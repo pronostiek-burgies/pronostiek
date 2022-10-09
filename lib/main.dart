@@ -1,9 +1,16 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:pronostiek/api/repository.dart';
 import 'package:pronostiek/dropbox.dart';
 import 'package:pronostiek/models/match.dart';
 import 'package:pronostiek/models/team.dart';
 
-void main() {
+import 'api/client.dart';
+
+late Repository repo;
+void main() async {
+  Dio dioClient = await dropboxClient();
+  repo = Repository(dioClient);
   runApp(const MyApp());
 }
 
@@ -73,8 +80,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     Team team = Team("België", "BEL", "be");
-    fetch();
     Match match = Match(DateTime(2022,11,7,17,30), team, team, false);
+    repo.readDropboxFile("/test.txt");
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by

@@ -39,6 +39,8 @@ dependencies:
   country_icons: ^2.0.2
   intl: ^0.17.0
   dio: ^4.0.6
+  logger: ^1.1.0
+  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:
