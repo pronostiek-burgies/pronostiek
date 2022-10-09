@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pronostiek/dropbox.dart';
+import 'package:pronostiek/models/match.dart';
+import 'package:pronostiek/models/team.dart';
 
 void main() {
   runApp(const MyApp());
@@ -69,6 +72,9 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    Team team = Team("België", "BEL", "be");
+    fetch();
+    Match match = Match(DateTime(2022,11,7,17,30), team, team, false);
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -95,6 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            match.getListTile(),
             const Text(
               'You have pushed the button this many times:',
             ),
