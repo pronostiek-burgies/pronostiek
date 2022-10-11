@@ -1,4 +1,5 @@
 
+import 'package:pronostiek/api/repository.dart';
 import 'package:pronostiek/models/initMatches.dart';
 import 'package:pronostiek/models/initTeams.dart';
 import 'package:pronostiek/models/match.dart';
@@ -10,6 +11,7 @@ import 'package:pronostiek/main.dart';
 class MatchController extends GetxController {
   Map<String,Team> teams = getTeams();
   Map<String,Match> matches = {};
+  Repository repo = Get.find<Repository>();
 
   static MatchController get to => Get.find<MatchController>();
 
