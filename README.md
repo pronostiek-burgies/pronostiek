@@ -1,16 +1,9 @@
 # pronostiek
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## How to generate refresh token
+1. browse to: https://www.dropbox.com/oauth2/authorize?client_id=rl5hbzehmfwp85w&token_access_type=offline&response_type=code
+2. copy the code
+3. and exectute this command:
+   ```shell
+   curl -k https://api.dropbox.com/oauth2/token \     -d code=<AUTHORIZATION_CODE> \     -d grant_type=authorization_code \     -u rl5hbzehmfwp85w:3419vcnk49gjmzi
+   ```

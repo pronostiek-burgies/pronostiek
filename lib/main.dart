@@ -1,16 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:pronostiek/api/repository.dart';
-import 'package:pronostiek/models/match.dart';
-import 'package:pronostiek/models/team.dart';
 import 'package:pronostiek/pages/match_page.dart';
 
 import 'api/client.dart';
 
 late Repository repo;
 void main() async {
-  Dio dioClient = await dropboxClient();
-  repo = Repository(dioClient);
+  Dio authClient = await dropboxAuthClient();
+  DropboxClient contentClient = DropboxClient(authClient);
+  await contentClient.refreshAccessToken();
+  repo = Repository(contentClient.dio);
   runApp(const MyApp());
 }
 

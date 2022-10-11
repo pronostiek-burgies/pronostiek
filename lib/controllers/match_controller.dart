@@ -25,7 +25,7 @@ class MatchController extends GetxController {
 
   void getResults() async {
     matches["A1"]!.id = await repo.readDropboxFile("/test.txt");
-    update()
+    update();
   }
 
 
