@@ -3,7 +3,7 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"command": "deploy_for_github_pages.bat",
+			"command": "flutter build web --release --base-href /pronostiek/ && xcopy .\\build\\web .\\docs /E /Y ",
 
 			"group": {
 				"kind": "build",

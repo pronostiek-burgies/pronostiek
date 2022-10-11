@@ -1,2 +1,3 @@
 flutter build web --release --base-href /pronostiek/
-xcopy ".\build\web" ".\docs" /E /Y
+echo "build"
+xcopy ".\build\web" ".\docs" /E /Y /R
