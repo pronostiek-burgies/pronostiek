@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:pronostiek/api/repository.dart';
-import 'package:pronostiek/dropbox.dart';
 import 'package:pronostiek/models/match.dart';
 import 'package:pronostiek/models/team.dart';
+import 'package:pronostiek/pages/match_page.dart';
 
 import 'api/client.dart';
 
@@ -34,10 +34,11 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MatchPage(),
     );
   }
 }
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -79,8 +80,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    Team team = Team("België", "BEL", "be");
-    Match match = Match(DateTime(2022,11,7,17,30), team, team, false);
     repo.readDropboxFile("/test.txt");
     return Scaffold(
       appBar: AppBar(
@@ -108,7 +107,6 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            match.getListTile(),
             const Text(
               'You have pushed the button this many times:',
             ),

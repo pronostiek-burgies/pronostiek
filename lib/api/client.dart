@@ -11,7 +11,7 @@ Future<Dio> dropboxClient() async {
 
   // Set default configs
   dio.options.baseUrl = "https://content.dropboxapi.com/2/";
-  dio.options.headers["Authorization"] = "Bearer sl.BQ0OOHyGqTulQcqbDpaDwDAHpN1NZsRga6-dGwAbKMmRUeSOyLv5Lugq_7GTSCNUix1gfAmoCKvp9rChgyb62Xry93hMO07pUdZsnaElzzW7R6Iky_X7iWrQkc1uTPOGh205D_0";
+  dio.options.headers["Authorization"] = "Bearer sl.BQ7xFLs5siV8vEpMnLlJrE6_ktnkIyoT_H51KMGa6PGCmHxA9N2m1noBLIaB126pbSWknqQYU5ZY1vhhugEHbZEljVQ3WDzTIIFz_U937ZYsor1u7zsmDzLK8kp4ZePSeU_V-2g";
   dio.options.connectTimeout = 10000; //10s
   dio.options.receiveTimeout = 5000;
   dio.interceptors.add(InterceptorsWrapper(
