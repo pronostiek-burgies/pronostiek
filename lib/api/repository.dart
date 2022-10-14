@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pronostiek/api/dropbox.dart';
 import 'package:pronostiek/controllers/user_controller.dart';
+import 'package:pronostiek/models/pronostiek.dart';
 import 'package:pronostiek/models/user.dart';
 
 class Repository {
@@ -69,7 +70,8 @@ class Repository {
     List<int> pwDigest = await Get.find<UserController>().getPwDigest(password);
     User newUser = User(username, firstname, lastname, pwDigest);
     bool savedUser = await writeDropboxFile("/users/$username.json", jsonEncode(newUser.toJSON()));
-    if (savedUser && savedUsername) {
+    bool savedPronostiek = await writeDropboxFile("/pronostiek/$username.json", jsonEncode(Pronostiek(username).toJSON()));
+    if (savedUser && savedUsername && savedPronostiek) {
       return newUser;
     } else {
       Get.defaultDialog(
@@ -78,6 +80,19 @@ class Repository {
       );
       return null;
     }
+  }
+
+  Future<Pronostiek?> getPronostiek() async {
+    UserController userController = Get.find<UserController>();
+    if (!userController.isLogged || userController.user == null) {
+      Get.defaultDialog(
+        title: "Could not find your pronostiek.",
+        content: const Text("Try again")
+      );
+      return null;
+    }
+    String username = userController.user!.username;
+    return Pronostiek.fromJson(jsonDecode(await readDropboxFile("/pronostiek/$username.json")));
   }
 
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:pronostiek/api/repository.dart';
+import 'package:pronostiek/controllers/pronostiek_controller.dart';
 import 'package:pronostiek/models/user.dart';
 import 'package:cryptography/cryptography.dart';
 
@@ -38,6 +39,7 @@ class UserController extends GetxController {
     if (userTemp != null) {
       user = userTemp;
       isLogged = true;
+      Get.find<PronostiekController>().initPronostiek();
       update();
       return true;
     }

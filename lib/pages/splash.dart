@@ -1,8 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ntp/ntp.dart';
 import 'package:pronostiek/api/client.dart';
 import 'package:pronostiek/api/repository.dart';
+import 'package:pronostiek/api/time_client.dart';
+import 'package:pronostiek/controllers/base_page_controller.dart';
+import 'package:pronostiek/controllers/pronostiek_controller.dart';
 import 'package:pronostiek/controllers/user_controller.dart';
 import 'package:pronostiek/pages/base_page.dart';
 
@@ -15,6 +19,9 @@ class SplashPage extends StatelessWidget {
     await _contentClient.refreshAccessToken();
     Repository _repo = Get.put(Repository(_contentClient.dio));
     UserController _userController = Get.put(UserController());
+    TimeClient _timeClient = Get.put(TimeClient());
+    BasePageController _basePageController = Get.put(BasePageController());
+    Get.put(PronostiekController());
   }
 
   @override

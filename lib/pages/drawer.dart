@@ -1,6 +1,8 @@
-import 'package:pronostiek/controllers/drawer_controller.dart' as dc;
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pronostiek/controllers/base_page_controller.dart';
 import 'package:pronostiek/controllers/login_controller.dart';
 import 'package:pronostiek/controllers/register_controller.dart';
 import 'package:pronostiek/controllers/user_controller.dart';
@@ -34,6 +36,39 @@ class MyDrawer extends StatelessWidget {
                     ),
                   ),
                 ),
+                ListTile(
+                  leading: const Icon(Icons.home),
+                  title: const Text("Dashboard"),
+                  onTap: () {
+                    Get.find<BasePageController>().changeTabIndex(0);
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.sports_soccer),
+                  title: const Text("My Pronostiek"),
+                  onTap: () {
+                    Get.find<BasePageController>().changeTabIndex(1);
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.info),
+                  title: const Text("Details"),
+                  onTap: () {
+                    Get.find<BasePageController>().changeTabIndex(2);
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.rule),
+                  title: const Text("Rules"),
+                  onTap: () {
+                    Get.find<BasePageController>().changeTabIndex(3);
+                    Navigator.pop(context);
+                  },
+                ),
+                const Divider(),
                 ListTile(
                   leading: const Icon(Icons.logout),
                   title: const Text("Log out"),
