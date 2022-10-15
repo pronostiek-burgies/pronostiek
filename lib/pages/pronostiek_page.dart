@@ -96,14 +96,11 @@ class PronostiekPage extends StatelessWidget {
         ],
       )),
       SingleChildScrollView(scrollDirection: Axis.horizontal,child:Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[Text("ok")] + List<Widget>.generate(8, (i) {
+        children: List<Widget>.generate(8, (i) {
           return Column(
-            physics: const NeverScrollableScrollPhysics(),
             children: List<Widget>.generate(4, (j) {
               return TextButton(
-                style: ButtonStyle(
+                style: ButtonStyle( 
                   padding: MaterialStateProperty.all<EdgeInsets>(
                     const EdgeInsets.all(8.0)
                   ),
@@ -158,7 +155,7 @@ class PronostiekPage extends StatelessWidget {
 
   Widget getProgressionCard(String title, List<String?> teamIds, int crossAxisCount, PronostiekController controller, {bool disable=false}) {
     int mainAxisCount = (teamIds.length/crossAxisCount).round();
-    return Card(child: Column(children: [
+    return SingleChildScrollView(child: Card(child: Column(children: [
       Text(title),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -184,7 +181,7 @@ class PronostiekPage extends StatelessWidget {
           );
         })
       ),
-    ],));
+    ],)));
   }
 
 }
