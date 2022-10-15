@@ -84,6 +84,7 @@ class PronostiekPage extends StatelessWidget {
         ]
       ),
       Flexible(child: PageView(
+        onPageChanged: (int page) => controller.updateProgressionPageIdx(page),
         controller: controller.progressionController,
         children: <Widget>[
           getProgressionCard("GroupStage", Pronostiek.teamIds, 8, controller, disable: true),
@@ -94,11 +95,12 @@ class PronostiekPage extends StatelessWidget {
           getProgressionCard("Winner", [controller.pronostiek!.progression.winner], 1, controller),
         ],
       )),
-      Row(
+      SingleChildScrollView(scrollDirection: Axis.horizontal,child:Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
-        children: List<Widget>.generate(8, (i) {
+        children: <Widget>[Text("ok")] + List<Widget>.generate(8, (i) {
           return Column(
+            physics: const NeverScrollableScrollPhysics(),
             children: List<Widget>.generate(4, (j) {
               return TextButton(
                 style: ButtonStyle(
@@ -115,7 +117,7 @@ class PronostiekPage extends StatelessWidget {
             })
           );
         })
-      ),
+      )),
     ]);
   }
   Widget getRandom(PronostiekController controller) {
