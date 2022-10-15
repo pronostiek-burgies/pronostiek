@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pronostiek/controllers/base_page_controller.dart';
@@ -36,39 +34,43 @@ class MyDrawer extends StatelessWidget {
                     ),
                   ),
                 ),
-                ListTile(
-                  leading: const Icon(Icons.home),
-                  title: const Text("Dashboard"),
-                  onTap: () {
-                    Get.find<BasePageController>().changeTabIndex(0);
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.sports_soccer),
-                  title: const Text("My Pronostiek"),
-                  onTap: () {
+              ],
+              ListTile(
+                leading: const Icon(Icons.home),
+                title: const Text("Dashboard"),
+                onTap: () {
+                  Get.find<BasePageController>().changeTabIndex(0);
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                textColor: controller.isLogged ? null : Colors.grey,
+                leading: const Icon(Icons.sports_soccer),
+                title: const Text("My Pronostiek"),
+                onTap: controller.isLogged ? () {
                     Get.find<BasePageController>().changeTabIndex(1);
                     Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.info),
-                  title: const Text("Details"),
-                  onTap: () {
-                    Get.find<BasePageController>().changeTabIndex(2);
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.rule),
-                  title: const Text("Rules"),
-                  onTap: () {
-                    Get.find<BasePageController>().changeTabIndex(3);
-                    Navigator.pop(context);
-                  },
-                ),
-                const Divider(),
+                  }
+                  : () => Get.defaultDialog(title: "No access to your pronostiek", content: const Text("Log in to get access."))
+              ),
+              ListTile(
+                leading: const Icon(Icons.info),
+                title: const Text("Details"),
+                onTap: () {
+                  Get.find<BasePageController>().changeTabIndex(2);
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.rule),
+                title: const Text("Rules"),
+                onTap: () {
+                  Get.find<BasePageController>().changeTabIndex(3);
+                  Navigator.pop(context);
+                },
+              ),
+              const Divider(),
+              if (controller.isLogged) ...[
                 ListTile(
                   leading: const Icon(Icons.logout),
                   title: const Text("Log out"),
@@ -80,10 +82,10 @@ class MyDrawer extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.login),
                   title: const Text("Login"),
-                  trailing: controller.login_open ? const Icon(Icons.keyboard_arrow_down) : const Icon(Icons.keyboard_arrow_up),
+                  trailing: controller.loginOpen ? const Icon(Icons.keyboard_arrow_down) : const Icon(Icons.keyboard_arrow_up),
                   onTap: () => controller.toggleLogin(),
                 ),
-                if (controller.login_open) ...[
+                if (controller.loginOpen) ...[
                   GetBuilder<LoginController>(
                     init: LoginController(),
                     builder: (controller) {
@@ -141,10 +143,10 @@ class MyDrawer extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.add),
                   title: const Text("Register"),
-                  trailing: controller.register_open ? const Icon(Icons.keyboard_arrow_down) : const Icon(Icons.keyboard_arrow_up),
+                  trailing: controller.registerOpen ? const Icon(Icons.keyboard_arrow_down) : const Icon(Icons.keyboard_arrow_up),
                   onTap: () => controller.toggleRegister(),
                 ),
-                if (controller.register_open) ...[
+                if (controller.registerOpen) ...[
                   GetBuilder<RegisterController>(
                     init: RegisterController(),
                     builder: (controller) {

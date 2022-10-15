@@ -1,5 +1,4 @@
 
-import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 
 class Team {

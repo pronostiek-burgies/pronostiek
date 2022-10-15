@@ -14,9 +14,13 @@ enum MatchStatus {
 class Match {
   String id;
   DateTime startDateTime;
-  Team home;
-  Team away;
-  bool knockout;
+  String? linkHome;
+  String? linkAway;
+  Function? getHome;  
+  Function? getAway;  
+  Team? home;
+  Team? away;
+  late bool knockout;
   MatchStatus status = MatchStatus.notStarted;
   int? time;
   /// goals after 90 mins
@@ -37,45 +41,56 @@ class Match {
     this.startDateTime,
     this.home,
     this.away,
-    this.knockout,
-  );
+  ) {knockout = false;}
 
-  // void startMatch() {
-  //   status = MatchStatus.inPlay;
-  // }
+  Match.knockout(
+    this.id,
+    this.startDateTime,
+    this.linkHome,
+    this.linkAway,
+    this.getHome,
+    this.getAway,
+  ) {knockout = true;}
 
-  // void updateScoreFT(int time, int goalsHomeFT, int goalsAwayFT) {
-  //   if (status != MatchStatus.inPlay) {
-  //     throw Exception("First start match");
-  //   }
-  //   this.goalsHomeFT = goalsHomeFT;
-  //   this.goalsAwayFT = goalsAwayFT;
-  // }
+  int? getPoints(bool home) {
+    if (status != MatchStatus.ended) {
+      return null;
+    }
+    if (goalsHomeFT == goalsAwayFT) {
+      return 1;
+    }
+    if (home) {
+      return goalsHomeFT! > goalsAwayFT! ? 3 : 0;
+    } else {
+      return goalsHomeFT! > goalsAwayFT! ? 0 : 3;
+    }
+  }
 
-  // void startOT() {
-  //   if (status != MatchStatus.inPlay) {
-  //     throw Exception("First start match");
-  //   }
-  //   status = MatchStatus.overTime;
-  // }
+  Team? getWinner() {
+    if (status != MatchStatus.ended) {
+      return null;
+    }
+    if (goalsHomeFT! != goalsAwayFT!) {
+      return goalsHomeFT! > goalsAwayFT! ? home : away;
+    }
+    if (goalsHomeOT! != goalsAwayOT!) {
+      return goalsHomeOT! > goalsAwayOT! ? home : away;
+    }
+    return goalsHomePen! > goalsAwayPen! ? home : away;
+  }
 
-  // void updateScoreOT(int time, int goalsHomeOT, int goalsAwayOT) {
-  //   if (status != MatchStatus.overTime) {
-  //     throw Exception("First start overtime");
-  //   }
-  //   this.goalsHomeOT = goalsHomeOT;
-  //   this.goalsAwayOT = goalsAwayOT;
-  // }
-
-  // void startOT() {
-  //   if (status != MatchStatus.inPlay) {
-  //     throw Exception("First start match");
-  //   }
-  //   status = MatchStatus.overTime;
-  // }
-  // void endMatch() {
-  //   status = MatchStatus.ended;
-  // }
+  Team? getLoser() {
+    if (status != MatchStatus.ended) {
+      return null;
+    }
+    if (goalsHomeFT! != goalsAwayFT!) {
+      return goalsHomeFT! < goalsAwayFT! ? home : away;
+    }
+    if (goalsHomeOT! != goalsAwayOT!) {
+      return goalsHomeOT! < goalsAwayOT! ? home : away;
+    }
+    return goalsHomePen! < goalsAwayPen! ? home : away;
+  }
 
   ListTile getListTile() {
     return ListTile(
@@ -83,9 +98,13 @@ class Match {
       title: Row(
         children: [
           Expanded(child: Row(children: [
-            home.getFlag(),
-            const VerticalDivider(thickness: 0,),
-            Text(home.name)
+            if (home != null) ... [
+              home!.getFlag(),
+              const VerticalDivider(thickness: 0,),
+              Text(home!.name)
+            ] else ...[
+              Text(linkHome!),
+            ],
           ])),
           
           Column(children: [
@@ -117,9 +136,13 @@ class Match {
           Expanded(child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(away.name),
-              const VerticalDivider(thickness: 0,),
-              away.getFlag(),
+              if (away != null) ...[
+                Text(away!.name),
+                const VerticalDivider(thickness: 0,),
+                away!.getFlag(),
+              ] else ...[
+                Text(linkAway!),
+              ]
             ]
           )),
         ]

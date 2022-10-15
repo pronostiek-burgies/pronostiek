@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ntp/ntp.dart';
 import 'package:pronostiek/api/client.dart';
 import 'package:pronostiek/api/repository.dart';
 import 'package:pronostiek/api/time_client.dart';
@@ -14,13 +13,13 @@ class SplashPage extends StatelessWidget {
   const SplashPage({Key? key}) : super(key: key);
 
   Future<void> initializeSettings() async {
-    Dio _authClient = await dropboxAuthClient();
-    DropboxClient _contentClient = Get.put(DropboxClient(_authClient));
-    await _contentClient.refreshAccessToken();
-    Repository _repo = Get.put(Repository(_contentClient.dio));
-    UserController _userController = Get.put(UserController());
-    TimeClient _timeClient = Get.put(TimeClient());
-    BasePageController _basePageController = Get.put(BasePageController());
+    Dio authClient = await dropboxAuthClient();
+    DropboxClient contentClient = Get.put(DropboxClient(authClient));
+    await contentClient.refreshAccessToken();
+    Get.put(Repository(contentClient.dio));
+    Get.put(UserController());
+    Get.put(TimeClient());
+    Get.put(BasePageController());
     Get.put(PronostiekController());
   }
 

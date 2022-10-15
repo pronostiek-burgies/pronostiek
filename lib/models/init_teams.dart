@@ -6,7 +6,7 @@ Map<String,Team> getTeams() {
   "A1": Team("Qatar", "QAT", "qa", "A1"),
   "A2": Team("Ecuador", "ECU", "ec", "A2"),
   "A3": Team("Senegal", "SEN", "sn", "A3"),
-  "A4": Team("Netherlands", "NLD", "nl", "A4"),
+  "A4": Team("Netherlands", "NED", "nl", "A4"),
 
   "B1": Team("England", "ENG", "gb-eng", "B1"),
   "B2": Team("Iran", "IRN", "ir", "B2"),
@@ -20,11 +20,11 @@ Map<String,Team> getTeams() {
 
   "D1": Team("France", "FRA", "fr", "D1"),
   "D2": Team("Australia", "AUS", "au", "D4"),
-  "D3": Team("Denmark", "DNK", "dk", "D2"),
+  "D3": Team("Denmark", "DEN", "dk", "D2"),
   "D4": Team("Tunisia", "TUN", "tn", "D3"),
 
   "E1": Team("Spain", "ESP", "es", "E1"),
-  "E2": Team("Costa Rica", "CRR", "cr", "E4"),
+  "E2": Team("Costa Rica", "CRC", "cr", "E4"),
   "E3": Team("Germany", "DEU", "de", "E2"),
   "E4": Team("Japan", "JPN", "jp", "E3"),
 
@@ -35,7 +35,7 @@ Map<String,Team> getTeams() {
 
   "G1": Team("Brazil", "BRA", "br", "G1"),
   "G2": Team("Serbia", "SRB", "rs", "G2"),
-  "G3": Team("Switzerland", "SUi", "ch", "G3"),
+  "G3": Team("Switzerland", "SUI", "ch", "G3"),
   "G4": Team("Cameroon", "CMR", "cm", "G4"),
 
   "H1": Team("Portugal", "POR", "pt", "H1"),

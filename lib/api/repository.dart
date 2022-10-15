@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pronostiek/api/dropbox.dart';
 import 'package:pronostiek/controllers/user_controller.dart';
-import 'package:pronostiek/models/pronostiek.dart';
+import 'package:pronostiek/models/pronostiek/pronostiek.dart';
 import 'package:pronostiek/models/user.dart';
 
 class Repository {
@@ -93,6 +93,11 @@ class Repository {
     }
     String username = userController.user!.username;
     return Pronostiek.fromJson(jsonDecode(await readDropboxFile("/pronostiek/$username.json")));
+  }
+
+  Future<bool> savePronostiek(Pronostiek pronostiek) async {
+    String username = Get.find<UserController>().user!.username;
+    return await writeDropboxFile("/pronostiek/$username.json", jsonEncode(pronostiek.toJSON()));
   }
 
 

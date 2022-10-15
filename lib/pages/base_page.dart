@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pronostiek/api/repository.dart';
 import 'package:pronostiek/controllers/base_page_controller.dart';
-import 'package:pronostiek/controllers/match_controller.dart';
 import 'package:pronostiek/pages/drawer.dart';
 import 'package:pronostiek/pages/match_page.dart';
 import 'package:pronostiek/pages/pronostiek_page.dart';
+import 'package:pronostiek/pages/result_page.dart';
 
 class BasePage extends StatelessWidget {
   const BasePage({Key? key}) : super(key: key);
@@ -19,8 +18,8 @@ class BasePage extends StatelessWidget {
           children: const [
             MatchPage(drawer),
             PronostiekPage(drawer),
-            Text("Details"),
-            Text("Rules"),
+            ResultPage(drawer),
+            // Text("Rules"),
           ]
         )
       );

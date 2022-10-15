@@ -9,8 +9,8 @@ class UserController extends GetxController {
   User? user;
   bool isLogged = false;
 
-  bool login_open = false;
-  bool register_open = false;
+  bool loginOpen = false;
+  bool registerOpen = false;
 
   Repository repo = Get.find<Repository>();
   final pbkdf2 = Pbkdf2(
@@ -25,12 +25,12 @@ class UserController extends GetxController {
   static UserController get to => Get.find<UserController>();
 
    void toggleLogin() {
-    login_open = !login_open;
+    loginOpen = !loginOpen;
     update();
   }
 
   void toggleRegister() {
-    register_open = !register_open;
+    registerOpen = !registerOpen;
     update();
   }
 

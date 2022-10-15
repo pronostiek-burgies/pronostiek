@@ -21,7 +21,6 @@ Future<bool> writeFile(Dio dio, String pathToFile, String data) async {
     ),
     data: data,
   );
-  print(response);
   if (response.statusCode == 200) {
     return true;
   } else {

@@ -1,22 +1,32 @@
 
 import 'package:pronostiek/api/repository.dart';
-import 'package:pronostiek/models/initMatches.dart';
-import 'package:pronostiek/models/initTeams.dart';
+import 'package:pronostiek/models/group.dart';
+import 'package:pronostiek/models/init_groups.dart';
+import 'package:pronostiek/models/init_matches.dart';
+import 'package:pronostiek/models/init_teams.dart';
 import 'package:pronostiek/models/match.dart';
 import 'package:get/get.dart';
 import 'package:pronostiek/models/team.dart';
 
-import 'package:pronostiek/main.dart';
-
 class MatchController extends GetxController {
   Map<String,Team> teams = getTeams();
   Map<String,Match> matches = {};
+  Map<String,Group> groups = {};
   Repository repo = Get.find<Repository>();
+
+  var tabIndex = 0;
 
   static MatchController get to => Get.find<MatchController>();
 
   MatchController() {
-    matches = getMatches(teams);
+    matches = getMatches(teams, this);
+    groups = getGroups(teams, matches);
+  }
+
+  /// sets [tabIndex] to [index] and updates view
+  void changeTabIndex(int index) {
+    tabIndex = index;
+    update();
   }
 
   List<String> getSortedKeys() {

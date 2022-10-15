@@ -1,6 +1,7 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pronostiek/colors.dart/wc_background.dart';
+import 'package:pronostiek/colors.dart/wc_red.dart';
 import 'package:pronostiek/pages/splash.dart';
 
 void main() async {
@@ -17,7 +18,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Pronostiek Burgies',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: wcRed,
+        backgroundColor: wcBackground,
+        scaffoldBackgroundColor: wcBackground,
+        cardColor: const Color(0xFFF7F6E9),
       ),
       home: const SplashPage(),
     );

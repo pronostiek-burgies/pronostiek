@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:get/get.dart' as getX;
+import 'package:get/get.dart' as get_x;
 import 'client.dart';
 
 class TimeClient {
@@ -55,21 +55,21 @@ class TimeClient {
 
       /// It occurs when url is opened timeout.
       case DioErrorType.connectTimeout:
-        getX.Get.defaultDialog(
+        get_x.Get.defaultDialog(
             title: "Connection timeout",
             middleText: "Make sure that you have a working internet connection.");
         break;
 
       /// It occurs when url is sent timeout.
       case DioErrorType.sendTimeout:
-        getX.Get.defaultDialog(
+        get_x.Get.defaultDialog(
             title: "Send timeout",
             middleText: "Make sure that you have a working internet connection.");
         break;
 
       ///It occurs when receiving timeout.
       case DioErrorType.receiveTimeout:
-        getX.Get.defaultDialog(
+        get_x.Get.defaultDialog(
             title: "Receive timeout",
             middleText: "Make sure that you have a working internet connection.");
         break;
