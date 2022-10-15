@@ -22,8 +22,8 @@ class LoginController extends GetxController {
       update();
       userController
           .login(
-            usernameController.text,
-            passwordController.text,
+            usernameController.text.trim(),
+            passwordController.text.trim(),
           ).then((auth) {
               busy = false;
               update();

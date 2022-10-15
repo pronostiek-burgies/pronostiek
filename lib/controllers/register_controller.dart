@@ -29,11 +29,11 @@ class RegisterController extends GetxController {
       update();
       userController
           .register(
-            usernameController.text,
-            firstnameController.text,
-            lastnameController.text,
-            passwordController.text,
-            passwordController2.text)
+            usernameController.text.trim(),
+            firstnameController.text.trim(),
+            lastnameController.text.trim(),
+            passwordController.text.trim(),
+            passwordController2.text.trim())
           .then((auth) {
             if (auth) {
               Get.snackbar('Register', 'Registration successful');

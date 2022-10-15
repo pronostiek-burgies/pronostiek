@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pronostiek/api/repository.dart';
@@ -14,8 +16,8 @@ class PronostiekController extends GetxController {
 
   List<bool> matchGroupCollapsed = [];
   Map<String,List<TextEditingController>> textControllers = {};
-  PageController progressionController = PageController(viewportFraction: 500/Get.width);
-  int progressionPageIdx = 0;
+  PageController progressionController = PageController(viewportFraction: min(500/Get.width, 1.0), initialPage: 1);
+  int progressionPageIdx = 1;
   ScrollController scroll = ScrollController();
 
   @override
@@ -99,12 +101,17 @@ class PronostiekController extends GetxController {
     update();
   }
 
-  void updateProgressionPageIdx(int idx) {
+  void updateProgressionPageIdx(int idx, {bool animate=true}) {
     if (idx < 0) {
       idx = 0;
     }
+    if (idx > 5) {
+      idx = 5;
+    }
     progressionPageIdx = idx;
-    progressionController.animateToPage(idx, duration: const Duration(seconds: 1), curve: Curves.easeInOut);
+    if (animate) {
+      progressionController.animateToPage(idx, duration: const Duration(seconds: 1), curve: Curves.easeInOut);
+    }
     update();
   }
 

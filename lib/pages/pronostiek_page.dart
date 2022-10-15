@@ -2,6 +2,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pronostiek/colors.dart/wc_purple.dart';
 import 'package:pronostiek/controllers/match_controller.dart';
 import 'package:pronostiek/controllers/pronostiek_controller.dart';
 import 'package:pronostiek/models/pronostiek/pronostiek.dart';
@@ -75,7 +76,7 @@ class PronostiekPage extends StatelessWidget {
           DotsIndicator(
             dotsCount: 6,
             position: controller.progressionPageIdx*1.0,
-            onTap: (position) => controller.updateProgressionPageIdx(position.round()),
+            onTap: (position) {controller.updateProgressionPageIdx(position.round());},
           ),
           IconButton(
             onPressed: () => controller.updateProgressionPageIdx(controller.progressionPageIdx+1),
@@ -83,14 +84,14 @@ class PronostiekPage extends StatelessWidget {
           ),
         ]
       ),
-      Flexible(child: PageView(
-        onPageChanged: (int page) => controller.updateProgressionPageIdx(page),
+      Expanded(child: PageView(
+        onPageChanged: (int page) {controller.updateProgressionPageIdx(page, animate: false);},
         controller: controller.progressionController,
         children: <Widget>[
-          getProgressionCard("GroupStage", Pronostiek.teamIds, 8, controller, disable: true),
-          getProgressionCard("Round of 16", controller.pronostiek!.progression.round16, 8, controller),
-          getProgressionCard("Quarter Finals", controller.pronostiek!.progression.quarterFinals, 8, controller),
-          getProgressionCard("Semi Finals", controller.pronostiek!.progression.semiFinals, 4, controller),
+          getProgressionCard("GroupStage", Pronostiek.teamIds, 4, controller, disable: true),
+          getProgressionCard("Round of 16", controller.pronostiek!.progression.round16, 4, controller),
+          getProgressionCard("Quarter Finals", controller.pronostiek!.progression.quarterFinals, 2, controller),
+          getProgressionCard("Semi Finals", controller.pronostiek!.progression.semiFinals, 2, controller),
           getProgressionCard("Final", controller.pronostiek!.progression.wcFinal, 2, controller),
           getProgressionCard("Winner", [controller.pronostiek!.progression.winner], 1, controller),
         ],
@@ -99,7 +100,7 @@ class PronostiekPage extends StatelessWidget {
         children: List<Widget>.generate(8, (i) {
           return Column(
             children: List<Widget>.generate(4, (j) {
-              return TextButton(
+              return SizedBox(width: Get.theme.textTheme.bodyText2!.fontSize!*3*0.8+30+16+5,child: TextButton(
                 style: ButtonStyle( 
                   padding: MaterialStateProperty.all<EdgeInsets>(
                     const EdgeInsets.all(8.0)
@@ -107,10 +108,11 @@ class PronostiekPage extends StatelessWidget {
                 ),
                 onPressed: controller.teamInProgression(Pronostiek.teamIds[i*4+j]) ? null : () => controller.addTeamToProgression(Pronostiek.teamIds[i*4+j]),
                 child: Row(children: [
-                  Get.find<MatchController>().teams[Pronostiek.teamIds[i*4+j]]!.getFlag(),
+                  Get.find<MatchController>().teams[Pronostiek.teamIds[i*4+j]]!.getFlag(disabled: controller.teamInProgression(Pronostiek.teamIds[i*4+j])),
+                  const VerticalDivider(width: 5, thickness: 0,),
                   Text(Get.find<MatchController>().teams[Pronostiek.teamIds[i*4+j]]!.shortName),
                 ]),
-              );
+              ));
             })
           );
         })
@@ -129,9 +131,19 @@ class PronostiekPage extends StatelessWidget {
       child: Column(
         children: <Widget>[
           ListTile(
-            tileColor: const Color.fromARGB(255, 0, 238, 255),
-            title: Text("${matchGroup.name} (deadline: ${DateFormat('dd/MM kk:mm').format(matchGroup.deadline)})"),
-            trailing: controller.matchGroupCollapsed[idx] ? const Icon(Icons.keyboard_arrow_up) : const Icon(Icons.keyboard_arrow_down),
+            tileColor: wcPurple,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(matchGroup.name, style: const TextStyle(color: Colors.white),),
+                Row(children: [
+                  const Icon(Icons.calendar_today, color: Colors.white,),
+                  const VerticalDivider(),
+                  Text(DateFormat('dd/MM kk:mm').format(matchGroup.deadline), style: const TextStyle(color: Colors.white),),
+                ],)
+              ]
+            ),
+            trailing: controller.matchGroupCollapsed[idx] ? const Icon(Icons.keyboard_arrow_up, color: Colors.white,) : const Icon(Icons.keyboard_arrow_down, color: Colors.white),
             onTap: () => controller.toggleGroupCollapse(idx),
           ),
           if (!controller.matchGroupCollapsed[idx]) ...[
@@ -155,28 +167,34 @@ class PronostiekPage extends StatelessWidget {
 
   Widget getProgressionCard(String title, List<String?> teamIds, int crossAxisCount, PronostiekController controller, {bool disable=false}) {
     int mainAxisCount = (teamIds.length/crossAxisCount).round();
-    return SingleChildScrollView(child: Card(child: Column(children: [
-      Text(title),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return Card(child: SingleChildScrollView(child: Column(mainAxisAlignment:MainAxisAlignment.spaceEvenly, children: [
+      Text(title, style: const TextStyle(fontWeight: FontWeight.bold), textScaleFactor: 1.5,),
+      const Divider(),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         mainAxisSize: MainAxisSize.max,
         children: List<Widget>.generate(mainAxisCount, (i) {
-          return Column(
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: List<Widget>.generate(crossAxisCount, (j) {
-              return OutlinedButton(
+              return Container(margin: EdgeInsets.symmetric(vertical: 5), child: SizedBox(width: Get.theme.textTheme.bodyText2!.fontSize!*3*0.8+30+16+5,child: OutlinedButton(
                 style: ButtonStyle(
                   padding: MaterialStateProperty.all<EdgeInsets>(
                     const EdgeInsets.all(8.0)
                   ),
                 ),
                 onPressed: disable ? null : (teamIds[i*crossAxisCount+j] != null ? () => controller.removeTeamFromProgression(teamIds[i*crossAxisCount+j]!) : null),
-                child: Row(children: [
-                  if (teamIds[i*crossAxisCount+j] != null) ...[
-                    Get.find<MatchController>().teams[teamIds[i*crossAxisCount+j]]!.getFlag(),
-                  ],
-                  Text(Get.find<MatchController>().teams[teamIds[i*crossAxisCount+j]]?.shortName ?? ""),
-                ]),
-              );
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    if (teamIds[i*crossAxisCount+j] != null) ...[
+                      Get.find<MatchController>().teams[teamIds[i*crossAxisCount+j]]!.getFlag(),
+                    ],
+                    const VerticalDivider(thickness: 0, width: 5,),
+                    Text(Get.find<MatchController>().teams[teamIds[i*crossAxisCount+j]]?.shortName ?? ""),
+                  ]
+                ),
+              )));
             })
           );
         })
