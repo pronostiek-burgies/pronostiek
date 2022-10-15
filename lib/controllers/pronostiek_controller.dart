@@ -16,6 +16,7 @@ class PronostiekController extends GetxController {
   Map<String,List<TextEditingController>> textControllers = {};
   PageController progressionController = PageController(viewportFraction: 500/Get.width);
   int progressionPageIdx = 0;
+  ScrollController scroll = ScrollController();
 
   @override
   onClose() {
