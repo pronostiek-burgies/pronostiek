@@ -66,7 +66,29 @@ class PronostiekPage extends StatelessWidget {
   }
 
   Widget getProgression(PronostiekController controller) {
+    int total = 0;
+    total += controller.pronostiek!.progression.round16.length;
+    total += controller.pronostiek!.progression.quarterFinals.length;
+    total += controller.pronostiek!.progression.semiFinals.length;
+    total += controller.pronostiek!.progression.wcFinal.length;
+    total += 1;
+
     return Column(mainAxisSize: MainAxisSize.max, children: [
+      ListTile(
+        tileColor: wcPurple[800],
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Expanded(child: Text("Progression", style: TextStyle(color: Colors.white),)),
+            Flexible(child: Row(mainAxisAlignment:MainAxisAlignment.center, children: [
+              const Icon(Icons.calendar_today, color: Colors.white),
+              const VerticalDivider(),
+              Text(DateFormat('dd/MM kk:mm').format(controller.deadlineProgression), style: const TextStyle(color: Colors.white),),
+            ],)),
+            Expanded(child:Text("${controller.nFilledInProgression}/$total", style: const TextStyle(color: Colors.white), textAlign: TextAlign.end,)),
+          ]
+        ),
+      ),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
@@ -90,12 +112,12 @@ class PronostiekPage extends StatelessWidget {
         onPageChanged: (int page) {controller.updateProgressionPageIdx(page, animate: false);},
         controller: controller.progressionController,
         children: <Widget>[
-          getProgressionCard("GroupStage", Pronostiek.teamIds, 4, controller, disable: true),
-          getProgressionCard("Round of 16", controller.pronostiek!.progression.round16, 4, controller),
-          getProgressionCard("Quarter Finals", controller.pronostiek!.progression.quarterFinals, 2, controller),
-          getProgressionCard("Semi Finals", controller.pronostiek!.progression.semiFinals, 2, controller),
-          getProgressionCard("Final", controller.pronostiek!.progression.wcFinal, 2, controller),
-          getProgressionCard("Winner", [controller.pronostiek!.progression.winner], 1, controller),
+          getProgressionCard("GroupStage", Pronostiek.teamIds, 4, controller, 0, disable: true),
+          getProgressionCard("Round of 16", controller.pronostiek!.progression.round16, 4, controller, 1),
+          getProgressionCard("Quarter Finals", controller.pronostiek!.progression.quarterFinals, 2, controller, 2),
+          getProgressionCard("Semi Finals", controller.pronostiek!.progression.semiFinals, 2, controller, 3),
+          getProgressionCard("Final", controller.pronostiek!.progression.wcFinal, 2, controller, 4),
+          getProgressionCard("Winner", [controller.pronostiek!.progression.winner], 1, controller, 5),
         ],
       )),
       SingleChildScrollView(scrollDirection: Axis.horizontal,child:Row(
@@ -204,7 +226,7 @@ class PronostiekPage extends StatelessWidget {
 
   }
 
-  Widget getProgressionCard(String title, List<String?> teamIds, int crossAxisCount, PronostiekController controller, {bool disable=false}) {
+  Widget getProgressionCard(String title, List<String?> teamIds, int crossAxisCount, PronostiekController controller, int pageIdx, {bool disable=false}) {
     int mainAxisCount = (teamIds.length/crossAxisCount).round();
     return Card(child: SingleChildScrollView(child: Column(mainAxisAlignment:MainAxisAlignment.spaceEvenly, children: [
       Text(title, style: const TextStyle(fontWeight: FontWeight.bold), textScaleFactor: 1.5,),
@@ -222,7 +244,7 @@ class PronostiekPage extends StatelessWidget {
                     const EdgeInsets.all(8.0)
                   ),
                 ),
-                onPressed: disable ? null : (teamIds[i*crossAxisCount+j] != null ? () => controller.removeTeamFromProgression(teamIds[i*crossAxisCount+j]!) : null),
+                onPressed: (disable || controller.progressionPageIdx != pageIdx)? null : (teamIds[i*crossAxisCount+j] != null ? () => controller.removeTeamFromProgression(teamIds[i*crossAxisCount+j]!) : null),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [

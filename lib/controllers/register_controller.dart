@@ -36,7 +36,7 @@ class RegisterController extends GetxController {
             passwordController2.text.trim())
           .then((auth) {
             if (auth) {
-              Get.snackbar('Register', 'Registration successful');
+              Get.snackbar('Register', 'Registration successful', colorText: Colors.white);
             }
               busy = false;
               update();

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pronostiek/api/repository.dart';
 import 'package:pronostiek/models/pronostiek/pronostiek.dart';
@@ -23,6 +24,7 @@ class PronostiekController extends GetxController {
   List<TextEditingController> textControllersRandom = [];
   PageController progressionController = PageController(viewportFraction: min(500/Get.width, 1.0), initialPage: 1);
   int progressionPageIdx = 1;
+  int nFilledInProgression = 0;
   ScrollController scroll = ScrollController();
   final randomFormKey = GlobalKey<FormState>();
 
@@ -87,11 +89,22 @@ class PronostiekController extends GetxController {
     update();
   }
 
+  void calcNFilledInProgression() {
+    int filledIn = 0;
+    filledIn += pronostiek!.progression.round16.fold(0, (v,e) => e != null ? v+1 : v);
+    filledIn += pronostiek!.progression.quarterFinals.fold(0, (v,e) => e != null ? v+1 : v);
+    filledIn += pronostiek!.progression.semiFinals.fold(0, (v,e) => e != null ? v+1 : v);
+    filledIn += pronostiek!.progression.wcFinal.fold(0, (v,e) => e != null ? v+1 : v);
+    filledIn += pronostiek!.progression.winner != null ? 1 : 0;
+    nFilledInProgression = filledIn;
+  }
+
   void initPronostiek() {
     repo.getPronostiek().then((pronostiek) {
       this.pronostiek = pronostiek;
       for (var element in matchIds) {textControllers[element] = [TextEditingController(text: pronostiek!.matches[element]?.goalsHomeFT?.toString() ?? ""),TextEditingController(text: pronostiek.matches[element]!.goalsAwayFT?.toString() ?? "")];}
       for (RandomPronostiek element in pronostiek!.random) {textControllersRandom.add(TextEditingController(text: element.answer ?? ""));}
+      calcNFilledInProgression();
       update();
     });
   }
@@ -104,7 +117,10 @@ class PronostiekController extends GetxController {
     for (int i=0; i<pronostiek!.random.length; i++) {
       pronostiek!.random[i].answer = textControllersRandom[i].text == "" ? null : textControllersRandom[i].text;
     }
-    await repo.savePronostiek(pronostiek!);
+    bool success = await repo.savePronostiek(pronostiek!);
+    if (success) {
+      Get.snackbar("Your changes were saved", "The changes to your pronostiek were succesfully save to the server", colorText: Colors.white);
+    }
     initPronostiek();
   }
 
