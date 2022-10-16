@@ -45,6 +45,7 @@ dependencies:
   cryptography: ^2.0.5
   ntp: ^2.0.0
   dots_indicator: ^2.1.0
+  searchfield: ^0.7.1
 
 dev_dependencies:
   flutter_test:

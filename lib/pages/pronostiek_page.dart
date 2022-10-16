@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:pronostiek/colors.dart/wc_purple.dart';
 import 'package:pronostiek/controllers/match_controller.dart';
 import 'package:pronostiek/controllers/pronostiek_controller.dart';
+import 'package:pronostiek/models/pronostiek/match_pronostiek.dart';
 import 'package:pronostiek/models/pronostiek/pronostiek.dart';
+import 'package:pronostiek/models/pronostiek/random_pronostiek.dart';
 
 class PronostiekPage extends StatelessWidget {
   final Widget drawer;
@@ -120,27 +122,64 @@ class PronostiekPage extends StatelessWidget {
     ]);
   }
   Widget getRandom(PronostiekController controller) {
-    return const Text("random");
+    int filledIn = controller.pronostiek!.random.fold(0, (int v, RandomPronostiek e) => (e.answer != null && e.answer != "") ? v+1 : v);
+    return Column(children: [
+      ListTile(
+        tileColor: wcPurple[800],
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Expanded(child: Text("Random Questions", style: TextStyle(color: Colors.white),)),
+              Flexible(child: Row(mainAxisAlignment:MainAxisAlignment.center, children: [
+                const Icon(Icons.calendar_today, color: Colors.white),
+                const VerticalDivider(),
+                Text(DateFormat('dd/MM kk:mm').format(controller.deadlineRandom), style: const TextStyle(color: Colors.white),),
+              ],)),
+              Expanded(child:Text("$filledIn/${controller.pronostiek!.random.length}", style: const TextStyle(color: Colors.white), textAlign: TextAlign.end,)),
+            ]
+          ),
+        ),
+      Form(
+        autovalidateMode: AutovalidateMode.always,
+        key: controller.randomFormKey,
+        child: Expanded(child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: controller.pronostiek!.random.length*2,
+          itemBuilder: ((context, index) {
+            if (index%2 == 0) {
+              return controller.pronostiek!.random[index>>1].getListTile(controller.textControllersRandom[index>>1], controller.randomFormKey);
+            }
+            return const Divider();
+          }),
+        ))
+      )
+    ]);
   }
 
   Widget getMatchGroup(PronostiekController controller, MatchGroup matchGroup, int idx) {
     List<String> matches = controller.matchIds.where((e) => controller.dealines[e] == matchGroup).toList();
+    int filledIn = matches.fold<int>(0, (int v, String e) {
+      MatchPronostiek matchPronostiek = controller.pronostiek!.matches[e]!;
+      return (matchPronostiek.goalsHomeFT != null && matchPronostiek.goalsAwayFT != null) ? v+1 : v;
+
+    });
     return Card(
       elevation: 10,
       margin: const EdgeInsets.all(10), 
       child: Column(
         children: <Widget>[
           ListTile(
-            tileColor: wcPurple,
+            tileColor: wcPurple[800],
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(matchGroup.name, style: const TextStyle(color: Colors.white),),
-                Row(children: [
-                  const Icon(Icons.calendar_today, color: Colors.white,),
+                Expanded(child: Text(matchGroup.name, style: const TextStyle(color: Colors.white),)),
+                Flexible(child: Row(mainAxisAlignment:MainAxisAlignment.center, children: [
+                  const Icon(Icons.calendar_today, color: Colors.white),
                   const VerticalDivider(),
                   Text(DateFormat('dd/MM kk:mm').format(matchGroup.deadline), style: const TextStyle(color: Colors.white),),
-                ],)
+                ],)),
+                Expanded(child:Text("$filledIn/${matches.length}", style: const TextStyle(color: Colors.white), textAlign: TextAlign.end,)),
               ]
             ),
             trailing: controller.matchGroupCollapsed[idx] ? const Icon(Icons.keyboard_arrow_up, color: Colors.white,) : const Icon(Icons.keyboard_arrow_down, color: Colors.white),
@@ -152,7 +191,7 @@ class PronostiekPage extends StatelessWidget {
               itemCount: matches.length*2,
               itemBuilder: (context, index) {
                 if (index%2 == 0) {
-                  return controller.pronostiek!.matches[matches[index>>1]]!.getListTile(controller.textControllers[controller.matchIds[index>>1]]!);
+                  return controller.pronostiek!.matches[matches[index>>1]]!.getListTile(controller.textControllers[matches[index>>1]]!);
                 } else {
                   return const Divider();
                 }

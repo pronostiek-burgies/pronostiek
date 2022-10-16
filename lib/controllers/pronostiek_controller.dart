@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pronostiek/api/repository.dart';
 import 'package:pronostiek/models/pronostiek/pronostiek.dart';
+import 'package:pronostiek/models/pronostiek/random_pronostiek.dart';
 
 class PronostiekController extends GetxController {
   Pronostiek? pronostiek;
@@ -14,17 +15,25 @@ class PronostiekController extends GetxController {
   List<String> matchIds = [];
   List<MatchGroup> groups = [];
 
+  DateTime deadlineRandom = DateTime(2022,11,20, 17, 00);
+  DateTime deadlineProgression = DateTime(2022,11,20, 17, 00);
+
   List<bool> matchGroupCollapsed = [];
   Map<String,List<TextEditingController>> textControllers = {};
+  List<TextEditingController> textControllersRandom = [];
   PageController progressionController = PageController(viewportFraction: min(500/Get.width, 1.0), initialPage: 1);
   int progressionPageIdx = 1;
   ScrollController scroll = ScrollController();
+  final randomFormKey = GlobalKey<FormState>();
 
   @override
   onClose() {
     for (String key in textControllers.keys) {
       textControllers[key]![0].dispose();
       textControllers[key]![1].dispose();
+    }
+    for (TextEditingController controller in textControllersRandom) {
+      controller.dispose();
     }
     super.onClose();
   }
@@ -82,7 +91,7 @@ class PronostiekController extends GetxController {
     repo.getPronostiek().then((pronostiek) {
       this.pronostiek = pronostiek;
       for (var element in matchIds) {textControllers[element] = [TextEditingController(text: pronostiek!.matches[element]?.goalsHomeFT?.toString() ?? ""),TextEditingController(text: pronostiek.matches[element]!.goalsAwayFT?.toString() ?? "")];}
-
+      for (RandomPronostiek element in pronostiek!.random) {textControllersRandom.add(TextEditingController(text: element.answer ?? ""));}
       update();
     });
   }
@@ -91,6 +100,9 @@ class PronostiekController extends GetxController {
     for (var element in matchIds) {
       pronostiek!.matches[element]!.goalsHomeFT = int.tryParse(textControllers[element]?.first.text ?? "");
       pronostiek!.matches[element]!.goalsAwayFT = int.tryParse(textControllers[element]?.last.text ?? "");
+    }
+    for (int i=0; i<pronostiek!.random.length; i++) {
+      pronostiek!.random[i].answer = textControllersRandom[i].text == "" ? null : textControllersRandom[i].text;
     }
     await repo.savePronostiek(pronostiek!);
     initPronostiek();

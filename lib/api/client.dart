@@ -117,6 +117,9 @@ errorInterceptors(DioError error) {
       break;
 
     default:
+      get_x.Get.defaultDialog(
+          title: "Could not connect to the server",
+          middleText: "Make sure that you have a working internet connection.");
       break;
   }
   return error;

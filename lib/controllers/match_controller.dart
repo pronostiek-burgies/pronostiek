@@ -3,6 +3,7 @@ import 'package:pronostiek/api/repository.dart';
 import 'package:pronostiek/models/group.dart';
 import 'package:pronostiek/models/init_groups.dart';
 import 'package:pronostiek/models/init_matches.dart';
+import 'package:pronostiek/models/init_players.dart';
 import 'package:pronostiek/models/init_teams.dart';
 import 'package:pronostiek/models/match.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,7 @@ class MatchController extends GetxController {
   Map<String,Team> teams = getTeams();
   Map<String,Match> matches = {};
   Map<String,Group> groups = {};
+  List<String> players = [];
   Repository repo = Get.find<Repository>();
 
   var tabIndex = 0;
@@ -21,6 +23,7 @@ class MatchController extends GetxController {
   MatchController() {
     matches = getMatches(teams, this);
     groups = getGroups(teams, matches);
+    players = getPlayers();
   }
 
   /// sets [tabIndex] to [index] and updates view

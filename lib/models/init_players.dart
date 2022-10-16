@@ -1,0 +1,34 @@
+List<String> getPlayers() {
+  List<String> players = [];
+  players.add("Koen Casteels");
+  players.add("Thibaut Courtois");
+  players.add("Simon Mignolet");
+  players.add("Matz Sels");
+  players.add("Toby Alderweireld");
+  players.add("Dedryck Boyata");
+  players.add("Zeno Debast");
+  players.add("Jason Denayer");
+  players.add("Wout Faes");
+  players.add("Brandon Mechele");
+  players.add("Arthur Theate");
+  players.add("Jan Vertonghen");
+  players.add("Yannick Carrasco");
+  players.add("Timothy Castagne");
+  players.add("Thorgan Hazard");
+  players.add("Thomas Meunier");
+  players.add("Alexis Saelemaekers");
+  players.add("Kevin De Bruyne");
+  players.add("Leander Dendoncker");
+  players.add("Amadou Onana");
+  players.add("Youri Tielemans");
+  players.add("Hans Vanaken");
+  players.add("Axel Witsel");
+  players.add("Michy Batshuayi");
+  players.add("Charles De Ketelaere");
+  players.add("Eden Hazard");
+  players.add("Dodi Lukebakio");
+  players.add("Dries Mertens");
+  players.add("Loïs Openda");
+  players.add("Leandro Trossard");
+  return players;
+}

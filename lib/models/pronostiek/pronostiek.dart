@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:pronostiek/models/pronostiek/match_pronostiek.dart';
 import 'package:pronostiek/models/pronostiek/progression_pronostiek.dart';
+import 'package:pronostiek/models/pronostiek/random_pronostiek.dart';
 
 
 class MatchGroup {
@@ -24,6 +25,7 @@ class Pronostiek {
   late String username;
   late Map<String, MatchPronostiek> matches;
   ProgressionPronostiek progression = ProgressionPronostiek();
+  List<RandomPronostiek> random = RandomPronostiek.getQuestions();
 
   Pronostiek(this.username) {
     matches = {};
@@ -39,6 +41,7 @@ class Pronostiek {
       matches[id] = MatchPronostiek.fromJson(jsonDecode(jsonEncode(match)));
     });
     progression = ProgressionPronostiek.fromJson(jsonDecode(jsonEncode(json["progression"])));
+    random = List<RandomPronostiek>.from(json["random"].map<RandomPronostiek>((question) => RandomPronostiek.fromJson(jsonDecode(jsonEncode(question)))));
   }
 
   Map<String,dynamic> toJSON() {
@@ -46,6 +49,7 @@ class Pronostiek {
       "username": username,
       "matches": matches.map((id, match) => MapEntry<String, dynamic>(id, match.toJSON())),
       "progression": progression.toJSON(),
+      "random": random.map((question) => question.toJSON()).toList(),
     };
   }
 

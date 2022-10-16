@@ -1,5 +1,7 @@
 
 
+import 'package:pronostiek/models/pronostiek/random_pronostiek.dart';
+
 class ProgressionPronostiek {
   /// list with team ID's
   List<String?> round16 = [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null];
