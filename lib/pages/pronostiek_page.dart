@@ -43,11 +43,13 @@ class PronostiekPage extends StatelessWidget {
               ),
             ]
           ),
-          body: <Widget>[
-            getMatches(controller),
-            getProgression(controller),
-            getRandom(controller),
-          ][controller.tabIndex],
+          body: controller.pronostiek == null
+            ? const CircularProgressIndicator()
+            : <Widget>[
+              getMatches(controller),
+              getProgression(controller),
+              getRandom(controller),
+            ][controller.tabIndex],
         );
       }
     );
@@ -83,7 +85,7 @@ class PronostiekPage extends StatelessWidget {
             Flexible(child: Row(mainAxisAlignment:MainAxisAlignment.center, children: [
               const Icon(Icons.calendar_today, color: Colors.white),
               const VerticalDivider(),
-              Text(DateFormat('dd/MM kk:mm').format(controller.deadlineProgression), style: const TextStyle(color: Colors.white),),
+              Text(DateFormat('dd/MM kk:mm').format(controller.deadlineProgression.toLocal()), style: const TextStyle(color: Colors.white),),
             ],)),
             Expanded(child:Text("${controller.nFilledInProgression}/$total", style: const TextStyle(color: Colors.white), textAlign: TextAlign.end,)),
           ]
@@ -155,7 +157,7 @@ class PronostiekPage extends StatelessWidget {
               Flexible(child: Row(mainAxisAlignment:MainAxisAlignment.center, children: [
                 const Icon(Icons.calendar_today, color: Colors.white),
                 const VerticalDivider(),
-                Text(DateFormat('dd/MM kk:mm').format(controller.deadlineRandom), style: const TextStyle(color: Colors.white),),
+                Text(DateFormat('dd/MM kk:mm').format(controller.deadlineRandom.toLocal()), style: const TextStyle(color: Colors.white),),
               ],)),
               Expanded(child:Text("$filledIn/${controller.pronostiek!.random.length}", style: const TextStyle(color: Colors.white), textAlign: TextAlign.end,)),
             ]
@@ -179,12 +181,13 @@ class PronostiekPage extends StatelessWidget {
   }
 
   Widget getMatchGroup(PronostiekController controller, MatchGroup matchGroup, int idx) {
-    List<String> matches = controller.matchIds.where((e) => controller.dealines[e] == matchGroup).toList();
+    print("dsqff");
+    List<String> matches = controller.matchIds.where((e) => controller.deadlines[e] == matchGroup).toList();
     int filledIn = matches.fold<int>(0, (int v, String e) {
       MatchPronostiek matchPronostiek = controller.pronostiek!.matches[e]!;
       return (matchPronostiek.goalsHomeFT != null && matchPronostiek.goalsAwayFT != null) ? v+1 : v;
-
     });
+    bool pastDeadline = controller.utcTime.isAfter(matchGroup.deadline);
     return Card(
       elevation: 10,
       margin: const EdgeInsets.all(10), 
@@ -197,9 +200,9 @@ class PronostiekPage extends StatelessWidget {
               children: [
                 Expanded(child: Text(matchGroup.name, style: const TextStyle(color: Colors.white),)),
                 Flexible(child: Row(mainAxisAlignment:MainAxisAlignment.center, children: [
-                  const Icon(Icons.calendar_today, color: Colors.white),
+                  Icon(pastDeadline ? Icons.event_busy : Icons.event_available, color: Colors.white),
                   const VerticalDivider(),
-                  Text(DateFormat('dd/MM kk:mm').format(matchGroup.deadline), style: const TextStyle(color: Colors.white),),
+                  Text(DateFormat('dd/MM kk:mm').format(matchGroup.deadline.toLocal()), style: const TextStyle(color: Colors.white),),
                 ],)),
                 Expanded(child:Text("$filledIn/${matches.length}", style: const TextStyle(color: Colors.white), textAlign: TextAlign.end,)),
               ]

@@ -20,7 +20,7 @@ class ProgressionPronostiek {
     winner = json["winner"] as String?;  
   }
 
-  Map<String,dynamic> toJSON() {
+  Map<String,dynamic> toJson() {
     return {
       "round16": round16,
       "quarter_finals": quarterFinals,

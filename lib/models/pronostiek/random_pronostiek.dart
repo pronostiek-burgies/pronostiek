@@ -18,39 +18,44 @@ enum ScoreCriterium {
 }
 
 class RandomPronostiek {
+  late String id;
   late String question;
   late AnswerType type;
   late ScoreCriterium criterium;
   String? answer;
 
+  static Map<String,RandomPronostiek> questions = {
+    "cards" : RandomPronostiek("cards", "Which player received the most card (at least 1) per played minutes?", AnswerType.player, ScoreCriterium.exact),
+    "loser" : RandomPronostiek("loser", "Which team will be last after the group phase (base on poinst, goal difference and goals scored)?", AnswerType.team, ScoreCriterium.exact),
+    "penalty" : RandomPronostiek("penalty", "What percentage of penalties (in game of in shou-outs) will be scored", AnswerType.number, ScoreCriterium.closest),
+  };
+
   RandomPronostiek(
+    this.id,
     this.question,
     this.type,
     this.criterium
   );
 
   RandomPronostiek.fromJson(Map<String,dynamic> json) {
-    question = json["question"] as String;
-    type = AnswerType.values[(json["type"]) as int];
-    criterium = ScoreCriterium.values[(json["criterium"]) as int];
+    if (questions[json["id"]] == null) {print(json);}
+    RandomPronostiek randomPronostiek = questions[json["id"]]!;
+    id = randomPronostiek.id;
+    question = randomPronostiek.question;
+    type = randomPronostiek.type;
+    criterium = randomPronostiek.criterium;
     answer = json["answer"] as String?;
   }
 
-  Map<String,dynamic> toJSON() {
+  Map<String,dynamic> toJson() {
     return {
-      "question": question,
-      "type": type.index,
-      "criterium": criterium.index,
+      "id": id,
       "answer" : answer,
     };
   }
   
   static List<RandomPronostiek> getQuestions() {
-    List<RandomPronostiek> questions = [];
-    questions.add(RandomPronostiek("Which player received the most card per played minutes?", AnswerType.player, ScoreCriterium.exact));
-    questions.add(RandomPronostiek("Which team will be last after the group phase (base on poinst, goal difference and goals scored)?", AnswerType.team, ScoreCriterium.exact));
-    questions.add(RandomPronostiek("What percentage of penalties (in game of in shou-outs) will be scored", AnswerType.number, ScoreCriterium.closest));
-    return questions;
+    return questions.values.toList();
   }
 
   Widget getListTile(TextEditingController controller, GlobalKey<FormState> formKey) {

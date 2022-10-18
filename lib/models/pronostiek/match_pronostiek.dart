@@ -24,7 +24,7 @@ class MatchPronostiek {
     winner = json["winner"];
   }
 
-  Map<String,dynamic> toJSON() {
+  Map<String,dynamic> toJson() {
     return {
       "match_id": matchId,
       "goals_home_FT": goalsHomeFT,

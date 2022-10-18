@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pronostiek/api/repository.dart';
+import 'package:pronostiek/api/time_client.dart';
 import 'package:pronostiek/models/pronostiek/pronostiek.dart';
 import 'package:pronostiek/models/pronostiek/random_pronostiek.dart';
 
@@ -12,12 +13,15 @@ class PronostiekController extends GetxController {
   Repository repo = Get.find<Repository>();
   /// index of shown tab
   var tabIndex = 0;
-  Map<String,MatchGroup> dealines = {};
   List<String> matchIds = [];
   List<MatchGroup> groups = [];
 
-  DateTime deadlineRandom = DateTime(2022,11,20, 17, 00);
-  DateTime deadlineProgression = DateTime(2022,11,20, 17, 00);
+  Map<String,MatchGroup> deadlines = {};
+  DateTime deadlineRandom = DateTime.utc(2022,11,20, 16, 00);
+  DateTime deadlineProgression = DateTime.utc(2022,11,20, 16, 00);
+
+  late DateTime utcTime;
+  TimeClient timeClient = Get.find<TimeClient>();
 
   List<bool> matchGroupCollapsed = [];
   Map<String,List<TextEditingController>> textControllers = {};
@@ -50,36 +54,55 @@ class PronostiekController extends GetxController {
     List<String> SFMatchesIds = ["SF1", "SF2"];
     // ignore: non_constant_identifier_names
     List<String> FMatchesIds = ["F", "f"];
-    MatchGroup groupMatches = MatchGroup("Group Phase", DateTime(2022,11,20, 17, 00));
+    // MatchGroup groupMatches = MatchGroup("Group Phase", DateTime.utc(2022,11,20, 16, 00));
+    MatchGroup groupMatches = MatchGroup("Group Phase", DateTime.utc(2021,11,20, 16, 00));
     // ignore: non_constant_identifier_names
-    MatchGroup R16Matches = MatchGroup("Round of 16", DateTime(2022,12, 3, 16, 00));
+    MatchGroup R16Matches = MatchGroup("Round of 16", DateTime.utc(2022,12, 3, 15, 00));
     // ignore: non_constant_identifier_names
-    MatchGroup QFMatches = MatchGroup("Quarter Finals", DateTime(2022,12, 9, 16, 00));
+    MatchGroup QFMatches = MatchGroup("Quarter Finals", DateTime.utc(2022,12, 9, 15, 00));
     // ignore: non_constant_identifier_names
-    MatchGroup SFMatches = MatchGroup("Semi Finals", DateTime(2022,12,13, 20, 00));
+    MatchGroup SFMatches = MatchGroup("Semi Finals", DateTime.utc(2022,12,13, 19, 00));
     // ignore: non_constant_identifier_names
-    MatchGroup FMatches = MatchGroup("Finals", DateTime(2022,12,17, 20, 00));
+    MatchGroup FMatches = MatchGroup("Finals", DateTime.utc(2022,12,17, 19, 00));
     matchIds.addAll(groupMatchesIds);
-    for (String id in groupMatchesIds) {dealines[id] = groupMatches;}
+    for (String id in groupMatchesIds) {deadlines[id] = groupMatches;}
     groups.add(groupMatches);
 
     matchIds.addAll(R16MatchesIds);
-    for (String id in R16MatchesIds) {dealines[id] = R16Matches;}
+    for (String id in R16MatchesIds) {deadlines[id] = R16Matches;}
     groups.add(R16Matches);
 
     matchIds.addAll(QFMatchesIds);
-    for (String id in QFMatchesIds) {dealines[id] = QFMatches;}
+    for (String id in QFMatchesIds) {deadlines[id] = QFMatches;}
     groups.add(QFMatches);
 
     matchIds.addAll(SFMatchesIds);
-    for (String id in SFMatchesIds) {dealines[id] = SFMatches;}
+    for (String id in SFMatchesIds) {deadlines[id] = SFMatches;}
     groups.add(SFMatches);
 
     matchIds.addAll(FMatchesIds);
-    for (String id in FMatchesIds) {dealines[id] = FMatches;}
+    for (String id in FMatchesIds) {deadlines[id] = FMatches;}
     groups.add(FMatches);
 
     for (MatchGroup _ in groups) {matchGroupCollapsed.add(true);}
+  }
+
+  void setUtcTime({bool update=true}) {
+    List<DateTime> deadlines = this.deadlines.values.map((MatchGroup e) => e.deadline).toList() + [deadlineProgression, deadlineRandom];
+    timeClient.getTime().then((time) {
+      utcTime = time;
+      DateTime? closestDeadline = deadlines.fold(null, (v, e) {
+        if (time.isAfter(e)) {return v;}
+        if (v == null) {return e;}
+        if (v.isAfter(e)) {return e;}
+        return v;
+      });
+      if (closestDeadline != null) {
+        print("created future with differnce ${closestDeadline.difference(time)}");
+        Future.delayed(closestDeadline.difference(time), () => setUtcTime());
+      }
+      if (update) {this.update();print("update");}
+    });
   }
 
 
@@ -99,7 +122,9 @@ class PronostiekController extends GetxController {
     nFilledInProgression = filledIn;
   }
 
-  void initPronostiek() {
+  Future<void> initPronostiek() async {
+    await timeClient.getTime();
+    setUtcTime(update: false);
     repo.getPronostiek().then((pronostiek) {
       this.pronostiek = pronostiek;
       for (var element in matchIds) {textControllers[element] = [TextEditingController(text: pronostiek!.matches[element]?.goalsHomeFT?.toString() ?? ""),TextEditingController(text: pronostiek.matches[element]!.goalsAwayFT?.toString() ?? "")];}

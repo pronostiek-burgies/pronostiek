@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pronostiek/colors.dart/wc_red.dart';
 import 'package:pronostiek/controllers/base_page_controller.dart';
 import 'package:pronostiek/controllers/login_controller.dart';
 import 'package:pronostiek/controllers/register_controller.dart';
@@ -16,6 +17,11 @@ class MyDrawer extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.all(0),
             children: <Widget>[
+              ListTile(
+                tileColor: wcRed,
+                iconColor: Colors.white,
+                trailing: IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+              ),
               if (controller.isLogged) ...[
                 UserAccountsDrawerHeader(
                   accountName: Text("${controller.user?.firstname ?? "???"} ${controller.user?.lastname ?? "???"}"),

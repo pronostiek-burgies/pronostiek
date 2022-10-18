@@ -1,5 +1,10 @@
 
+import 'dart:math';
+
+import 'package:pronostiek/api/match_repository.dart';
 import 'package:pronostiek/api/repository.dart';
+import 'package:pronostiek/api/sportdataapi.dart';
+import 'package:pronostiek/api/time_client.dart';
 import 'package:pronostiek/models/group.dart';
 import 'package:pronostiek/models/init_groups.dart';
 import 'package:pronostiek/models/init_matches.dart';
@@ -14,16 +19,47 @@ class MatchController extends GetxController {
   Map<String,Match> matches = {};
   Map<String,Group> groups = {};
   List<String> players = [];
-  Repository repo = Get.find<Repository>();
+  MatchRepository repo = MatchRepository();
+
+
+  TimeClient timeClient = Get.find<TimeClient>();
+  Random random = Random();
 
   var tabIndex = 0;
+  late DateTime utcTime;
 
   static MatchController get to => Get.find<MatchController>();
 
-  MatchController() {
+  MatchController()  {
     matches = getMatches(teams, this);
     groups = getGroups(teams, matches);
     players = getPlayers();
+    updateAllMatches();
+  }
+
+  Future<void> init() async {
+    setRefresher();
+  }
+
+  Future<void> setRefresher() async {
+    utcTime = await timeClient.getTime();
+    List<Match> busyMatches = matches.values.where((Match e) => e.isBusy()).toList();
+    Duration timeUntilUpdate;
+    if (busyMatches.isNotEmpty) {
+      timeUntilUpdate = Duration(minutes: 1, seconds: random.nextInt(60));
+    } else {
+      List<DateTime> startTimes = matches.values.where((Match e) => e.status != MatchStatus.ended).map((Match e) => e.startDateTime).toList();
+      DateTime timeUntilMatch = startTimes.reduce((value, element) => value.isBefore(element) ? value : element);
+      if (timeUntilMatch.isBefore(utcTime)) {
+        timeUntilUpdate = Duration(minutes: 1, seconds: random.nextInt(60));
+      } else {
+        timeUntilUpdate = timeUntilMatch.difference(utcTime) + Duration(minutes: 1, seconds: random.nextInt(60));
+      }
+    }
+    Future.delayed(timeUntilUpdate, () {
+      fetchLiveResults();
+      setRefresher();
+    });
   }
 
   /// sets [tabIndex] to [index] and updates view
@@ -38,9 +74,26 @@ class MatchController extends GetxController {
     return keys;
   }
 
-  void getResults() async {
-    matches["A1"]!.id = await repo.readDropboxFile("/test.txt");
-    update();
+  void saveAllMatches() {
+    repo.saveAllMatches(matches);
+  }
+
+  void updateAllMatches() {
+    repo.getAllMatches(matches).then((value) {
+      update();
+    });
+  }
+
+  void getStatus() {
+    // sportDataApiClient.getStatus();
+  }
+
+  void getLiveMatches() {
+    repo.fetchLiveMatchResults(matches, DateTime.now());
+  }
+
+  void fetchLiveResults() {
+    repo.fetchLiveMatchResults(matches, DateTime.now());
   }
 
 

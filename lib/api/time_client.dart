@@ -21,14 +21,14 @@ class TimeClient {
       },
       onError: (err, handler) {
         errorInterceptors(err);
-        handler.next(err);
+        // handler.next(err);
       },
     ));
   }
 
   Future<DateTime> getTime() async {
-    Response response = await dio.get("/zone", queryParameters: {"timeZone": "Europe/Amsterdam"});
-    return DateTime(
+    Response response = await dio.get("/zone", queryParameters: {"timeZone": "UTC"});
+    return DateTime.utc(
       response.data["year"],
       response.data["month"],
       response.data["day"],

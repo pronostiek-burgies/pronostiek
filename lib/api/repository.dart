@@ -69,8 +69,8 @@ class Repository {
     bool savedUsername = await writeDropboxFile("/users/usernames.json", jsonEncode(usernames));
     List<int> pwDigest = await Get.find<UserController>().getPwDigest(password);
     User newUser = User(username, firstname, lastname, pwDigest);
-    bool savedUser = await writeDropboxFile("/users/$username.json", jsonEncode(newUser.toJSON()));
-    bool savedPronostiek = await writeDropboxFile("/pronostiek/$username.json", jsonEncode(Pronostiek(username).toJSON()));
+    bool savedUser = await writeDropboxFile("/users/$username.json", jsonEncode(newUser.toJson()));
+    bool savedPronostiek = await writeDropboxFile("/pronostiek/$username.json", jsonEncode(Pronostiek(username).toJson()));
     if (savedUser && savedUsername && savedPronostiek) {
       return newUser;
     } else {
@@ -97,7 +97,7 @@ class Repository {
 
   Future<bool> savePronostiek(Pronostiek pronostiek) async {
     String username = Get.find<UserController>().user!.username;
-    return await writeDropboxFile("/pronostiek/$username.json", jsonEncode(pronostiek.toJSON()));
+    return await writeDropboxFile("/pronostiek/$username.json", jsonEncode(pronostiek.toJson()));
   }
 
 

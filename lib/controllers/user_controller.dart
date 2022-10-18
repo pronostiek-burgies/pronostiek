@@ -39,7 +39,7 @@ class UserController extends GetxController {
     if (userTemp != null) {
       user = userTemp;
       isLogged = true;
-      Get.find<PronostiekController>().initPronostiek();
+      await Get.find<PronostiekController>().initPronostiek();
       update();
       return true;
     }

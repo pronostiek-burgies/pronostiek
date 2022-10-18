@@ -17,9 +17,9 @@ class MatchPage extends StatelessWidget {
           appBar: AppBar(
             title: const Text("Pronostiek WK Qatar"),
             actions: <Widget>[
-              IconButton(onPressed: () => Get.find<MatchController>().getResults(), icon: const Icon(Icons.refresh)),
+              IconButton(onPressed: () async => controller.getLiveMatches(), icon: const Icon(Icons.save_alt)),
+              IconButton(onPressed: () async => controller.updateAllMatches(), icon: const Icon(Icons.refresh)),
               IconButton(onPressed: () async => Get.find<Repository>().writeDropboxFile("/users/usernames.json", "[]"), icon: const Icon(Icons.build)),
-
             ],
           ),
           body: controller.matches.isNotEmpty

@@ -11,7 +11,7 @@ class User {
     this.pwDigest,
   );
 
-  /// Constructor for a User instance from [json] (JSON format)
+  /// Constructor for a User instance from [json] (Json format)
   User.fromJson(Map<String, dynamic> json) {
     username = json["username"];
     firstname = json["firstname"];
@@ -19,7 +19,7 @@ class User {
     pwDigest = json["pw_digest"];
   }
 
-  Map<String,dynamic> toJSON() {
+  Map<String,dynamic> toJson() {
     return {
       "username": username,
       "firstname": firstname,

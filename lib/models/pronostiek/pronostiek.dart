@@ -44,12 +44,12 @@ class Pronostiek {
     random = List<RandomPronostiek>.from(json["random"].map<RandomPronostiek>((question) => RandomPronostiek.fromJson(jsonDecode(jsonEncode(question)))));
   }
 
-  Map<String,dynamic> toJSON() {
+  Map<String,dynamic> toJson() {
     return {
       "username": username,
-      "matches": matches.map((id, match) => MapEntry<String, dynamic>(id, match.toJSON())),
-      "progression": progression.toJSON(),
-      "random": random.map((question) => question.toJSON()).toList(),
+      "matches": matches.map((id, match) => MapEntry<String, dynamic>(id, match.toJson())),
+      "progression": progression.toJson(),
+      "random": random.map((question) => question.toJson()).toList(),
     };
   }
 

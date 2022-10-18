@@ -13,6 +13,7 @@ enum MatchStatus {
 
 class Match {
   String id;
+  int? sportDataApiId;
   DateTime startDateTime;
   String? linkHome;
   String? linkAway;
@@ -41,7 +42,37 @@ class Match {
     this.startDateTime,
     this.home,
     this.away,
+    {this.sportDataApiId}
   ) {knockout = false;}
+
+  Map<String,dynamic> toJson() {
+    return {
+      "id": id,
+      "status": status.index,
+      "time": time, 
+      "goals_home_FT": goalsHomeFT, 
+      "goals_Away_FT": goalsAwayFT, 
+      "goals_Home_OT": goalsHomeOT, 
+      "goals_Away_OT": goalsAwayOT, 
+      "goals_Home_Pen": goalsHomePen, 
+      "goals_Away_Pen": goalsAwayPen, 
+    };
+  }
+
+  static void updateFromJson(Map<String,dynamic> json, Map<String,Match> matches) {
+    Match? temp = matches[json["id"]];
+    if (temp == null) {return;}
+    Match match = temp;
+    match.status = MatchStatus.values[json["status"] as int];
+    match.time = json["time"] as int?;
+    match.goalsHomeFT = json["goals_home_FT"] as int?; 
+    match.goalsAwayFT = json["goals_Away_FT"] as int?; 
+    match.goalsHomeOT = json["goals_Home_OT"] as int?; 
+    match.goalsAwayOT = json["goals_Away_OT"] as int?; 
+    match.goalsHomePen = json["goals_Home_Pen"] as int?; 
+    match.goalsAwayPen = json["goals_Away_Pen"] as int?;
+  }
+
 
   Match.knockout(
     this.id,
@@ -50,7 +81,12 @@ class Match {
     this.linkAway,
     this.getHome,
     this.getAway,
+    {this.sportDataApiId,}
   ) {knockout = true;}
+
+  bool isBusy() {
+    return status != MatchStatus.ended && status != MatchStatus.notStarted;
+  }
 
   int? getPoints(bool home) {
     if (status != MatchStatus.ended) {
@@ -109,8 +145,8 @@ class Match {
           
           Column(children: [
             if (status == MatchStatus.notStarted) ...[
-              Text(DateFormat('dd/MM').format(startDateTime), textScaleFactor: 0.75,),
-              Text(DateFormat('kk:mm').format(startDateTime), textScaleFactor: 0.75,),
+              Text(DateFormat('dd/MM').format(startDateTime.toLocal()), textScaleFactor: 0.75,),
+              Text(DateFormat('kk:mm').format(startDateTime.toLocal()), textScaleFactor: 0.75,),
             ]
             else if (status == MatchStatus.inPlay) ...[
               Text("$time'"),
@@ -125,7 +161,7 @@ class Match {
               Text("($goalsHomePen- $goalsAwayPen)", textScaleFactor: 0.75),
             ]
             else if (status == MatchStatus.ended) ...[
-              const Text("FT"),
+              Text("FT${goalsAwayFT != null ? " (+OT)" : ""}"),
               Text("${goalsHomeOT ?? goalsHomeFT} - ${goalsAwayOT ?? goalsAwayFT}"),
               if (goalsHomePen != null) ... [
                 Text("($goalsHomePen- $goalsAwayPen)", textScaleFactor: 0.75),

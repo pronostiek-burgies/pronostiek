@@ -30,14 +30,24 @@ class ResultPage extends StatelessWidget {
                 label: 'Group Phase',
               ),
               NavigationDestination(
-                icon: Icon(Icons.merge),
+                icon: Icon(Icons.emoji_events),
                 label: 'Knock-out',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.merge),
+                label: 'Progression',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.star),
+                label: 'Random',
               ),
             ]
           ),
           body: <Widget>[
             getMatches(controller),
             getGroupPhase(controller),
+            getKnockOut(controller),
+            getKnockOut(controller),
             getKnockOut(controller),
           ][controller.tabIndex],
         );
