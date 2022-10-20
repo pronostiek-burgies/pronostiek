@@ -19,7 +19,10 @@ class MyApp extends StatelessWidget {
       title: 'Pronostiek Burgies',
       theme: ThemeData(
         primarySwatch: wcRed,
-        backgroundColor: wcBackground,
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: wcRed,
+          backgroundColor: wcBackground
+          ),
         scaffoldBackgroundColor: wcBackground,
         cardColor: const Color(0xFFF7F6E9),
       ),

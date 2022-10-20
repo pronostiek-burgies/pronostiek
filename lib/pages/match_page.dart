@@ -10,7 +10,6 @@ class MatchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MatchController>(
-      init: MatchController(),
       builder: (controller) {
         return Scaffold(
           drawer: drawer,

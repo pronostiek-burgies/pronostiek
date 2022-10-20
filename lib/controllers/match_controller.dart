@@ -30,15 +30,15 @@ class MatchController extends GetxController {
 
   static MatchController get to => Get.find<MatchController>();
 
-  MatchController()  {
+  MatchController() {
     matches = getMatches(teams, this);
     groups = getGroups(teams, matches);
     players = getPlayers();
-    updateAllMatches();
   }
 
   Future<void> init() async {
-    setRefresher();
+    await updateAllMatches();
+    // await setRefresher();
   }
 
   Future<void> setRefresher() async {
@@ -57,6 +57,7 @@ class MatchController extends GetxController {
       }
     }
     Future.delayed(timeUntilUpdate, () {
+      print("ezr");
       fetchLiveResults();
       setRefresher();
     });
@@ -78,10 +79,9 @@ class MatchController extends GetxController {
     repo.saveAllMatches(matches);
   }
 
-  void updateAllMatches() {
-    repo.getAllMatches(matches).then((value) {
-      update();
-    });
+  Future<void> updateAllMatches() async {
+    await repo.getAllMatches(matches);
+    update();
   }
 
   void getStatus() {

@@ -128,6 +128,34 @@ class Match {
     return goalsHomePen! < goalsAwayPen! ? home : away;
   }
 
+  Widget getScoreBoardMiddle() {
+    return Column(children: [
+      if (status == MatchStatus.notStarted) ...[
+        Text(DateFormat('dd/MM').format(startDateTime.toLocal()), textScaleFactor: 0.75,),
+        Text(DateFormat('kk:mm').format(startDateTime.toLocal()), textScaleFactor: 0.75,),
+      ]
+      else if (status == MatchStatus.inPlay) ...[
+        Text("$time'"),
+        Text("$goalsHomeFT - $goalsAwayFT"),
+      ]
+      else if (status == MatchStatus.overTime) ...[
+        Text("$time'"),
+        Text("$goalsHomeOT - $goalsAwayOT"),
+      ]
+      else if (status == MatchStatus.penalties) ...[
+        Text("$goalsHomeOT - $goalsAwayOT"),
+        Text("($goalsHomePen- $goalsAwayPen)", textScaleFactor: 0.75),
+      ]
+      else if (status == MatchStatus.ended) ...[
+        Text("FT${goalsAwayFT != null ? " (+OT)" : ""}"),
+        Text("${goalsHomeOT ?? goalsHomeFT} - ${goalsAwayOT ?? goalsAwayFT}"),
+        if (goalsHomePen != null) ... [
+          Text("($goalsHomePen- $goalsAwayPen)", textScaleFactor: 0.75),
+        ]
+      ]
+    ],);
+  }
+
   ListTile getListTile() {
     return ListTile(
       leading: Text(id),

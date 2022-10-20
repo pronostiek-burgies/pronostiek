@@ -24,27 +24,5 @@ class BasePage extends StatelessWidget {
           ]
         )
       );
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: const Text("Pronostiek WK Qatar"),
-    //     actions: <Widget>[
-    //       IconButton(onPressed: () => Get.find<MatchController>().getResults(), icon: const Icon(Icons.refresh)),
-    //       IconButton(onPressed: () async => Get.find<Repository>().writeDropboxFile("/users/usernames.json", "[]").then((value) => print(value)), icon: const Icon(Icons.build)),
-
-    //     ],
-    //   ),
-    //   drawer: const MyDrawer(),
-    //   body: GetBuilder<BasePageController>(
-    //     builder:(controller) => IndexedStack(
-    //       index: controller.tabIndex,
-    //       children: const [
-    //         MatchPage(),
-    //         PronostiekPage(),
-    //         Text("Details"),
-    //         Text("Rules"),
-    //       ]
-    //     )
-    //   ),
-    // );
   }
 }

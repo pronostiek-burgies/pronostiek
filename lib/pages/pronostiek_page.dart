@@ -181,8 +181,8 @@ class PronostiekPage extends StatelessWidget {
   }
 
   Widget getMatchGroup(PronostiekController controller, MatchGroup matchGroup, int idx) {
-    print("dsqff");
     List<String> matches = controller.matchIds.where((e) => controller.deadlines[e] == matchGroup).toList();
+    int points = matches.fold(0, (int v, String e) => v + (controller.pronostiek!.matches[e]!.getPronostiekPoints() ?? 0));
     int filledIn = matches.fold<int>(0, (int v, String e) {
       MatchPronostiek matchPronostiek = controller.pronostiek!.matches[e]!;
       return (matchPronostiek.goalsHomeFT != null && matchPronostiek.goalsAwayFT != null) ? v+1 : v;
@@ -204,7 +204,13 @@ class PronostiekPage extends StatelessWidget {
                   const VerticalDivider(),
                   Text(DateFormat('dd/MM kk:mm').format(matchGroup.deadline.toLocal()), style: const TextStyle(color: Colors.white),),
                 ],)),
-                Expanded(child:Text("$filledIn/${matches.length}", style: const TextStyle(color: Colors.white), textAlign: TextAlign.end,)),
+                Expanded(child:Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  Text("$filledIn/${matches.length}", style: const TextStyle(color: Colors.white), textAlign: TextAlign.end,),
+                  if (pastDeadline) ...[
+                    const VerticalDivider(),
+                    Text("Pts: $points", style: const TextStyle(color: Colors.white), textAlign: TextAlign.end,),
+                  ]
+                ]))
               ]
             ),
             trailing: controller.matchGroupCollapsed[idx] ? const Icon(Icons.keyboard_arrow_up, color: Colors.white,) : const Icon(Icons.keyboard_arrow_down, color: Colors.white),
@@ -216,7 +222,7 @@ class PronostiekPage extends StatelessWidget {
               itemCount: matches.length*2,
               itemBuilder: (context, index) {
                 if (index%2 == 0) {
-                  return controller.pronostiek!.matches[matches[index>>1]]!.getListTile(controller.textControllers[matches[index>>1]]!);
+                  return controller.pronostiek!.matches[matches[index>>1]]!.getListTile(controller, controller.textControllers[matches[index>>1]]!, pastDeadline);
                 } else {
                   return const Divider();
                 }
