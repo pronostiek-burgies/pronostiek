@@ -1,6 +1,4 @@
 import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pronostiek/api/repository.dart';
@@ -54,8 +52,8 @@ class PronostiekController extends GetxController {
     List<String> SFMatchesIds = ["SF1", "SF2"];
     // ignore: non_constant_identifier_names
     List<String> FMatchesIds = ["F", "f"];
-    // MatchGroup groupMatches = MatchGroup("Group Phase", DateTime.utc(2022,11,20, 16, 00));
-    MatchGroup groupMatches = MatchGroup("Group Phase", DateTime.utc(2022,10,20, 8, 52));
+    MatchGroup groupMatches = MatchGroup("Group Phase", DateTime.utc(2022,11,20, 16, 00));
+    // MatchGroup groupMatches = MatchGroup("Group Phase", DateTime.utc(2022,10,20, 8, 52));
     // ignore: non_constant_identifier_names
     MatchGroup R16Matches = MatchGroup("Round of 16", DateTime.utc(2022,12, 3, 15, 00));
     // ignore: non_constant_identifier_names

@@ -6,11 +6,8 @@ class TimeClient {
   Dio dio = Dio();
   
   TimeClient() {
-    dio.options.baseUrl = "http://worldtimeapi.org/api/";
+    dio.options.baseUrl = "https://worldtimeapi.org/api/";
     dio.options.headers["Accept"] = "application/json";
-    // dio.options.headers["Content-Type"] = "application/x-www-form-urlencoded";
-    // dio.options.headers['Access-Control-Allow-Origin'] = '*';
-    // dio.options.headers['Access-Control-Allow-Methods'] = ['GET, POST'];
     dio.options.connectTimeout = 10000; //10s
     dio.options.receiveTimeout = 5000;
     dio.interceptors.add(InterceptorsWrapper(
@@ -24,14 +21,18 @@ class TimeClient {
       },
       onError: (err, handler) {
         errorInterceptors(err);
-        // handler.next(err);
+        handler.next(err);
       },
     ));
   }
 
   Future<DateTime> getTime() async {
-    Response response = await dio.get("/timezone/Etc/UTC");
-    return DateTime.parse(response.data["datetime"]);
+    try {
+      Response response = await dio.get("/timezone/Etc/UTC");
+      return DateTime.parse(response.data["datetime"]);
+    } catch (e) {
+      return getTime();
+    }
   }
 
   requestInterceptors(RequestOptions options) {
