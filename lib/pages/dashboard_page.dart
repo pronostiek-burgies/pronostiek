@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:get/get.dart';
+import 'package:pronostiek/api/repository.dart';
+import 'package:pronostiek/controllers/dashboard_controller.dart';
+import 'package:pronostiek/widgets/match_pageview.dart';
 
 class DashboardPage extends StatelessWidget {
   final Widget drawer;
+  
   const DashboardPage(this.drawer, {Key? key}) : super(key: key);
 
   @override
@@ -14,74 +19,59 @@ class DashboardPage extends StatelessWidget {
         // actions: <Widget>[
         // ],
       ),
-      body: Column(
-        children: [
-          Flexible(child: PageView(children: const [
-            Card(child: Text("matches"),)
-          ],)),
-          Expanded(child:charts.BarChart(
-            StackedHorizontalBarChart._createSampleData(),
-            animate: true,
-            barGroupingType: charts.BarGroupingType.stacked,
-            vertical: false,
-          ))
-        ],
-      ) 
+      body: GetBuilder<DashboardController>(
+        builder: (controller) => Column(
+          children: [
+            const Text("Matches", textScaleFactor: 2.0, style: TextStyle(fontWeight: FontWeight.bold),),
+            MatchPageView(),
+            const Text("Ranking", textScaleFactor: 2.0, style: TextStyle(fontWeight: FontWeight.bold),),
+            SizedBox(
+              height: controller.usernames.length*100.0,
+              child: charts.BarChart(
+                getRankingData(controller.usernames),
+                animate: true,
+                barGroupingType: charts.BarGroupingType.stacked,
+                vertical: false,
+              )
+            )
+          ],
+        ),
+      )
     );
   }
 }
 
-class StackedHorizontalBarChart {
-   /// Create series list with multiple series
-  static List<charts.Series<OrdinalSales, String>> _createSampleData() {
-    final desktopSalesData = [
-      OrdinalSales('2014', 5),
-      OrdinalSales('2015', 25),
-      OrdinalSales('2016', 100),
-      OrdinalSales('2017', 75),
-    ];
+List<charts.Series<UserPoints, String>> getRankingData(List<String> usernames) {
+  List<UserPoints> matchPoints = usernames.map<UserPoints>((username) => UserPoints(username, 0)).toList();
+  List<UserPoints> progressionPoints = usernames.map<UserPoints>((username) => UserPoints(username, 0)).toList();
+  List<UserPoints> randomPoints = usernames.map<UserPoints>((username) => UserPoints(username, 0)).toList();
 
-    final tableSalesData = [
-      OrdinalSales('2014', 25),
-      OrdinalSales('2015', 50),
-      OrdinalSales('2016', 10),
-      OrdinalSales('2017', 20),
-    ];
-
-    final mobileSalesData = [
-      OrdinalSales('2014', 10),
-      OrdinalSales('2015', 15),
-      OrdinalSales('2016', 50),
-      OrdinalSales('2017', 45),
-    ];
-
-    return [
-      charts.Series<OrdinalSales, String>(
-        id: 'Desktop',
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
-        data: desktopSalesData,
-      ),
-      charts.Series<OrdinalSales, String>(
-        id: 'Tablet',
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
-        data: tableSalesData,
-      ),
-      charts.Series<OrdinalSales, String>(
-        id: 'Mobile',
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
-        data: mobileSalesData,
-      ),
-    ];
-  }
+   return [
+    charts.Series<UserPoints, String>(
+      id: 'Matches',
+      domainFn: (UserPoints sales, _) => sales.username,
+      measureFn: (UserPoints sales, _) => sales.points,
+      data: matchPoints,
+    ),
+    charts.Series<UserPoints, String>(
+      id: 'Progression',
+      domainFn: (UserPoints sales, _) => sales.username,
+      measureFn: (UserPoints sales, _) => sales.points,
+      data: progressionPoints,
+    ),
+    charts.Series<UserPoints, String>(
+      id: 'Random',
+      domainFn: (UserPoints sales, _) => sales.username,
+      measureFn: (UserPoints sales, _) => sales.points,
+      data: randomPoints,
+    ),
+  ];
 }
 
-/// Sample ordinal data type.
-class OrdinalSales {
-  final String year;
-  final int sales;
 
-  OrdinalSales(this.year, this.sales);
+class UserPoints {
+  final String username;
+  final int points;
+
+  UserPoints(this.username, this.points);
 }

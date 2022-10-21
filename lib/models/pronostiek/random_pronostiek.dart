@@ -1,4 +1,6 @@
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -18,6 +20,7 @@ enum ScoreCriterium {
 }
 
 class RandomPronostiek {
+
   late String id;
   late String question;
   late AnswerType type;
@@ -25,9 +28,16 @@ class RandomPronostiek {
   String? answer;
 
   static Map<String,RandomPronostiek> questions = {
-    "cards" : RandomPronostiek("cards", "Which player received the most card (at least 1) per played minutes?", AnswerType.player, ScoreCriterium.exact),
+    "cards_player" : RandomPronostiek("cards_player", "Which player received the most card (at least 1) per played minutes?", AnswerType.player, ScoreCriterium.exact),
     "loser" : RandomPronostiek("loser", "Which team will be last after the group phase (base on poinst, goal difference and goals scored)?", AnswerType.team, ScoreCriterium.exact),
-    "penalty" : RandomPronostiek("penalty", "What percentage of penalties (in game of in shou-outs) will be scored", AnswerType.number, ScoreCriterium.closest),
+    "penalty" : RandomPronostiek("penalty", "What percentage of penalties (in game and in shout-outs) will be scored", AnswerType.number, ScoreCriterium.closest),
+    "goals_stoppage": RandomPronostiek("goals_stoppage", "How many goals will be scored in 90+ and 120+ stoppage time?", AnswerType.number, ScoreCriterium.closest),
+    "total_card": RandomPronostiek("total_goals", "How many bookings will be given? (red: 4, two yellows: 3, yellow: 1", AnswerType.number, ScoreCriterium.closest),
+    "hazard": RandomPronostiek("hazard", "How many minutes will Eden Hazard play?", AnswerType.number, ScoreCriterium.closest),
+    "top_scorer": RandomPronostiek("top_scorer", "Which player will be the top scorer?", AnswerType.player, ScoreCriterium.exact),
+    "top_assists": RandomPronostiek("top_assists", "Which player will be the assists king?", AnswerType.player, ScoreCriterium.exact),
+    "hattricks": RandomPronostiek("hattricks", "How many hattricks will be scored?", AnswerType.number, ScoreCriterium.closest),
+    "own_goals": RandomPronostiek("own_goals", "How many own goals will be scored?", AnswerType.number, ScoreCriterium.closest),
   };
 
   RandomPronostiek(

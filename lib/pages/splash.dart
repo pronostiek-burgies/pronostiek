@@ -5,6 +5,7 @@ import 'package:pronostiek/api/client.dart';
 import 'package:pronostiek/api/repository.dart';
 import 'package:pronostiek/api/time_client.dart';
 import 'package:pronostiek/controllers/base_page_controller.dart';
+import 'package:pronostiek/controllers/dashboard_controller.dart';
 import 'package:pronostiek/controllers/match_controller.dart';
 import 'package:pronostiek/controllers/pronostiek_controller.dart';
 import 'package:pronostiek/controllers/user_controller.dart';
@@ -24,6 +25,8 @@ class SplashPage extends StatelessWidget {
     Get.put(PronostiekController());
     MatchController matchController = Get.put(MatchController());
     await matchController.init();
+    DashboardController dashboardController = Get.put(DashboardController());
+    await dashboardController.init();
     print("init complete!");
   }
 

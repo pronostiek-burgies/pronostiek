@@ -27,6 +27,10 @@ class Repository {
 
   /// USER
   
+  Future<List<String>> getUsernames() async {
+    return List<String>.from(jsonDecode(await readDropboxFile("/users/usernames.json")));
+  }
+  
   Future<User?> loginUser(String username, String password) async {
     List<dynamic> usernames = jsonDecode(await readDropboxFile("/users/usernames.json"));
     if (!usernames.contains(username)) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pronostiek/controllers/match_controller.dart';
+import 'package:pronostiek/pages/group_phase_page.dart';
 
 class ResultPage extends StatelessWidget {
   final Widget drawer;
@@ -45,7 +46,7 @@ class ResultPage extends StatelessWidget {
           ),
           body: <Widget>[
             getMatches(controller),
-            getGroupPhase(controller),
+            GroupPhasePage(controller),
             getKnockOut(controller),
             getKnockOut(controller),
             getKnockOut(controller),

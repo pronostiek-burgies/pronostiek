@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:pronostiek/models/team.dart';
 import 'package:pronostiek/models/match.dart';
 
@@ -41,7 +42,7 @@ class Group {
           key = "";
           for (int idx in e) {
             if (idx != i) {
-              key += teams[i].id;
+              key += teams[idx].id;
             }
           }
           re[team.id]![key] = [0, 0, 0];
@@ -112,5 +113,97 @@ class Group {
 
   String _getEqualTeamsKey(List<Team> teams, Team team) {
     return teams.where((e) => e != team).fold("", ((previousValue, element) => previousValue + element.id));
+  }
+
+  TableRow _getTeamTableRow(Team team) {
+    List<int> stats = calcStats()[team.id]![_getEqualTeamsKey(teams, team)]!;
+    return TableRow(
+      children: [
+        Row(
+          children: [
+            team.getFlag(),
+            Text(team.name),
+          ]
+        ),
+        // points
+        Text("${stats[0]}"),
+        // n_played
+        Text("${matches.fold(0, (v,e) => e.status == MatchStatus.ended && (e.away == team || e.home == team) ? v+1 : v)}"),
+        // wins
+        Text("${matches.fold(0, (v,e) => e.status == MatchStatus.ended && (e.away == team || e.home == team) && e.getWinner() == team ? v+1 : v)}"),
+        // losses
+        Text("${matches.fold(0, (v,e) => e.status == MatchStatus.ended && (e.away == team || e.home == team) && e.getLoser() == team ? v+1 : v)}"),
+        // draws
+        Text("${matches.fold(0, (v,e) => e.status == MatchStatus.ended && (e.away == team || e.home == team) && e.getPoints(true) == 1 ? v+1 : v)}"),
+        // goal difference
+        Text("${stats[1]}"),
+        // goals scored
+        Text("${stats[2]}"),
+        // goals against
+        Text("${stats[2] - stats[1]}"),
+      ]
+    );
+  }
+
+  Widget getGroupTable() {
+    Map<String, Map<String,List<int>>> stats = calcStats();
+    print(stats);
+    return Card(
+      child: Table(
+        children: [
+          const TableRow(
+            children: [
+              Text("Rank"),
+              Text("Teams"),
+              Text("Pts."),
+              Text("P"),
+              Text("W"),
+              Text("L"),
+              Text("D"),
+              Text("G+/-"),
+              Text("G+"),
+              Text("G-"),
+            ]
+          ),
+          ... teams.map((Team team) => _getTeamTableRow(team)).toList(),
+        ],
+      )
+      // child: Container(
+      //   padding: const EdgeInsets.all(5),
+      //   child: Row(
+      //     children: [
+      //       Column(
+      //         crossAxisAlignment: CrossAxisAlignment.start,
+      //         children: [
+      //           const Text("Teams", style: TextStyle(
+      //             fontWeight: FontWeight.bold
+      //           )),
+      //           const Divider(),
+      //           ... ranked.map<Widget>((Team team) => 
+      //             Row(
+      //               children: [
+      //                 team.getFlag(),
+      //                 Text(team.name),
+      //               ]
+      //             )
+      //           ).toList(),
+      //         ],
+      //       ),
+      //       Column(
+      //         crossAxisAlignment: CrossAxisAlignment.start,
+      //         children: [
+      //           const Text("Pts.", style: TextStyle(
+      //             fontWeight: FontWeight.bold
+      //           )),
+      //           const Divider(),
+      //           ... ranked.map<Widget>((Team team) => 
+      //             Text(stats[team.id]![_getEqualTeamsKey(teams, team)]![0].toString())
+      //           ).toList(),
+      //         ],
+      //       ),
+      //     ],
+      //   ),
+      // )
+    );
   }
 }
