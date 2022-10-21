@@ -19,7 +19,6 @@ class MatchPageView extends StatelessWidget {
         List<Match> sortedMatches = controller.matches.values.toList();
         sortedMatches.sort((a,b) => a.startDateTime.compareTo(b.startDateTime));
         int indexFirstActiveGame = sortedMatches.indexWhere((element) => element.isBusy() || element.startDateTime.isAfter(controller.utcTime));
-        print(indexFirstActiveGame);
         if (pageController.hasClients) {
           pageController.animateToPage(indexFirstActiveGame, duration: const Duration(seconds: 1), curve: Curves.easeInOut);
         }
@@ -87,7 +86,7 @@ class MatchPageView extends StatelessWidget {
                             children: [
                               if (match.status == MatchStatus.ended || match.isBusy()) ...[
                                 Text("${match.goalsHomePen != null ? "(${match.goalsHomePen})": ""} ${match.goalsHomeOT ?? match.goalsHomeFT!}"),
-                                Text("${match.goalsAwayPen != null ? "(${match.goalsAwayPen})": ""} ${match.goalsHomeOT ?? match.goalsHomeFT!}"),
+                                Text("${match.goalsAwayPen != null ? "(${match.goalsAwayPen})": ""} ${match.goalsAwayOT ?? match.goalsAwayFT!}"),
                               ]
                             ],
                           ),

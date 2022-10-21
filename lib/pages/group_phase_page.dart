@@ -9,7 +9,9 @@ class GroupPhasePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return controller.groups["A"]!.getGroupTable();
-    
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(children: controller.groups.values.map((e) => e.getGroupWidget()).toList())
+    );    
   }
 }

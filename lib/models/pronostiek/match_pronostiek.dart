@@ -35,7 +35,12 @@ class MatchPronostiek {
       "winner": winner,
     };
   }
-
+  /// 
+  /// knockout
+  /// FT win/lost normal
+  /// OT/pen: 3pts predict draw (+4 if correct winner)
+  /// factor: R16: 1.5, QF: 2, SF: 3, F: 4, f:1S
+  /// 
   int? getPronostiekPoints() {
     Match match = Get.find<MatchController>().matches[matchId]!;
     if (match.status != MatchStatus.ended) {return null;}

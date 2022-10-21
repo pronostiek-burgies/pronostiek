@@ -58,7 +58,7 @@ class Group {
             if (comb.contains(match.away!.id)) {
               re[team.id]![comb]![0] += match.getPoints(true)!; // points
               re[team.id]![comb]![1] += (match.goalsHomeFT! - match.goalsAwayFT!); // goal saldo
-              re[team.id]![comb]![0] += match.goalsHomeFT!; // scored goals
+              re[team.id]![comb]![2] += match.goalsHomeFT!; // scored goals
             }
           }
         }
@@ -67,7 +67,7 @@ class Group {
             if (comb.contains(match.home!.id)) {
               re[team.id]![comb]![0] += match.getPoints(false)!; // points
               re[team.id]![comb]![1] += (match.goalsAwayFT! - match.goalsHomeFT!); // goal saldo
-              re[team.id]![comb]![0] += match.goalsAwayFT!; // scored goals
+              re[team.id]![comb]![2] += match.goalsAwayFT!; // scored goals
             }
           }
         }
@@ -115,95 +115,100 @@ class Group {
     return teams.where((e) => e != team).fold("", ((previousValue, element) => previousValue + element.id));
   }
 
-  TableRow _getTeamTableRow(Team team) {
+  TableRow _getTeamTableRow(Team team, int rank) {
     List<int> stats = calcStats()[team.id]![_getEqualTeamsKey(teams, team)]!;
+    List<Widget> rowContent = [
+      Text((rank+1).toString(), textAlign: TextAlign.center,),
+      Row(
+        children: [
+          team.getFlag(),
+          const SizedBox(width: 5,),
+          Expanded(child: Text(team.name,)),
+        ]
+      ),
+      // points
+      Text("${stats[0]}", textAlign: TextAlign.center,),
+      // n_played
+      Text("${matches.fold(0, (v,e) => e.status == MatchStatus.ended && (e.away == team || e.home == team) ? v+1 : v)}", textAlign: TextAlign.center,),
+      // wins
+      Text("${matches.fold(0, (v,e) => e.status == MatchStatus.ended && (e.away == team || e.home == team) && e.getWinner() == team ? v+1 : v)}", textAlign: TextAlign.center,),
+      // losses
+      Text("${matches.fold(0, (v,e) => e.status == MatchStatus.ended && (e.away == team || e.home == team) && e.getLoser() == team ? v+1 : v)}", textAlign: TextAlign.center,),
+      // draws
+      Text("${matches.fold(0, (v,e) => e.status == MatchStatus.ended && (e.away == team || e.home == team) && e.getPoints(true) == 1 ? v+1 : v)}", textAlign: TextAlign.center,),
+      // goal difference
+      Text("${stats[1]>0 ? "+" : ""}${stats[1]}", textAlign: TextAlign.center,),
+      // goals scored
+      Text("${stats[2]}", textAlign: TextAlign.center,),
+      // goals against
+      Text("${stats[2] - stats[1]}", textAlign: TextAlign.center,),
+    ];
     return TableRow(
-      children: [
-        Row(
-          children: [
-            team.getFlag(),
-            Text(team.name),
-          ]
-        ),
-        // points
-        Text("${stats[0]}"),
-        // n_played
-        Text("${matches.fold(0, (v,e) => e.status == MatchStatus.ended && (e.away == team || e.home == team) ? v+1 : v)}"),
-        // wins
-        Text("${matches.fold(0, (v,e) => e.status == MatchStatus.ended && (e.away == team || e.home == team) && e.getWinner() == team ? v+1 : v)}"),
-        // losses
-        Text("${matches.fold(0, (v,e) => e.status == MatchStatus.ended && (e.away == team || e.home == team) && e.getLoser() == team ? v+1 : v)}"),
-        // draws
-        Text("${matches.fold(0, (v,e) => e.status == MatchStatus.ended && (e.away == team || e.home == team) && e.getPoints(true) == 1 ? v+1 : v)}"),
-        // goal difference
-        Text("${stats[1]}"),
-        // goals scored
-        Text("${stats[2]}"),
-        // goals against
-        Text("${stats[2] - stats[1]}"),
-      ]
+      children: rowContent.map((Widget e) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+        child: e,
+      )).toList(),
     );
   }
 
   Widget getGroupTable() {
-    Map<String, Map<String,List<int>>> stats = calcStats();
-    print(stats);
+    setRanked();
+    List<String> header = ["Rank", "Teams", "Pts.", "P", "W", "L", "D", "G+/-", "G+", "G-"];
     return Card(
       child: Table(
+        border: const TableBorder(
+          horizontalInside: BorderSide(color: Colors.grey),
+        ),
+        columnWidths: const {
+          1: FlexColumnWidth(0.5),
+        },
+        defaultColumnWidth: const IntrinsicColumnWidth(),
         children: [
-          const TableRow(
-            children: [
-              Text("Rank"),
-              Text("Teams"),
-              Text("Pts."),
-              Text("P"),
-              Text("W"),
-              Text("L"),
-              Text("D"),
-              Text("G+/-"),
-              Text("G+"),
-              Text("G-"),
-            ]
+          TableRow(
+            children: header.map<Widget>((String e) => Padding(padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5), child: Text(
+              e,
+              textScaleFactor: 1.25,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              )
+            ))).toList(),
           ),
-          ... teams.map((Team team) => _getTeamTableRow(team)).toList(),
+          ... ranked.map((Team team) => _getTeamTableRow(team, ranked.indexOf(team))).toList(),
         ],
       )
-      // child: Container(
-      //   padding: const EdgeInsets.all(5),
-      //   child: Row(
-      //     children: [
-      //       Column(
-      //         crossAxisAlignment: CrossAxisAlignment.start,
-      //         children: [
-      //           const Text("Teams", style: TextStyle(
-      //             fontWeight: FontWeight.bold
-      //           )),
-      //           const Divider(),
-      //           ... ranked.map<Widget>((Team team) => 
-      //             Row(
-      //               children: [
-      //                 team.getFlag(),
-      //                 Text(team.name),
-      //               ]
-      //             )
-      //           ).toList(),
-      //         ],
-      //       ),
-      //       Column(
-      //         crossAxisAlignment: CrossAxisAlignment.start,
-      //         children: [
-      //           const Text("Pts.", style: TextStyle(
-      //             fontWeight: FontWeight.bold
-      //           )),
-      //           const Divider(),
-      //           ... ranked.map<Widget>((Team team) => 
-      //             Text(stats[team.id]![_getEqualTeamsKey(teams, team)]![0].toString())
-      //           ).toList(),
-      //         ],
-      //       ),
-      //     ],
-      //   ),
-      // )
     );
+  }
+
+  Widget getGroupMatches() {
+    return Column(children: matches.map((Match match) => match.getListTile(leading: false)).toList());
+  }
+
+  Widget getGroupWidget() {
+    return Column(children: [
+      Text(name, textAlign: TextAlign.center, textScaleFactor: 2.0, style: const TextStyle(fontWeight: FontWeight.bold),),
+      const SizedBox(height: 3,),
+      LayoutBuilder(
+        builder: (context, boxConstraints) {
+          if (boxConstraints.maxWidth > 1000) {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(child: getGroupTable()),
+                Flexible(child: getGroupMatches())
+              ]
+            );
+          } else {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(child: getGroupTable()),
+                Flexible(child: getGroupMatches())
+              ]
+            ); 
+          }
+        },
+      ),
+      const Divider(),
+    ]);
   }
 }

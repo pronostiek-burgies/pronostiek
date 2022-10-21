@@ -15,8 +15,9 @@ class ResultPage extends StatelessWidget {
           drawer: drawer,
           appBar: AppBar(
             title: const Text("Pronostiek WK Qatar"),
-            // actions: <Widget>[
-            // ],
+            actions: <Widget>[
+              IconButton(onPressed: () => controller.updateAllMatches(), icon: const Icon(Icons.refresh))
+            ],
           ),
           bottomNavigationBar: NavigationBar(
             selectedIndex: controller.tabIndex,

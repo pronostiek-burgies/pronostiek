@@ -79,8 +79,13 @@ class MatchController extends GetxController {
     repo.saveAllMatches(matches);
   }
 
+  /// update match results based on dropbox state (does not call api for live results)
   Future<void> updateAllMatches() async {
     await repo.getAllMatches(matches);
+    for (Match match in matches.values) {
+      match.trySetHome();
+      match.trySetAway();
+    }
     update();
   }
 

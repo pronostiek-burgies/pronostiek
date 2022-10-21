@@ -84,6 +84,23 @@ class Match {
     {this.sportDataApiId,}
   ) {knockout = true;}
 
+  // Tries to set home if still null, returns if home is != after this call
+  bool trySetHome() {
+    if (home != null) {
+      return true;
+    } 
+    home = getHome?.call();
+    return home != null;
+  }
+  // Tries to set away if still null, returns if away is != after this call
+  bool trySetAway() {
+    if (away != null) {
+      return true;
+    } 
+    away = getAway?.call();
+    return away != null;
+  }
+
   bool isBusy() {
     return status != MatchStatus.ended && status != MatchStatus.notStarted;
   }
@@ -109,6 +126,7 @@ class Match {
     if (goalsHomeFT! != goalsAwayFT!) {
       return goalsHomeFT! > goalsAwayFT! ? home : away;
     }
+    if (knockout == false) {return null;}
     if (goalsHomeOT! != goalsAwayOT!) {
       return goalsHomeOT! > goalsAwayOT! ? home : away;
     }
@@ -122,6 +140,7 @@ class Match {
     if (goalsHomeFT! != goalsAwayFT!) {
       return goalsHomeFT! < goalsAwayFT! ? home : away;
     }
+    if (knockout == false) {return null;}
     if (goalsHomeOT! != goalsAwayOT!) {
       return goalsHomeOT! < goalsAwayOT! ? home : away;
     }
@@ -156,9 +175,9 @@ class Match {
     ],);
   }
 
-  ListTile getListTile() {
+  ListTile getListTile({bool leading=true}) {
     return ListTile(
-      leading: Text(id),
+      leading: leading ? Text(id): null,
       title: Row(
         children: [
           Expanded(child: Row(children: [
@@ -189,7 +208,7 @@ class Match {
               Text("($goalsHomePen- $goalsAwayPen)", textScaleFactor: 0.75),
             ]
             else if (status == MatchStatus.ended) ...[
-              Text("FT${goalsAwayFT != null ? " (+OT)" : ""}"),
+              Text("FT${goalsAwayOT != null ? " (+OT)" : ""}"),
               Text("${goalsHomeOT ?? goalsHomeFT} - ${goalsAwayOT ?? goalsAwayFT}"),
               if (goalsHomePen != null) ... [
                 Text("($goalsHomePen- $goalsAwayPen)", textScaleFactor: 0.75),

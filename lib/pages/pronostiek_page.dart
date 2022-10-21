@@ -115,18 +115,18 @@ class PronostiekPage extends StatelessWidget {
         controller: controller.progressionController,
         children: <Widget>[
           getProgressionCard("GroupStage", Pronostiek.teamIds, 4, controller, 0, disable: true),
-          getProgressionCard("Round of 16", controller.pronostiek!.progression.round16, 4, controller, 1),
-          getProgressionCard("Quarter Finals", controller.pronostiek!.progression.quarterFinals, 2, controller, 2),
-          getProgressionCard("Semi Finals", controller.pronostiek!.progression.semiFinals, 2, controller, 3),
-          getProgressionCard("Final", controller.pronostiek!.progression.wcFinal, 2, controller, 4),
-          getProgressionCard("Winner", [controller.pronostiek!.progression.winner], 1, controller, 5),
+          getProgressionCard("Round of 16 (2pts/team)", controller.pronostiek!.progression.round16, 4, controller, 1),
+          getProgressionCard("Quarter Finals (5pts/team)", controller.pronostiek!.progression.quarterFinals, 2, controller, 2),
+          getProgressionCard("Semi Finals (10pts/team)", controller.pronostiek!.progression.semiFinals, 2, controller, 3),
+          getProgressionCard("Final (20pts/team)", controller.pronostiek!.progression.wcFinal, 2, controller, 4),
+          getProgressionCard("Winner (50pts/team)", [controller.pronostiek!.progression.winner], 1, controller, 5),
         ],
       )),
       SingleChildScrollView(scrollDirection: Axis.horizontal,child:Row(
         children: List<Widget>.generate(8, (i) {
           return Column(
             children: List<Widget>.generate(4, (j) {
-              return SizedBox(width: Get.theme.textTheme.bodyText2!.fontSize!*3*0.8+30+16+5,child: TextButton(
+              return SizedBox(width: Get.theme.textTheme.bodyLarge!.fontSize!*3*0.8+30+16+5,child: TextButton(
                 style: ButtonStyle( 
                   padding: MaterialStateProperty.all<EdgeInsets>(
                     const EdgeInsets.all(8.0)
@@ -171,7 +171,7 @@ class PronostiekPage extends StatelessWidget {
           itemCount: controller.pronostiek!.random.length*2,
           itemBuilder: ((context, index) {
             if (index%2 == 0) {
-              return controller.pronostiek!.random[index>>1].getListTile(controller.textControllersRandom[index>>1], controller.randomFormKey);
+              return controller.pronostiek!.random[index>>1].getListTile(controller.textControllersRandom[index>>1], controller.randomFormKey, controller);
             }
             return const Divider();
           }),
@@ -247,7 +247,7 @@ class PronostiekPage extends StatelessWidget {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: List<Widget>.generate(crossAxisCount, (j) {
-              return Container(margin: EdgeInsets.symmetric(vertical: 5), child: SizedBox(width: Get.theme.textTheme.bodyText2!.fontSize!*3*0.8+30+16+5,child: OutlinedButton(
+              return Container(margin: const EdgeInsets.symmetric(vertical: 5), child: SizedBox(width: Get.theme.textTheme.bodyText2!.fontSize!*3*0.8+30+16+5,child: OutlinedButton(
                 style: ButtonStyle(
                   padding: MaterialStateProperty.all<EdgeInsets>(
                     const EdgeInsets.all(8.0)
