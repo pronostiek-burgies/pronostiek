@@ -5,7 +5,7 @@ import 'package:pronostiek/pages/dashboard_page.dart';
 import 'package:pronostiek/pages/drawer.dart';
 import 'package:pronostiek/pages/match_page.dart';
 import 'package:pronostiek/pages/pronostiek_page.dart';
-import 'package:pronostiek/pages/result_page.dart';
+import 'package:pronostiek/pages/result_pages/result_page.dart';
 import 'package:pronostiek/pages/rules_page.dart';
 
 class BasePage extends StatelessWidget {

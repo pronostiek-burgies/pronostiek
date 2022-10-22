@@ -88,7 +88,7 @@ class MatchPronostiek {
                 children: [
                   if (match.knockout && winner != null) ... [
                     Switch(
-                      value: !(winner ?? false),
+                      value: !(winner!),
                       inactiveTrackColor: wcRed[200],
                       activeTrackColor: wcRed[200],
                       inactiveThumbColor: wcRed,
@@ -111,7 +111,7 @@ class MatchPronostiek {
                         controller: controllers.first,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         decoration: const InputDecoration(counterText: "", isDense: true),
-                        maxLength: 2,
+                        maxLength: 1,
                         textAlign: TextAlign.center,
                         onChanged: (v) => controller.updateMatchWinner(winnerByGoals(), match.id),
                         readOnly: disabled,
@@ -124,7 +124,7 @@ class MatchPronostiek {
                         controller: controllers.last,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         decoration: const InputDecoration(counterText: "", isDense: true),
-                        maxLength: 2,
+                        maxLength: 1,
                         textAlign: TextAlign.center,
                         onChanged: (v) => controller.updateMatchWinner(winnerByGoals(), match.id),
                         readOnly: disabled,

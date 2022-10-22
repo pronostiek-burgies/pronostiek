@@ -41,7 +41,7 @@ class MatchController extends GetxController {
     await setRefresher();
   }
 
-  Future<void> setRefresher() async {
+  Future<void> setRefresher({bool takeAction=true}) async {
     utcTime = await timeClient.getTime();
     update();
     List<Match> busyMatches = matches.values.where((Match e) => e.isBusy()).toList();
@@ -56,6 +56,9 @@ class MatchController extends GetxController {
       } else {
         timeUntilUpdate = timeUntilMatch.difference(utcTime) + Duration(minutes: 1, seconds: random.nextInt(60));
       }
+    }
+    if (timeUntilUpdate < const Duration(minutes: 30)) {
+      timeUntilUpdate = const Duration(minutes: 30);
     }
     Future.delayed(timeUntilUpdate, () {
       // fetchLiveResults();

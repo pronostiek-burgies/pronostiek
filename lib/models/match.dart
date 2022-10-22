@@ -232,4 +232,80 @@ class Match {
       ),
     );
   }
+
+  Widget getMatchCard({bool showMatchId=false}) {
+    return Card(
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 280),
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        child: IntrinsicHeight(child: Row(
+          children: [
+            Text(id),
+            const VerticalDivider(),
+            Expanded(child:Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: 20),
+                  child: Row(
+                    children: [
+                      if (home != null) ...[
+                        home!.getFlag(),
+                      ],
+                      const SizedBox(width: 8),
+                      Text(home?.name ?? linkHome!),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16,),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: 20),
+                  child: Row(
+                    children: [
+                      if (away != null) ...[
+                        away!.getFlag(),
+                      ],
+                      const SizedBox(width: 8),
+                      Text(away?.name ?? linkAway!),
+                    ],
+                  ),
+                ),
+              ],
+            )),
+            Container(
+              // padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (status == MatchStatus.notStarted) ...[
+                    Text(DateFormat("dd/MM").format(startDateTime.toLocal())),
+                    Text(DateFormat("HH:mm").format(startDateTime.toLocal())),
+                  ] else if (status == MatchStatus.ended) ...[
+                    Text(goalsHomeOT != null ? "FT\n(+OT)" : "FT", textAlign: TextAlign.center,),
+                  ] else ...[
+                    Text("$time'")
+                  ],
+                ],
+              ),
+            ),
+            Container(
+              // padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (status == MatchStatus.ended || isBusy()) ...[
+                    Text("${goalsHomePen != null ? "($goalsHomePen)": ""} ${goalsHomeOT ?? goalsHomeFT!}"),
+                    const SizedBox(height: 16),
+                    Text("${goalsAwayPen != null ? "($goalsAwayPen)": ""} ${goalsAwayOT ?? goalsAwayFT!}"),
+                  ]
+                ],
+              ),
+            ),                     
+          ],
+        )),
+      )
+    );
+  }
 }
