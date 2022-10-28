@@ -55,7 +55,8 @@ class PronostiekController extends GetxController {
     MatchGroup groupMatches = MatchGroup("Group Phase", DateTime.utc(2022,11,20, 16, 00));
     // MatchGroup groupMatches = MatchGroup("Group Phase", DateTime.utc(2022,10,20, 8, 52));
     // ignore: non_constant_identifier_names
-    MatchGroup R16Matches = MatchGroup("Round of 16", DateTime.utc(2022,12, 3, 15, 00));
+    // MatchGroup R16Matches = MatchGroup("Round of 16", DateTime.utc(2022,12, 3, 15, 00));
+    MatchGroup R16Matches = MatchGroup("Round of 16", DateTime.utc(2021,12, 3, 15, 00));
     // ignore: non_constant_identifier_names
     MatchGroup QFMatches = MatchGroup("Quarter Finals", DateTime.utc(2022,12, 9, 15, 00));
     // ignore: non_constant_identifier_names
@@ -123,8 +124,8 @@ class PronostiekController extends GetxController {
   }
 
   Future<void> initPronostiek() async {
-    print("inti");
-    await timeClient.getTime();
+    print("init");
+    utcTime = await timeClient.getTime();
     setUtcTime(update: false);
     repo.getPronostiek().then((pronostiek) {
       this.pronostiek = pronostiek;

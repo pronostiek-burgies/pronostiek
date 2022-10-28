@@ -36,22 +36,22 @@ class ResultPage extends StatelessWidget {
                 icon: Icon(Icons.emoji_events),
                 label: 'Knock-out',
               ),
-              NavigationDestination(
-                icon: Icon(Icons.merge),
-                label: 'Progression',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.star),
-                label: 'Random',
-              ),
+              // NavigationDestination(
+              //   icon: Icon(Icons.merge),
+              //   label: 'Progression',
+              // ),
+              // NavigationDestination(
+              //   icon: Icon(Icons.star),
+              //   label: 'Random',
+              // ),
             ]
           ),
           body: <Widget>[
             getMatches(controller),
             GroupPhasePage(controller),
             KnockoutPage(controller),
-            getKnockOut(controller),
-            getKnockOut(controller),
+            // getKnockOut(controller),
+            // getKnockOut(controller),
           ][controller.tabIndex],
         );
       }

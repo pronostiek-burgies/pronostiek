@@ -57,7 +57,7 @@ class MatchController extends GetxController {
         timeUntilUpdate = timeUntilMatch.difference(utcTime) + Duration(minutes: 1, seconds: random.nextInt(60));
       }
     }
-    if (timeUntilUpdate < const Duration(minutes: 30)) {
+    if (timeUntilUpdate > const Duration(minutes: 30)) {
       timeUntilUpdate = const Duration(minutes: 30);
     }
     Future.delayed(timeUntilUpdate, () {

@@ -11,8 +11,18 @@ enum MatchStatus {
   ended
 }
 
+enum MatchType {
+  group,
+  roundOf16,
+  quarterFinals,
+  semiFinals,
+  wcFinal,
+  bronzeFinal,
+}
+
 class Match {
   String id;
+  MatchType type;
   int? sportDataApiId;
   DateTime startDateTime;
   String? linkHome;
@@ -42,6 +52,7 @@ class Match {
     this.startDateTime,
     this.home,
     this.away,
+    this.type,
     {this.sportDataApiId}
   ) {knockout = false;}
 
@@ -81,6 +92,7 @@ class Match {
     this.linkAway,
     this.getHome,
     this.getAway,
+    this.type,
     {this.sportDataApiId,}
   ) {knockout = true;}
 
@@ -148,31 +160,40 @@ class Match {
   }
 
   Widget getScoreBoardMiddle() {
-    return Column(children: [
-      if (status == MatchStatus.notStarted) ...[
-        Text(DateFormat('dd/MM').format(startDateTime.toLocal()), textScaleFactor: 0.75,),
-        Text(DateFormat('kk:mm').format(startDateTime.toLocal()), textScaleFactor: 0.75,),
-      ]
-      else if (status == MatchStatus.inPlay) ...[
-        Text("$time'"),
-        Text("$goalsHomeFT - $goalsAwayFT"),
-      ]
-      else if (status == MatchStatus.overTime) ...[
-        Text("$time'"),
-        Text("$goalsHomeOT - $goalsAwayOT"),
-      ]
-      else if (status == MatchStatus.penalties) ...[
-        Text("$goalsHomeOT - $goalsAwayOT"),
-        Text("($goalsHomePen- $goalsAwayPen)", textScaleFactor: 0.75),
-      ]
-      else if (status == MatchStatus.ended) ...[
-        Text("FT${goalsAwayFT != null ? " (+OT)" : ""}"),
-        Text("${goalsHomeOT ?? goalsHomeFT} - ${goalsAwayOT ?? goalsAwayFT}"),
-        if (goalsHomePen != null) ... [
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (status == MatchStatus.notStarted) ...[
+          Text(DateFormat('dd/MM').format(startDateTime.toLocal()), textScaleFactor: 0.75,),
+          Text(DateFormat('kk:mm').format(startDateTime.toLocal()), textScaleFactor: 0.75,),
+        ]
+        else if (status == MatchStatus.inPlay) ...[
+          Text("$time'"),
+          Text("$goalsHomeFT - $goalsAwayFT"),
+        ]
+        else if (status == MatchStatus.overTime) ...[
+          Text("$time'"),
+          Text("$goalsHomeOT - $goalsAwayOT"),
+        ]
+        else if (status == MatchStatus.penalties) ...[
+          Text("$goalsHomeOT - $goalsAwayOT"),
           Text("($goalsHomePen- $goalsAwayPen)", textScaleFactor: 0.75),
         ]
-      ]
-    ],);
+        else if (status == MatchStatus.ended) ...[
+          if (goalsHomeOT == null) ...[
+            const Text("FT"),
+            Text("$goalsHomeFT - $goalsAwayFT"),
+          ] else ...[
+            Text("FT: $goalsHomeFT - $goalsAwayFT"),
+            Text("OT: $goalsHomeOT - $goalsAwayOT"),
+            if (goalsHomePen != null) ...[
+              Text("($goalsHomePen-$goalsAwayPen)", textScaleFactor: 0.75),
+            ]
+
+          ]
+        ]
+      ],
+    );
   }
 
   ListTile getListTile({bool leading=true}) {
