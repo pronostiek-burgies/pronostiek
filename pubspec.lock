@@ -29,6 +29,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.1"
+  charcode:
+    dependency: transitive
+    description:
+      name: charcode
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.3.1"
   charts_common:
     dependency: transitive
     description:
@@ -152,7 +159,7 @@ packages:
       name: flutter_markdown
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.12"
+    version: "0.6.9+1"
   flutter_svg:
     dependency: transitive
     description:
@@ -220,7 +227,7 @@ packages:
       name: markdown
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.1"
+    version: "4.0.1"
   matcher:
     dependency: transitive
     description:

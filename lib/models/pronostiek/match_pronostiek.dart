@@ -20,8 +20,9 @@ class MatchPronostiek {
     MatchType.wcFinal:        4,
   };
 
-  static const int basePoints = 5;
-  static const int basePointsDrawKnockout = 3;
+  static const int basePointsWin = 5;
+  static const int basePointsDraw = 7;
+  static const int basePointsDrawKnockout = 5;
   static const int basePointsDrawKnockoutWinner = 4;
 
   static const List<int> bonusPointsGoalsSingleTeam = [2, 1, 3, 7, 10, 17, 27, 44, 71, 115, 186];
@@ -71,7 +72,11 @@ class MatchPronostiek {
     if (knockout && getWDL(correctGoalsHome, correctGoalsAway) == 0) {
       return (getWDL(predictGoalsHome, predictGoalsAway) == 0 ? basePointsDrawKnockout : 0) + (correctWinner == predictWinner && predictWinner != null ? basePointsDrawKnockoutWinner : 0);
     } else {
-      return getWDL(correctGoalsHome, correctGoalsAway) == getWDL(predictGoalsHome, predictGoalsAway) ? basePoints : 0;
+      if (getWDL(correctGoalsHome, correctGoalsAway) == getWDL(predictGoalsHome, predictGoalsAway)) {
+        return getWDL(correctGoalsHome, correctGoalsAway) == 0 ? basePointsDraw : basePointsWin;
+      } else {
+        return 0;
+      }
     }
   }
 

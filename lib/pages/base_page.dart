@@ -17,10 +17,10 @@ class BasePage extends StatelessWidget {
     return GetBuilder<BasePageController>(
         builder:(controller) => IndexedStack(
           index: controller.tabIndex,
-          children: const [
-            DashboardPage(drawer),
-            PronostiekPage(drawer),
-            ResultPage(drawer),
+          children: [
+            const DashboardPage(drawer),
+            const PronostiekPage(drawer),
+            const ResultPage(drawer),
             RulesPage(drawer),
           ]
         )

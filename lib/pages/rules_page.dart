@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
+import 'package:pronostiek/models/match.dart';
+import 'package:pronostiek/models/pronostiek/match_pronostiek.dart';
 
 class RulesPage extends StatelessWidget {
   final Widget drawer;
-  const RulesPage(this.drawer, {Key? key}) : super(key: key);
+  RulesPage(this.drawer, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +17,42 @@ class RulesPage extends StatelessWidget {
         // actions: <Widget>[
         // ],
       ),
-      body: Container(
+      body: SingleChildScrollView(child: Container(
         padding: EdgeInsets.only(left: Get.size.width*0.1),
-        width: Get.size.width*0.6,
-        child: const Markdown(data: 
+        width: Get.size.width*0.8,
+        child:  Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(child: Markdown(data: rules[0], shrinkWrap: true,)),
+            Image.asset("assets/bonus_points_eq.png", scale:1.75, alignment: Alignment.centerLeft,),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0), child: Row(
+              children: [
+                const Text("With "),
+                Image.asset("assets/P_single_team.png", scale:1.75),
+                const Text(" :"),
+              ],
+            )),
+            Flexible(child: Markdown(data: rules[1], shrinkWrap: true,)),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0), child: Row(
+              children: [
+                const Text("With "),
+                Image.asset("assets/P_both_teams.png", scale:1.75),
+                const Text(" :"),
+              ],
+            )),
+            Flexible(child: Markdown(data: rules[2], shrinkWrap: true,)),
+            Flexible(child: Markdown(data: rules[3], shrinkWrap: true,)),
+            Image.asset("assets/delta_factor.png", scale:1.25, alignment: Alignment.centerLeft,),
+            Flexible(child: Markdown(data: rules[4], shrinkWrap: true,)),
+            Flexible(child: Markdown(data: rules[5], shrinkWrap: true,)),
+            
+          ],
+        ),
+      )
+    ));
+  }
+
+  List<String> rules = [
 """
 # Rules
 
@@ -26,26 +60,49 @@ Welcome to the only burgie worthy pronostiek, with point distribution based on m
 
 ## 1. Matches
 Points for matches are calculates as follows:  
-**Points** = 	floor(floor(**Base Points** + **Bonus Points**) x **Mulitplier**)
+**Points** = 	floor(**Base Points** + **Bonus Points** x **Mulitplier**)
 
-- The **Multiplier** depends on the type of match:
+## 1.1 Multiplier
+**Multiplier** depends on the type of match:
 
 |Match type|Multiplier|
 |--|--|
-|Group Matches|1.0|
-|Round of 16|1.5|
-|Quarter Finals|2.0|
-|Semi-Finals|3.0|
-|Final|4.0|
-|Loser Final|1.0|
+|Group Matches|${MatchPronostiek.matchTypeMultiplier[MatchType.group]!}|
+|Round of 16|${MatchPronostiek.matchTypeMultiplier[MatchType.roundOf16]!}|
+|Quarter Finals|${MatchPronostiek.matchTypeMultiplier[MatchType.quarterFinals]!}|
+|Semi-Finals|${MatchPronostiek.matchTypeMultiplier[MatchType.semiFinals]!}|
+|Final|${MatchPronostiek.matchTypeMultiplier[MatchType.wcFinal]!}|
+|Loser Final|${MatchPronostiek.matchTypeMultiplier[MatchType.bronzeFinal]!}|
 
-- **Base Points** are earned when you predict the correct winner (or draw):
-  - For *group matches* you earn **2 points** for predicting the correct winner and **3 points** for predicting a draw.
-  - For *knock-out matches* you earn **2 points** for predicting the correct winner after 90' and **6 points** for predicting a draw.
+## 1.2 Base Points
+**Base Points** are earned when you predict the correct winner (or draw):
+- For *group matches* you earn **${MatchPronostiek.basePointsWin} points** for predicting the correct winner and **${MatchPronostiek.basePointsDraw} points** for predicting a draw.
+- For *knock-out matches* you earn **${MatchPronostiek.basePointsWin} points** for predicting the correct winner after 90'.  
+  If you correctly predict a draw after 90' you will earn **${MatchPronostiek.basePointsDrawKnockout} points** and if you also predict the correct winner after extra time/penalties you will earn **${MatchPronostiek.basePointsDrawKnockoutWinner} points** extra.
 
-- **Bonus Points** are earn for predicting the correct (or being close to the correct) score after 90'. Bonus points for rare scores are higher than for normal scores.
+## 1.3 Bonus Points
+**Bonus Points** are earned for predicting the correct (or being close to the correct) score after 90'. Bonus points for rare scores are higher than for normal scores.
 
-
+""",
+"""
+|**#Goals**|**0**|**1**|**2**|**3**|**4**|**5**|**6**|**7**|**8**|**9**|
+|--|--|--|--|--|--|--|--|--|--|--|
+|**Points**|${MatchPronostiek.bonusPointsGoalsSingleTeam.join("|")}|
+""",
+"""
+|**#Goals**|**0**|**1**|**2**|**3**|**4**|**5**|**6**|**7**|**8**|**9**|
+|--|--|--|--|--|--|--|--|--|--|--|
+|**Points**|${MatchPronostiek.bonusPointsTotalGoals.join("|")}|
+**#Goals**|**10**|**11**|**12**|**13**|**14**|**15**|**16**|**17**|**18**|**19**|
+|**Points**|${MatchPronostiek.bonusPointsTotalGoals.sublist(10).join("|")}|
+""",
+"""
+With:
+""",
+"""
+Where:
+""",
+"""
 The pronostiek for the matches need to be filled in before the first match of the tournament stage:  
 **Deadlines\***:
   - Group Phase: 20/11 17:00
@@ -82,8 +139,6 @@ If the answer is a number you get 20 points if you are the closest to the correc
 
 The fractions in the top left of every purple bar show how many item of your pronostiek are saved on the server. So when you fill in your pronostiek make sure to save your changes and check if the fractions have changed accordingly.
 """
-      ),
-    ));
-  }
+];
 
 }
