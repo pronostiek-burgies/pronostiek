@@ -157,6 +157,32 @@ class MatchPronostiek {
     );
   }
 
+  int? getPronostiekBasePoints() {
+    Match match = Get.find<MatchController>().matches[matchId]!;
+    if (match.status != MatchStatus.ended) {return null;}
+    if (goalsHomeFT == null || goalsHomeFT == null) {return 0;}
+    return getBasePoints(
+      match.goalsHomeFT!,
+      match.goalsAwayFT!,
+      goalsHomeFT!,
+      goalsAwayFT!,
+      correctWinner: match.getWinner() == match.home,
+      predictWinner: winner,
+      knockout: match.knockout
+    );
+  }
+  int? getPronostiekBonusPoints() {
+    Match match = Get.find<MatchController>().matches[matchId]!;
+    if (match.status != MatchStatus.ended) {return null;}
+    if (goalsHomeFT == null || goalsHomeFT == null) {return 0;}
+    return getBonusPoints(
+      match.goalsHomeFT!,
+      match.goalsAwayFT!,
+      goalsHomeFT!,
+      goalsAwayFT!,
+    );
+  }
+
   ListTile getListTile(PronostiekController controller, List<TextEditingController> controllers, bool disabled) {
     bool? winnerByGoals() {
       if (controllers[1].text == "" || controllers[0].text == "") {return null;}
@@ -208,6 +234,7 @@ class MatchPronostiek {
                       width: 24,
                       child: TextFormField(
                         controller: controllers.first,
+                        keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         decoration: const InputDecoration(counterText: "", isDense: true),
                         maxLength: 1,
@@ -221,6 +248,7 @@ class MatchPronostiek {
                       width: 24,
                       child: TextFormField(
                         controller: controllers.last,
+                        keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         decoration: const InputDecoration(counterText: "", isDense: true),
                         maxLength: 1,
@@ -255,7 +283,26 @@ class MatchPronostiek {
               if (disabled) ... [
                 IntrinsicHeight(child: Row(children: [
                   VerticalDivider(color: wcRed, thickness: 1.0),
-                  Text("Pts: ${getPronostiekPoints() ?? "?"}")
+                  Tooltip(
+                    richMessage: TextSpan(children: [
+                      const TextSpan(text: "Points\n",style: TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(text: "= floor(("),
+                      const TextSpan(text: "Base Points",style: TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(text: " + "),
+                      const TextSpan(text: "Bonus Points",style: TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(text: ") x "),
+                      const TextSpan(text: "Match Type Multiplier", style: TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(text: ")\n"),
+                      const TextSpan(text: "= floor(("),
+                      TextSpan(text: "${getPronostiekBasePoints()}",style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(text: " + "),
+                      TextSpan(text: "${getPronostiekBonusPoints()}",style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(text: ") x "),
+                      TextSpan(text: "${matchTypeMultiplier[match.type]!}", style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(text: ")\n"),
+                      TextSpan(text: "= ${getPronostiekPoints()}", style: const TextStyle(fontWeight: FontWeight.bold)),
+                    ]),
+                    child: Text("Pts: ${getPronostiekPoints() ?? "?"}"))
                 ],))
               ]
             ]

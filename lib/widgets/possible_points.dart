@@ -35,9 +35,9 @@ class PossiblePointsWidget extends StatelessWidget {
         Text("For this ${match.knockout ? "knockout": "group"} match your points are calculated as followed:"),
         Text.rich(TextSpan(children: [
           const TextSpan(text: "Points = floor( ( "),
-          const TextSpan(text: "base points",style: TextStyle(fontWeight: FontWeight.bold)),
+          const TextSpan(text: "Base Points",style: TextStyle(fontWeight: FontWeight.bold)),
           const TextSpan(text: " + "),
-          const TextSpan(text: "bonus points",style: TextStyle(fontWeight: FontWeight.bold)),
+          const TextSpan(text: "Bonus Points",style: TextStyle(fontWeight: FontWeight.bold)),
           const TextSpan(text: " ) x "),
           TextSpan(text: MatchPronostiek.matchTypeMultiplier[match.type]!.toStringAsFixed(1), style: const TextStyle(fontWeight: FontWeight.bold)),
           const TextSpan(text: " )"),

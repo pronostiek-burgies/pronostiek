@@ -3,9 +3,24 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'package:get/get.dart' as get_x;
+import 'package:universal_html/html.dart';
 
 // Logger logger = Logger(level: Level.nothing);
 Logger logger = Logger();
+
+
+class WebStorage {
+
+  //Singleton
+  WebStorage._internal();
+  static final WebStorage instance = WebStorage._internal();
+  factory WebStorage() {
+    return instance;
+  }
+
+  String? get username => window.localStorage['username'];
+  set username(String? sid) => sid == null ? window.localStorage.remove('username') : window.localStorage['username'] = sid;
+}
 
 class DropboxClient {
   Dio dio = Dio();

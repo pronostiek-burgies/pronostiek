@@ -7,8 +7,13 @@ class Group {
   String name;
   List<Team> teams;
   List<Match> matches;
-  late List<Team> ranked;
+  late List<Team> _ranked;
   List<int> rankingPoints;
+
+  get ranked {
+    setRanked();
+    return _ranked;
+  }
 
   static List<List<int>> comb = [[0,1,2,3],
                                  [1,2,3],
@@ -23,7 +28,7 @@ class Group {
                                  [2,3]];
 
   Group(this.name, this.teams, this.matches, {this.rankingPoints=const [0,1,2,3]}) {
-    ranked = teams;
+    _ranked = teams;
   }
 
   bool finished() {
@@ -101,14 +106,14 @@ class Group {
       prev = cur;
     }
     if (ready) {
-      this.ranked = ranked;
+      _ranked = ranked;
       return ;
     }
     ranked.sort((a, b) => rankingPoints[teams.indexOf(a)].compareTo(rankingPoints[teams.indexOf(b)]));
     ranked.sort((b, a) => stats[a.id]![_getEqualTeamsKey(teams, a)]![2].compareTo(stats[b.id]![_getEqualTeamsKey(teams, b)]![2]));
     ranked.sort((b, a) => stats[a.id]![_getEqualTeamsKey(teams, a)]![1].compareTo(stats[b.id]![_getEqualTeamsKey(teams, b)]![1]));
     ranked.sort((b, a) => stats[a.id]![_getEqualTeamsKey(teams, a)]![0].compareTo(stats[b.id]![_getEqualTeamsKey(teams, b)]![0]));
-    this.ranked = ranked;
+    _ranked = ranked;
   }
 
   String _getEqualTeamsKey(List<Team> teams, Team team) {
@@ -152,7 +157,6 @@ class Group {
   }
 
   Widget getGroupTable() {
-    setRanked();
     List<String> header = ["Rank", "Teams", "Pts.", "P", "W", "L", "D", "G+/-", "G+", "G-"];
     return Card(
       child: Table(

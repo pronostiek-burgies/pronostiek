@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:pronostiek/api/client.dart';
 import 'package:pronostiek/api/repository.dart';
 import 'package:pronostiek/controllers/pronostiek_controller.dart';
 import 'package:pronostiek/models/user.dart';
 import 'package:cryptography/cryptography.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class UserController extends GetxController {
   User? user;
@@ -24,7 +26,39 @@ class UserController extends GetxController {
 
   static UserController get to => Get.find<UserController>();
 
-   void toggleLogin() {
+  UserController() {
+  }
+
+  Future<bool> tryLoginWithBrowserToken() async {
+    if (!kIsWeb) {
+      return false;
+    }
+    if (WebStorage.instance.username == null) {return false;}
+    User? userTemp = await repo.loginUser(WebStorage.instance.username!, "maakt niet uit", token: true);
+    if (userTemp != null) {
+      user = userTemp;
+      isLogged = true;
+      saveUserToBrowser();
+      await Get.find<PronostiekController>().initPronostiek();
+      update();
+      return true;
+    }
+    return false;
+  }
+
+  saveUserToBrowser() {
+    if (kIsWeb) {
+      WebStorage.instance.username = user!.username;
+    }
+  }
+
+  logoutFromBrowser() {
+    if (kIsWeb) {
+      WebStorage.instance.username = null;
+    }
+  }
+
+  void toggleLogin() {
     loginOpen = !loginOpen;
     update();
   }
@@ -39,6 +73,7 @@ class UserController extends GetxController {
     if (userTemp != null) {
       user = userTemp;
       isLogged = true;
+      saveUserToBrowser();
       await Get.find<PronostiekController>().initPronostiek();
       update();
       return true;
@@ -84,6 +119,7 @@ class UserController extends GetxController {
   logout() async {
     user = null;
     isLogged = false;
+    logoutFromBrowser();
     update();
   }
 

@@ -1,6 +1,10 @@
 
 
-import 'package:pronostiek/models/pronostiek/random_pronostiek.dart';
+import 'package:get/get.dart';
+import 'package:pronostiek/controllers/match_controller.dart';
+import 'package:pronostiek/controllers/result_controller.dart';
+import 'package:pronostiek/models/match.dart';
+import 'package:pronostiek/models/team.dart';
 
 class ProgressionPronostiek {
   /// list with team ID's
@@ -9,6 +13,12 @@ class ProgressionPronostiek {
   List<String?> semiFinals = [null,null,null,null];
   List<String?> wcFinal = [null, null];
   String? winner;
+
+  static const int pointsRound16 = 2;
+  static const int pointsQuarterFinals = 5;
+  static const int pointsSemiFinals = 10;
+  static const int pointsWcFinals = 20;
+  static const int pointsWinner = 50;
 
   ProgressionPronostiek();
 
@@ -29,4 +39,45 @@ class ProgressionPronostiek {
       "winner": winner,
     };
   }
+
+  List<bool?> getCorrection(List<Team?> teams, int round) {
+    ResultController resultController = Get.find<ResultController>();
+    return teams.map<bool?>((e) {
+      if (e == null) {return null;}
+      if (resultController.progression[round].contains(e)) {
+        return true;
+      }
+      return resultController.teamsEndStage[round-1].contains(e) ? false : null;
+    }).toList();
+  }
+
+  int getTotalPoints() {
+    Map<String,Team> teams = MatchController.to.teams;
+    int s = 0;
+    s += getCorrection(round16.map((e) => teams[e]).toList(), 1).fold(0, (v, e) => e??false ? v+getPointsPerTeam(1) : v);
+    s += getCorrection(quarterFinals.map((e) => teams[e]).toList(), 2).fold(0, (v, e) => e??false ? v+getPointsPerTeam(2) : v);
+    s += getCorrection(semiFinals.map((e) => teams[e]).toList(), 3).fold(0, (v, e) => e??false ? v+getPointsPerTeam(3) : v);
+    s += getCorrection(wcFinal.map((e) => teams[e]).toList(), 4).fold(0, (v, e) => e??false ? v+getPointsPerTeam(4) : v);
+    s += getCorrection([winner].map((e) => teams[e]).toList(), 5).fold(0, (v, e) => e??false ? v+getPointsPerTeam(5) : v);
+    return s;
+  }
+
+  static int getPointsPerTeam(int round) {
+    switch (round) {
+      case 1:
+        return ProgressionPronostiek.pointsRound16;
+      case 2:
+        return ProgressionPronostiek.pointsQuarterFinals;
+      case 3:
+        return ProgressionPronostiek.pointsSemiFinals;
+      case 4:
+        return ProgressionPronostiek.pointsWcFinals;
+      case 5:
+        return ProgressionPronostiek.pointsWinner;
+      default:
+      return 0;
+    }
+  }
+
+
 }

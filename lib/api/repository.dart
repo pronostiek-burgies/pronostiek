@@ -31,9 +31,9 @@ class Repository {
     return List<String>.from(jsonDecode(await readDropboxFile("/users/usernames.json")));
   }
   
-  Future<User?> loginUser(String username, String password) async {
+  Future<User?> loginUser(String username, String password, {bool token=false}) async {
     List<dynamic> usernames = jsonDecode(await readDropboxFile("/users/usernames.json"));
-    if (!usernames.contains(username)) {
+    if (!usernames.contains(username) && !token) {
       Get.defaultDialog(
         title: "Could not login.",
         content: Text("Username ($username) does not exist")
@@ -41,6 +41,9 @@ class Repository {
       return null;
     }
     User user = User.fromJson(jsonDecode(await readDropboxFile("/users/$username.json")));
+    if (token) {
+      return user;
+    }
     bool checkPassword= await Get.find<UserController>().checkPassword(user, password);
     if (checkPassword) {
       return user;

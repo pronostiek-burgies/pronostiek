@@ -13,6 +13,11 @@ class Team {
     this.id,
   );
 
+  @override
+  String toString() {
+    return name;
+  }
+
   Widget getWidget({bool flagFirst = true}) {
     Widget flag = getFlag();
     Widget text = Expanded(

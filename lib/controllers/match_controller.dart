@@ -5,6 +5,7 @@ import 'package:pronostiek/api/match_repository.dart';
 import 'package:pronostiek/api/repository.dart';
 import 'package:pronostiek/api/sportdataapi.dart';
 import 'package:pronostiek/api/time_client.dart';
+import 'package:pronostiek/controllers/result_controller.dart';
 import 'package:pronostiek/models/group.dart';
 import 'package:pronostiek/models/init_groups.dart';
 import 'package:pronostiek/models/init_matches.dart';
@@ -20,7 +21,6 @@ class MatchController extends GetxController {
   Map<String,Group> groups = {};
   List<String> players = [];
   MatchRepository repo = MatchRepository();
-
 
   TimeClient timeClient = Get.find<TimeClient>();
   Random random = Random();
@@ -89,6 +89,7 @@ class MatchController extends GetxController {
       match.trySetHome();
       match.trySetAway();
     }
+    Get.find<ResultController>().updateTeamsEndStage();
     update();
   }
 

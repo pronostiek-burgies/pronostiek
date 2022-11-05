@@ -16,7 +16,7 @@ enum MatchType {
   roundOf16,
   quarterFinals,
   semiFinals,
-  wcFinal,
+  wcFinal, // do not change this order!
   bronzeFinal,
 }
 
