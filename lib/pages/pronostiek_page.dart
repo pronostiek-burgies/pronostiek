@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -81,11 +83,11 @@ class PronostiekPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Expanded(child: Text("Progression", style: TextStyle(color: Colors.white),)),
-            Flexible(child: Row(mainAxisAlignment:MainAxisAlignment.center, children: [
+            Row(mainAxisAlignment:MainAxisAlignment.center, children: [
               const Icon(Icons.calendar_today, color: Colors.white),
               const VerticalDivider(),
               Text(DateFormat('dd/MM kk:mm').format(controller.deadlineProgression.toLocal()), style: const TextStyle(color: Colors.white),),
-            ],)),
+            ],),
             Expanded(child:Text("${controller.nFilledInProgression}/$total", style: const TextStyle(color: Colors.white), textAlign: TextAlign.end,)),
           ]
         ),
@@ -109,17 +111,22 @@ class PronostiekPage extends StatelessWidget {
           ),
         ]
       ),
-      Expanded(child: PageView(
-        onPageChanged: (int page) {controller.updateProgressionPageIdx(page, animate: false);},
-        controller: controller.progressionController,
-        children: <Widget>[
-          getProgressionCard("GroupStage", Pronostiek.teamIds, 4, controller, 0, disable: true),
-          getProgressionCard("Round of 16 (2pts/team)", controller.pronostiek!.progression.round16, 4, controller, 1),
-          getProgressionCard("Quarter Finals (5pts/team)", controller.pronostiek!.progression.quarterFinals, 2, controller, 2),
-          getProgressionCard("Semi Finals (10pts/team)", controller.pronostiek!.progression.semiFinals, 2, controller, 3),
-          getProgressionCard("Final (20pts/team)", controller.pronostiek!.progression.wcFinal, 2, controller, 4),
-          getProgressionCard("Winner (50pts/team)", [controller.pronostiek!.progression.winner], 1, controller, 5),
-        ],
+      Expanded(child: LayoutBuilder(
+        builder: (context, BoxConstraints) {
+          controller.progressionController = PageController(viewportFraction: min(500/BoxConstraints.maxWidth, 1.0), initialPage: controller.progressionPageIdx);         
+          return PageView(
+            onPageChanged: (int page) {controller.updateProgressionPageIdx(page, animate: false);},
+            controller: controller.progressionController,
+            children: <Widget>[
+              getProgressionCard("GroupStage", Pronostiek.teamIds, 4, controller, 0, disable: true),
+              getProgressionCard("Round of 16 (2pts/team)", controller.pronostiek!.progression.round16, 4, controller, 1),
+              getProgressionCard("Quarter Finals (5pts/team)", controller.pronostiek!.progression.quarterFinals, 2, controller, 2),
+              getProgressionCard("Semi Finals (10pts/team)", controller.pronostiek!.progression.semiFinals, 2, controller, 3),
+              getProgressionCard("Final (20pts/team)", controller.pronostiek!.progression.wcFinal, 2, controller, 4),
+              getProgressionCard("Winner (50pts/team)", [controller.pronostiek!.progression.winner], 1, controller, 5),
+            ],
+          );
+        }
       )),
       SingleChildScrollView(scrollDirection: Axis.horizontal,child:Row(
         children: List<Widget>.generate(8, (i) {
@@ -153,11 +160,11 @@ class PronostiekPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Expanded(child: Text("Random Questions", style: TextStyle(color: Colors.white),)),
-              Flexible(child: Row(mainAxisAlignment:MainAxisAlignment.center, children: [
+              Row(mainAxisAlignment:MainAxisAlignment.center, children: [
                 const Icon(Icons.calendar_today, color: Colors.white),
                 const VerticalDivider(),
                 Text(DateFormat('dd/MM kk:mm').format(controller.deadlineRandom.toLocal()), style: const TextStyle(color: Colors.white),),
-              ],)),
+              ],),
               Expanded(child:Text("$filledIn/${controller.pronostiek!.random.length}", style: const TextStyle(color: Colors.white), textAlign: TextAlign.end,)),
             ]
           ),
