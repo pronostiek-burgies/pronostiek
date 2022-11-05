@@ -48,9 +48,12 @@ class Pronostiek {
   // MatchGroup FMatches = MatchGroup("Finals", DateTime.utc(2022,12,17, 19, 00));
 
   late String username;
+
+  /// Matches present in the pronostiek with key matchId.
   late Map<String, MatchPronostiek> matches;
   ProgressionPronostiek progression = ProgressionPronostiek();
   List<RandomPronostiek> random = RandomPronostiek.getQuestions();
+
 
   Pronostiek(this.username) {
     matches = {};

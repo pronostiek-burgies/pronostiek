@@ -167,13 +167,11 @@ class MatchPronostiek {
     return ListTile(
       title: Row(
         children: [
+          Text(matchId),
+          const SizedBox(width: 8.0,),
           Expanded(child: Row(children: [
-            Text(matchId),
-            const VerticalDivider(thickness: 0,),
             if (match.home != null) ... [
-              match.home!.getFlag(),
-              const VerticalDivider(thickness: null,),
-              Text(match.home!.name, style: TextStyle(fontWeight: (!disabled && match.knockout && (winner ?? false)) ? FontWeight.bold: FontWeight.normal),)
+              Expanded(child: match.home!.getWidget())
             ] else ...[
               Text(match.linkHome!, style: TextStyle(fontWeight: (!disabled && match.knockout && (winner ?? false)) ? FontWeight.bold: FontWeight.normal),),
             ],
@@ -250,9 +248,7 @@ class MatchPronostiek {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               if (match.away != null) ... [
-                Text(match.away!.name, style: TextStyle(fontWeight: (!disabled && match.knockout && !(winner ?? true)) ? FontWeight.bold: FontWeight.normal),),
-                const VerticalDivider(thickness: null,),
-                match.away!.getFlag(),
+                Expanded(child: match.away!.getWidget(flagFirst: false))
               ] else ...[
                 Text(match.linkAway!, style: TextStyle(fontWeight: (!disabled && match.knockout && !(winner ?? true)) ? FontWeight.bold: FontWeight.normal),),
               ],

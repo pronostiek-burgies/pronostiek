@@ -59,11 +59,10 @@ class PronostiekPage extends StatelessWidget {
     if (controller.pronostiek == null) {
       return const CircularProgressIndicator();
     }
-    return ListView.builder(
-      itemCount: controller.groups.length,
-      itemBuilder: (context, index) {
-        return getMatchGroup(controller, controller.groups[index], index);
-      }
+    return SingleChildScrollView(
+      child: Column(
+        children: getMatchGroups(controller),
+      )
     );
   }
 
@@ -180,59 +179,49 @@ class PronostiekPage extends StatelessWidget {
     ]);
   }
 
-  Widget getMatchGroup(PronostiekController controller, MatchGroup matchGroup, int idx) {
-    List<String> matches = controller.matchIds.where((e) => controller.deadlines[e] == matchGroup).toList();
-    int points = matches.fold(0, (int v, String e) => v + (controller.pronostiek!.matches[e]!.getPronostiekPoints() ?? 0));
-    int filledIn = matches.fold<int>(0, (int v, String e) {
-      MatchPronostiek matchPronostiek = controller.pronostiek!.matches[e]!;
-      return (matchPronostiek.goalsHomeFT != null && matchPronostiek.goalsAwayFT != null) ? v+1 : v;
-    });
-    bool pastDeadline = controller.utcTime.isAfter(matchGroup.deadline);
-    return Card(
-      elevation: 10,
-      margin: const EdgeInsets.all(10), 
-      child: Column(
-        children: <Widget>[
-          ListTile(
-            tileColor: wcPurple[800],
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(child: Text(matchGroup.name, style: const TextStyle(color: Colors.white),)),
-                Flexible(child: Row(mainAxisAlignment:MainAxisAlignment.center, children: [
-                  Icon(pastDeadline ? Icons.event_busy : Icons.event_available, color: Colors.white),
+  List<Widget> getMatchGroups(PronostiekController controller) {
+    return Iterable<int>.generate(controller.groups.length).map<Widget>((int idx) {
+      MatchGroup matchGroup = controller.groups[idx];
+      List<String> matches = controller.matchIds.where((e) => controller.deadlines[e] == matchGroup).toList();
+      int points = matches.fold(0, (int v, String e) => v + (controller.pronostiek!.matches[e]!.getPronostiekPoints() ?? 0));
+      int filledIn = matches.fold<int>(0, (int v, String e) {
+        MatchPronostiek matchPronostiek = controller.pronostiek!.matches[e]!;
+        return (matchPronostiek.goalsHomeFT != null && matchPronostiek.goalsAwayFT != null) ? v+1 : v;
+      });
+      bool pastDeadline = controller.utcTime.isAfter(matchGroup.deadline);
+      return ListTileTheme(
+        tileColor: wcPurple[800],
+        child:ExpansionTile(
+          iconColor: Colors.white,
+          collapsedIconColor: Colors.white,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(child: Text(matchGroup.name, style: const TextStyle(color: Colors.white),)),
+              Row(mainAxisAlignment:MainAxisAlignment.center, children: [
+                Icon(pastDeadline ? Icons.event_busy : Icons.event_available, color: Colors.white),
+                const VerticalDivider(),
+                Text(DateFormat('dd/MM kk:mm').format(matchGroup.deadline.toLocal()), style: const TextStyle(color: Colors.white),),
+              ],),
+              Expanded(child:Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                Text("$filledIn/${matches.length}", style: const TextStyle(color: Colors.white), textAlign: TextAlign.end,),
+                if (pastDeadline) ...[
                   const VerticalDivider(),
-                  Text(DateFormat('dd/MM kk:mm').format(matchGroup.deadline.toLocal()), style: const TextStyle(color: Colors.white),),
-                ],)),
-                Expanded(child:Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  Text("$filledIn/${matches.length}", style: const TextStyle(color: Colors.white), textAlign: TextAlign.end,),
-                  if (pastDeadline) ...[
-                    const VerticalDivider(),
-                    Text("Pts: $points", style: const TextStyle(color: Colors.white), textAlign: TextAlign.end,),
-                  ]
-                ]))
-              ]
-            ),
-            trailing: controller.matchGroupCollapsed[idx] ? const Icon(Icons.keyboard_arrow_up, color: Colors.white,) : const Icon(Icons.keyboard_arrow_down, color: Colors.white),
-            onTap: () => controller.toggleGroupCollapse(idx),
+                  Text("Pts: $points", style: const TextStyle(color: Colors.white), textAlign: TextAlign.end,),
+                ]
+              ]))
+            ]
           ),
-          if (!controller.matchGroupCollapsed[idx]) ...[
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: matches.length*2,
-              itemBuilder: (context, index) {
-                if (index%2 == 0) {
-                  return controller.pronostiek!.matches[matches[index>>1]]!.getListTile(controller, controller.textControllers[matches[index>>1]]!, pastDeadline);
-                } else {
-                  return const Divider();
-                }
-              }
-            )
-          ],
-        ]
-      ),
-    );
-
+          children: matches.expand<Widget>((id) => [
+            ListTileTheme(
+              tileColor: Get.theme.listTileTheme.tileColor,
+              child: controller.pronostiek!.matches[id]!.getListTile(controller, controller.textControllers[id]!, pastDeadline)
+            ),
+            const Divider(),
+          ]).toList(),
+        )
+      );
+    }).toList();
   }
 
   Widget getProgressionCard(String title, List<String?> teamIds, int crossAxisCount, PronostiekController controller, int pageIdx, {bool disable=false}) {

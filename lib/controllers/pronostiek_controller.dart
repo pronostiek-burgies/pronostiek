@@ -55,8 +55,7 @@ class PronostiekController extends GetxController {
     MatchGroup groupMatches = MatchGroup("Group Phase", DateTime.utc(2022,11,20, 16, 00));
     // MatchGroup groupMatches = MatchGroup("Group Phase", DateTime.utc(2022,10,20, 8, 52));
     // ignore: non_constant_identifier_names
-    // MatchGroup R16Matches = MatchGroup("Round of 16", DateTime.utc(2022,12, 3, 15, 00));
-    MatchGroup R16Matches = MatchGroup("Round of 16", DateTime.utc(2021,12, 3, 15, 00));
+    MatchGroup R16Matches = MatchGroup("Round of 16", DateTime.utc(2022,12, 3, 15, 00));
     // ignore: non_constant_identifier_names
     MatchGroup QFMatches = MatchGroup("Quarter Finals", DateTime.utc(2022,12, 9, 15, 00));
     // ignore: non_constant_identifier_names
@@ -98,11 +97,10 @@ class PronostiekController extends GetxController {
       });
       if (closestDeadline != null) {
         Duration timeUntilNextCall = closestDeadline.difference(time) < const Duration(minutes: 30) ? closestDeadline.difference(time) : const Duration(minutes: 30);
-        print("created future with difference $timeUntilNextCall");
-        // Future.delayed(closestDeadline.difference(time), () => setUtcTime());
+        print("Created future with difference $timeUntilNextCall");
         Future.delayed(timeUntilNextCall, () => setUtcTime());
       }
-      if (update) {this.update();print("update");}
+      if (update) {this.update();}
     });
   }
 
@@ -124,7 +122,6 @@ class PronostiekController extends GetxController {
   }
 
   Future<void> initPronostiek() async {
-    print("init");
     utcTime = await timeClient.getTime();
     setUtcTime(update: false);
     repo.getPronostiek().then((pronostiek) {
