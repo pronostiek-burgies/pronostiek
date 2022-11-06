@@ -23,7 +23,7 @@ class DashboardPage extends StatelessWidget {
         // ],
       ),
       body: GetBuilder<DashboardController>(
-        builder: (controller) => Column(
+        builder: (controller) => SingleChildScrollView(child: Column(
           children: [
             const Text("Matches", textScaleFactor: 2.0, style: TextStyle(fontWeight: FontWeight.bold),),
             MatchPageView(),
@@ -46,7 +46,7 @@ class DashboardPage extends StatelessWidget {
             )
           ],
         ),
-      )
+      ))
     );
   }
 }

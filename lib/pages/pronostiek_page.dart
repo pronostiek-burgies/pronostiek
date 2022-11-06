@@ -156,7 +156,7 @@ class PronostiekPage extends StatelessWidget {
           itemCount: controller.pronostiek!.random.length*2,
           itemBuilder: ((context, index) {
             if (index%2 == 0) {
-              return controller.pronostiek!.random[index>>1].getListTile(controller.textControllersRandom[index>>1], controller.randomFormKey, controller);
+              return controller.pronostiek!.random[index>>1].getListTile(controller.textControllersRandom[index>>1], controller.randomFormKey, controller, pastDeadline);
             }
             return const Divider();
           }),

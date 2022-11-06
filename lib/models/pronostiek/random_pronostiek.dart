@@ -71,21 +71,22 @@ class RandomPronostiek {
     return questions.values.toList();
   }
 
-  Widget getListTile(TextEditingController controller, GlobalKey<FormState> formKey, PronostiekController pronostiekController) {
+  Widget getListTile(TextEditingController controller, GlobalKey<FormState> formKey, PronostiekController pronostiekController, bool pastDeadline) {
     return ListTile(title:Row(
       children: [
         Expanded(child: Text(question)),
-        getInputWidget(controller, formKey, pronostiekController),
+        getInputWidget(controller, formKey, pronostiekController, pastDeadline),
       ]
     ));
   }
 
-  Widget getInputWidget(TextEditingController controller, GlobalKey<FormState> formKey, PronostiekController pronostiekController) {
+  Widget getInputWidget(TextEditingController controller, GlobalKey<FormState> formKey, PronostiekController pronostiekController, bool pastDeadline) {
     switch (type) {
       case AnswerType.number:
         return SizedBox(
           width: Get.textTheme.bodyLarge!.fontSize!*15,
           child: TextFormField(
+            readOnly: pastDeadline,
             controller: controller,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration: const InputDecoration(counterText: "", isDense: true),
@@ -97,8 +98,9 @@ class RandomPronostiek {
         return SizedBox(
           width: Get.textTheme.bodyLarge!.fontSize!*15,
           child: Autocomplete<Team>(
-            initialValue: TextEditingValue(text: controller.text),
+            initialValue: TextEditingValue(text: controller.text, ),
             fieldViewBuilder: (context, textEditingController, focusNode, onFieldSubmitted) => TextFormField(
+              readOnly: pastDeadline,
               focusNode: focusNode,
               controller: textEditingController,
               validator: (state) {
@@ -127,6 +129,7 @@ class RandomPronostiek {
           child: Autocomplete<String>(
             initialValue: TextEditingValue(text: controller.text),
             fieldViewBuilder: (context, textEditingController, focusNode, onFieldSubmitted) => TextFormField(
+              readOnly: pastDeadline,
               focusNode: focusNode,
               controller: textEditingController,
               validator: (state) {

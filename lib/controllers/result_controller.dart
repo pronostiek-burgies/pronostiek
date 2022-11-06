@@ -3,6 +3,7 @@ import 'package:pronostiek/controllers/match_controller.dart';
 import 'package:pronostiek/models/group.dart';
 import 'package:pronostiek/models/match.dart';
 import 'package:pronostiek/models/pronostiek/pronostiek.dart';
+import 'package:pronostiek/models/pronostiek/random_pronostiek.dart';
 import 'package:pronostiek/models/team.dart';
 
 
@@ -18,6 +19,8 @@ class ResultController extends GetxController {
   /// The first element of [progression] contains all the teams who reached the group phase.
   /// The second element of [progression] contains all the teams who reached the round of 16...
   List<List<Team>> progression = [[], [], [], [], [], []];
+
+  List<RandomPronostiek> randomQuestions = RandomPronostiek.getQuestions();
 
   MatchController matchController = Get.find<MatchController>();
 

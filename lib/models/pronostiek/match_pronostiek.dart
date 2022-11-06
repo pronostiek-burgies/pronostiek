@@ -88,8 +88,8 @@ class MatchPronostiek {
   ) {
     /// factor = 0 if predicted wrong winner
     if ((correctGoalsHome - correctGoalsAway) * (predictGoalsHome - predictGoalsAway) < 0) {return 0;}
-    int goalDifferenceDelta = ((correctGoalsHome - correctGoalsAway).abs() - (predictGoalsHome - predictGoalsAway).abs());
-    int goalTotalDelta = ((correctGoalsHome + correctGoalsAway) - (predictGoalsHome + predictGoalsAway).abs()).abs();
+    int goalDifferenceDelta = ((correctGoalsHome - correctGoalsAway).abs() - (predictGoalsHome - predictGoalsAway).abs()).abs();
+    int goalTotalDelta = ((correctGoalsHome + correctGoalsAway) - (predictGoalsHome + predictGoalsAway)).abs();
     return pow(pi, -2*(
       pow(goalDifferenceDelta,2) / max((predictGoalsHome - predictGoalsAway).abs(), 2)
       + pow(goalTotalDelta,2) / max((predictGoalsHome + predictGoalsAway).abs(), 2)
@@ -183,6 +183,7 @@ class MatchPronostiek {
     );
   }
 
+  // TODO: make own widget with own state
   ListTile getListTile(PronostiekController controller, List<TextEditingController> controllers, bool disabled) {
     bool? winnerByGoals() {
       if (controllers[1].text == "" || controllers[0].text == "") {return null;}
