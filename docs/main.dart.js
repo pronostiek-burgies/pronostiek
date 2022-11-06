@@ -89762,7 +89762,7 @@ a3k(){var s,r,q,p,o,n,m,l,k=this,j=2022,i=t.s,h=A.a(["A1","A2","A3","A4","A5","A
 i=A.aP(j,11,20,16,0,0,0,!0)
 if(!A.aH(i))A.y(A.aF(i))
 s=new A.ju("Group Phase",new A.ab(i,!0))
-i=A.aP(2021,12,3,15,0,0,0,!0)
+i=A.aP(j,12,3,15,0,0,0,!0)
 if(!A.aH(i))A.y(A.aF(i))
 r=new A.ju("Round of 16",new A.ab(i,!0))
 i=A.aP(j,12,9,15,0,0,0,!0)
@@ -91666,7 +91666,7 @@ b=$.aM()
 return A.Do(a2,A.ie(A.c5(a1,A.on(A.bR(A.a([r,B.VA,q,B.W6,B.VK,p,B.W4,m,l,B.Wj,B.VD,B.VV,a3,B.Wl,k,new A.bt(B.dN,i,a1),g,new A.bt(B.dN,c,a1),o,B.W1,n,B.VR,f,h,B.Wi,B.W0,B.VJ,B.Wb,B.VM,B.Wm,B.VQ,A.aa("2. Progression",a1,a1,a1,A.fs(b).p3.e,a1,a1,a1),B.VT,B.VE,B.VF,B.VC,B.Wf,B.We,B.Aq,A.aa("3. Random Questions",a1,a1,a1,A.fs(b).p3.e,a1,a1,a1),B.Wc,B.Aq,A.aa("General Info",a1,a1,a1,A.fs(b).p3.d,a1,a1,a1),B.W7,A.hQ("assets/fractions.png",B.z,a1,a1,a1,a1,a1,a1,a1),B.Vz,A.hQ("assets/help.png",B.z,a1,a1,a1,a1,a1,a1,a1),B.VN,A.eP(a1,A.hQ("assets/stats.png",B.z,a1,a1,a1,a1,a1,a1,a1),B.Y,!1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,new A.al7(),a1,a1,a1,a1,a1,a1),B.VB],j),B.cj,B.t,B.av),a1,a1,B.a8),B.o,a1,a1,a1,a1,a1,a1,a1,new A.aB(s,0,s,0),a1,a1,a1),a1,a1,B.bp,!0,a4,B.ab,a1,B.aq),a1,this.c)}}
 A.al7.prototype={
 $0(){var s=null
-return A.ex($.aM(),new A.AT(B.pH,A.hQ("assets/stats.png",B.z,s,s,s,s,s,s,s),1.6,0.1,s),"Dialog made in 3 lines of code","Point statistics",t.z)},
+return A.ex($.aM(),new A.AT(B.pH,A.hQ("assets/stats.png",B.z,s,s,s,s,s,s,s),5,0.1,s),"Dialog made in 3 lines of code","Point statistics",t.z)},
 $S:0}
 A.S9.prototype={
 mK(){var s=0,r=A.U(t.H),q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,b0,b1,b2,b3,b4
@@ -91703,7 +91703,7 @@ g=A.a([],t.sE)
 f=t.N
 e=A.aP(2022,11,20,16,0,0,0,!0)
 if(!A.aH(e))A.y(A.aF(e))
-d=A.aP(2021,11,20,16,0,0,0,!0)
+d=A.aP(2022,11,20,16,0,0,0,!0)
 if(!A.aH(d))A.y(A.aF(d))
 c=$.aA
 c=(c==null?$.aA=B.A:c).c3(0,null,q)

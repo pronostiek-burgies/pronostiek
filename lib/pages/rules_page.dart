@@ -320,7 +320,7 @@ You can also fill in a not logical prediction (e.g. Brazil wins the World Cup, A
               content: InteractiveViewer(
                 boundaryMargin: const EdgeInsets.all(20.0),
                 minScale: 0.1,
-                maxScale: 1.6,
+                maxScale: 5,
                 child: Image.asset("assets/stats.png"),
             ),
               ),

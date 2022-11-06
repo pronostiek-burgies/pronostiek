@@ -16,7 +16,7 @@ class PronostiekController extends GetxController {
 
   Map<String,MatchGroup> deadlines = {};
   DateTime deadlineRandom = DateTime.utc(2022,11,20, 16, 00);
-  DateTime deadlineProgression = DateTime.utc(2021,11,20, 16, 00);
+  DateTime deadlineProgression = DateTime.utc(2022,11,20, 16, 00);
 
   late DateTime utcTime;
   TimeClient timeClient = Get.find<TimeClient>();
@@ -53,9 +53,8 @@ class PronostiekController extends GetxController {
     // ignore: non_constant_identifier_names
     List<String> FMatchesIds = ["F", "f"];
     MatchGroup groupMatches = MatchGroup("Group Phase", DateTime.utc(2022,11,20, 16, 00));
-    // MatchGroup groupMatches = MatchGroup("Group Phase", DateTime.utc(2022,10,20, 8, 52));
     // ignore: non_constant_identifier_names
-    MatchGroup R16Matches = MatchGroup("Round of 16", DateTime.utc(2021,12, 3, 15, 00));
+    MatchGroup R16Matches = MatchGroup("Round of 16", DateTime.utc(2022,12, 3, 15, 00));
     // ignore: non_constant_identifier_names
     MatchGroup QFMatches = MatchGroup("Quarter Finals", DateTime.utc(2022,12, 9, 15, 00));
     // ignore: non_constant_identifier_names
