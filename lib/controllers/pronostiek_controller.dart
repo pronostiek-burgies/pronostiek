@@ -251,7 +251,7 @@ class PronostiekController extends GetxController {
 
   updateMatchWinner(bool? value, String matchId) {
     pronostiek!.matches[matchId]!.winner = value;
-    update();
+    // update();
   }
 
 }

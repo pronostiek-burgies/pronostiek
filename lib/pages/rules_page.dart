@@ -317,12 +317,15 @@ You can also fill in a not logical prediction (e.g. Brazil wins the World Cup, A
             const Text("The algorithm to calculate the points was tuned using more 25000 match scores. Some statistics of the distribution of the points together with a comparison to the Sporza WK pronostiek is shown below.\n"),
             GestureDetector(
               onTap: () => Get.defaultDialog(title: "Point statistics",
-              content: InteractiveViewer(
-                boundaryMargin: const EdgeInsets.all(20.0),
-                minScale: 0.1,
-                maxScale: 5,
-                child: Image.asset("assets/stats.png"),
-            ),
+                content: SizedBox(
+                  height: Get.size.aspectRatio < 1 ? Get.size.height/2 : null,
+                  child: InteractiveViewer(
+                    boundaryMargin: const EdgeInsets.all(20.0),
+                    minScale: 0.1,
+                    maxScale: 5,
+                    child: Image.asset("assets/stats.png"),
+                  )
+                ),
               ),
               child: Image.asset("assets/stats.png")
             ),

@@ -8,7 +8,7 @@ import 'package:pronostiek/controllers/match_controller.dart';
 import 'package:pronostiek/models/match.dart';
 
 class MatchPageView extends StatelessWidget {
-  final pageController = PageController(viewportFraction: min(300/Get.size.width,1.0),);
+  PageController pageController = PageController(viewportFraction: min(250/Get.size.width,1.0),);
   
   MatchPageView({Key? key}) : super(key: key);
 
@@ -28,74 +28,79 @@ class MatchPageView extends StatelessWidget {
               onPressed: () {pageController.previousPage(duration: const Duration(seconds: 1), curve: Curves.easeInOut);},
               icon: const Icon(Icons.chevron_left)
             ),
-            Flexible(child:ExpandablePageView(
-              // onPageChanged: (int page) {pageController.animateToPage(page, duration: const Duration(seconds: 1), curve: Curves.easeInOut);},
-              controller: pageController,
-              children: sortedMatches.map<Card>((Match match) {
-                return Card(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                    child: IntrinsicHeight(child: Row(
-                      children: [
-                        Expanded(child:Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+            Flexible(child:LayoutBuilder(
+              builder: (context, boxConstraints) {
+                pageController = PageController(viewportFraction: min(250/boxConstraints.maxWidth, 1.0));
+                return ExpandablePageView(
+                // onPageChanged: (int page) {pageController.animateToPage(page, duration: const Duration(seconds: 1), curve: Curves.easeInOut);},
+                  controller: pageController,
+                  children: sortedMatches.map<Card>((Match match) {
+                    return Card(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                        child: IntrinsicHeight(child: Row(
                           children: [
-                            Row(
+                            Expanded(child:Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                if (match.home != null) ...[
-                                  match.home!.getFlag(),
-                                ],
-                                const VerticalDivider(width: 8),
-                                Text(match.home?.name ?? match.linkHome!),
+                                Row(
+                                  children: [
+                                    if (match.home != null) ...[
+                                      match.home!.getFlag(),
+                                    ],
+                                    const SizedBox(width: 8),
+                                    Expanded(child: Text(match.home?.name ?? match.linkHome!, overflow: TextOverflow.ellipsis,)),
+                                  ],
+                                ),
+                                const Divider(thickness: 1.0, height:5.0),
+                                Row(
+                                  children: [
+                                    if (match.away != null) ...[
+                                      match.away!.getFlag(),
+                                    ],
+                                    const SizedBox(width: 8),
+                                    Expanded(child: Text(match.away?.name ?? match.linkAway!, overflow: TextOverflow.ellipsis,)),
+                                  ],
+                                ),
                               ],
-                            ),
-                            const Divider(thickness: 1.0, height:5.0),
-                            Row(
-                              children: [
-                                if (match.away != null) ...[
-                                  match.away!.getFlag(),
+                            )),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  if (match.status == MatchStatus.notStarted) ...[
+                                    Text(DateFormat("dd/MM").format(match.startDateTime.toLocal())),
+                                    Text(DateFormat("HH:mm").format(match.startDateTime.toLocal())),
+                                  ] else if (match.status == MatchStatus.ended) ...[
+                                    Text(match.goalsHomeOT != null ? "FT\n(+OT)" : "FT", textAlign: TextAlign.center,),
+                                  ] else ...[
+                                    Text("${match.time}'")
+                                  ],
                                 ],
-                                const VerticalDivider(width: 8),
-                                Text(match.away?.name ?? match.linkAway!),
-                              ],
+                              ),
                             ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  if (match.status == MatchStatus.ended || match.isBusy()) ...[
+                                    Text("${match.goalsHomePen != null ? "(${match.goalsHomePen})": ""} ${match.goalsHomeOT ?? match.goalsHomeFT!}"),
+                                    Text("${match.goalsAwayPen != null ? "(${match.goalsAwayPen})": ""} ${match.goalsAwayOT ?? match.goalsAwayFT!}"),
+                                  ]
+                                ],
+                              ),
+                            ),                     
                           ],
                         )),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              if (match.status == MatchStatus.notStarted) ...[
-                                Text(DateFormat("dd/MM").format(match.startDateTime.toLocal())),
-                                Text(DateFormat("HH:mm").format(match.startDateTime.toLocal())),
-                              ] else if (match.status == MatchStatus.ended) ...[
-                                Text(match.goalsHomeOT != null ? "FT\n(+OT)" : "FT", textAlign: TextAlign.center,),
-                              ] else ...[
-                                Text("${match.time}'")
-                              ],
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              if (match.status == MatchStatus.ended || match.isBusy()) ...[
-                                Text("${match.goalsHomePen != null ? "(${match.goalsHomePen})": ""} ${match.goalsHomeOT ?? match.goalsHomeFT!}"),
-                                Text("${match.goalsAwayPen != null ? "(${match.goalsAwayPen})": ""} ${match.goalsAwayOT ?? match.goalsAwayFT!}"),
-                              ]
-                            ],
-                          ),
-                        ),                     
-                      ],
-                    )),
-                  )
+                      )
+                    );
+                  }).toList(),
                 );
-              }).toList(),
+              }
             )),
             IconButton(
               onPressed: () {pageController.nextPage(duration: const Duration(seconds: 1), curve: Curves.easeInOut);},

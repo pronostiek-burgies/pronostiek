@@ -8,7 +8,7 @@ import 'package:pronostiek/api/time_client.dart';
 import 'package:pronostiek/models/pronostiek/pronostiek.dart';
 import 'package:pronostiek/models/pronostiek/random_pronostiek.dart';
 
-class PronostiekController extends GetxController {
+class MatchPronostiekController extends GetxController {
   Pronostiek? pronostiek;
   Repository repo = Get.find<Repository>();
   /// index of shown tab

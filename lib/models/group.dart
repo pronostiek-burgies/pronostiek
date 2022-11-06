@@ -188,7 +188,7 @@ class Group {
   }
 
   Widget getGroupWidget() {
-    return Column(children: [
+    return ListView(shrinkWrap: true, children: [
       Text(name, textAlign: TextAlign.center, textScaleFactor: 2.0, style: const TextStyle(fontWeight: FontWeight.bold),),
       const SizedBox(height: 3,),
       LayoutBuilder(

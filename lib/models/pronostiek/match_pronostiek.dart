@@ -8,6 +8,7 @@ import 'package:pronostiek/controllers/match_controller.dart';
 import 'package:pronostiek/controllers/pronostiek_controller.dart';
 import 'package:pronostiek/models/icon_image_provider.dart';
 import 'package:pronostiek/models/match.dart';
+import 'package:pronostiek/widgets/match_pronostiek_input_tile.dart';
 import 'package:pronostiek/widgets/possible_points.dart';
 
 class MatchPronostiek {
@@ -144,7 +145,7 @@ class MatchPronostiek {
   int? getPronostiekPoints() {
     Match match = Get.find<MatchController>().matches[matchId]!;
     if (match.status != MatchStatus.ended) {return null;}
-    if (goalsHomeFT == null || goalsHomeFT == null) {return 0;}
+    if (goalsHomeFT == null || goalsAwayFT == null) {return 0;}
     return getPronostiekPointsByScore(
       match.goalsHomeFT!,
       match.goalsAwayFT!,
@@ -184,7 +185,9 @@ class MatchPronostiek {
   }
 
   // TODO: make own widget with own state
-  ListTile getListTile(PronostiekController controller, List<TextEditingController> controllers, bool disabled) {
+  Widget getListTile(PronostiekController controller, List<TextEditingController> controllers, bool disabled) {
+    print("update");
+    return MatchPronostiekInputTile(this, controllers, disabled, controller);
     bool? winnerByGoals() {
       if (controllers[1].text == "" || controllers[0].text == "") {return null;}
       return int.parse(controllers[0].text) >= int.parse(controllers[1].text);

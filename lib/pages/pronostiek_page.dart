@@ -101,8 +101,8 @@ class PronostiekPage extends StatelessWidget {
         ]
       ),
       Expanded(child: LayoutBuilder(
-        builder: (context, BoxConstraints) {
-          controller.progressionController = PageController(viewportFraction: min(500/BoxConstraints.maxWidth, 1.0), initialPage: controller.progressionPageIdx);         
+        builder: (context, boxConstraints) {
+          controller.progressionController = PageController(viewportFraction: min(500/boxConstraints.maxWidth, 1.0), initialPage: controller.progressionPageIdx);         
           return PageView(
             onPageChanged: (int page) {controller.updateProgressionPageIdx(page, animate: false);},
             controller: controller.progressionController,
