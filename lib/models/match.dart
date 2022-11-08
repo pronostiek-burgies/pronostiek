@@ -258,13 +258,13 @@ class Match {
         Expanded(
             child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           if (away != null) ...[
-            Expanded(child: Text(away!.name)),
+            Expanded(child: Text(away!.name, textAlign: TextAlign.end)),
             const VerticalDivider(
               thickness: 0,
             ),
             away!.getFlag(),
           ] else ...[
-            Expanded(child:Text(linkAway!)),
+            Expanded(child:Text(linkAway!, textAlign: TextAlign.end,)),
           ]
         ])),
       ]),
