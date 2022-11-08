@@ -43,7 +43,7 @@ class ProgressionPronostiek {
   List<bool?> getCorrection(List<Team?> teams, int round) {
     ResultController resultController = Get.find<ResultController>();
     return teams.map<bool?>((e) {
-      if (e == null) {return null;}
+      if (e == null) {return false;}
       if (resultController.progression[round].contains(e)) {
         return true;
       }

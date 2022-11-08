@@ -72,8 +72,8 @@ class MatchPageView extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   if (match.status == MatchStatus.notStarted) ...[
-                                    Text(DateFormat("dd/MM").format(match.startDateTime.toLocal())),
-                                    Text(DateFormat("HH:mm").format(match.startDateTime.toLocal())),
+                                    Text(DateFormat("dd/MM").format(match.startDateTime.toLocal()), textAlign: TextAlign.center,),
+                                    Text(DateFormat("HH:mm").format(match.startDateTime.toLocal()), textAlign: TextAlign.center,),
                                   ] else if (match.status == MatchStatus.ended) ...[
                                     Text(match.goalsHomeOT != null ? "FT\n(+OT)" : "FT", textAlign: TextAlign.center,),
                                   ] else ...[

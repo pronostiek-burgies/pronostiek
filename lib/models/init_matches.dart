@@ -23,10 +23,25 @@ Map<String,Match> getMatches(Map<String,Team> teams, MatchController controller)
   }
   
   return {
-    // "eup-ohl": Match("eup-ohl", DateTime.utc(2022, 10, 18, 16, 30), teams["A1"]!, teams["A2"]!, sportDataApiId: 438472),
-    // "ser-cer": Match("ser-cer", DateTime.utc(2022, 10, 18, 18, 45), teams["A3"]!, teams["A4"]!, sportDataApiId: 438478),
-    
-    "A1": Match("A1", DateTime.utc(2022, 11, 20, 17-1, 00), teams["A1"]!, teams["A2"]!,  MatchType.group),
+    "RAY-RMA": Match("RAY-RMA", DateTime.utc(2022, 11, 7, 20, 0), Team("Rayo Vallecano", "RAY", "eu", "test"), Team("Real Madrid", "RMA", "eu", "test"), MatchType.group, sporzaApi: 3317566),    "A1": Match("A1", DateTime.utc(2022, 11, 20, 17-1, 00), teams["A1"]!, teams["A2"]!,  MatchType.group),
+    "WOL-BVB": Match("WOL-BVB", DateTime.utc(2022, 11, 8, 17, 30), Team("VfL Wolfsburg", "WOL", "eu", "test"), Team("Borussia Dortmund", "BVB", "eu", "test"), MatchType.group, sporzaApi: 3316021),
+    "VFB-HER": Match("VFB-HER", DateTime.utc(2022, 11, 8, 19, 30), Team("VfB Stuttgart", "VFB", "eu", "test"), Team("Hertha BSC", "HER", "eu", "test"), MatchType.group, sporzaApi: 3316008),
+    "BOC-BMG": Match("BOC-BMG", DateTime.utc(2022, 11, 8, 19, 30), Team("VfL Bochum", "BOC", "eu", "test"), Team("Borussia Mönchengladbach", "BMG", "eu", "test"), MatchType.group, sporzaApi: 3316013),
+    "FCB-WER": Match("FCB-WER", DateTime.utc(2022, 11, 8, 19, 30), Team("FC Bayern München", "FCB", "eu", "test"), Team("Werder Bremen", "WER", "eu", "test"), MatchType.group, sporzaApi: 3316014),
+    "LEI-NEW": Match("LEI-NEW", DateTime.utc(2022, 11, 8, 19, 45), Team("Leicester City", "LEI", "eu", "test"), Team("Newport County", "NEW", "eu", "test"), MatchType.group, sporzaApi: 3317496),
+    "BOU-EVE": Match("BOU-EVE", DateTime.utc(2022, 11, 8, 19, 45), Team("Bournemouth", "BOU", "eu", "test"), Team("Everton", "EVE", "eu", "test"), MatchType.group, sporzaApi: 3317501),
+    "BUR-CRA": Match("BUR-CRA", DateTime.utc(2022, 11, 8, 19, 45), Team("Burnley", "BUR", "eu", "test"), Team("Crawley Town", "CRA", "eu", "test"), MatchType.group, sporzaApi: 3317503),
+    "BRI-LIN": Match("BRI-LIN", DateTime.utc(2022, 11, 8, 19, 45), Team("Bristol City", "BRI", "eu", "test"), Team("Lincoln City", "LIN", "eu", "test"), MatchType.group, sporzaApi: 3317504),
+    "STE-CHA": Match("STE-CHA", DateTime.utc(2022, 11, 8, 19, 45), Team("Stevenage", "STE", "eu", "test"), Team("Charlton Athletic", "CHA", "eu", "test"), MatchType.group, sporzaApi: 3317506),
+    "MK Dons-MOR": Match("MK Dons-MOR", DateTime.utc(2022, 11, 8, 19, 45), Team("Milton Keynes Dons", "MK Dons", "eu", "test"), Team("Morecambe", "MOR", "eu", "test"), MatchType.group, sporzaApi: 3317507),
+    "BRE-GIL": Match("BRE-GIL", DateTime.utc(2022, 11, 8, 19, 45), Team("Brentford", "BRE", "eu", "test"), Team("Gillingham", "GIL", "eu", "test"), MatchType.group, sporzaApi: 3317511),
+    "ECF-GIR": Match("ECF-GIR", DateTime.utc(2022, 11, 8, 18, 0), Team("Elche CF", "ECF", "eu", "test"), Team("Girona FC", "GIR", "eu", "test"), MatchType.group, sporzaApi: 3317533),
+    "ATH-VLD": Match("ATH-VLD", DateTime.utc(2022, 11, 8, 19, 0), Team("Athletic Club", "ATH", "eu", "test"), Team("Real Valladolid", "VLD", "eu", "test"), MatchType.group, sporzaApi: 3317536),
+    "OSA-BAR": Match("OSA-BAR", DateTime.utc(2022, 11, 8, 20, 30), Team("CA Osasuna", "OSA", "eu", "test"), Team("FC Barcelona", "BAR", "eu", "test"), MatchType.group, sporzaApi: 3317578),
+    "NAP-EMP": Match("NAP-EMP", DateTime.utc(2022, 11, 8, 17, 30), Team("Napoli", "NAP", "eu", "test"), Team("Empoli", "EMP", "eu", "test"), MatchType.group, sporzaApi: 3317984),
+    "SPE-UDI": Match("SPE-UDI", DateTime.utc(2022, 11, 8, 17, 30), Team("Spezia", "SPE", "eu", "test"), Team("Udinese", "UDI", "eu", "test"), MatchType.group, sporzaApi: 3318004),
+    "CRE-MIL": Match("CRE-MIL", DateTime.utc(2022, 11, 8, 19, 45), Team("Cremonese", "CRE", "eu", "test"), Team("AC Milan", "MIL", "eu", "test"), MatchType.group, sporzaApi: 3317978),
+
     "A2": Match("A2", DateTime.utc(2022, 11, 21, 17-1, 00), teams["A3"]!, teams["A4"]!,  MatchType.group),
     "A3": Match("A3", DateTime.utc(2022, 11, 25, 14-1, 00), teams["A1"]!, teams["A3"]!,  MatchType.group),
     "A4": Match("A4", DateTime.utc(2022, 11, 25, 17-1, 00), teams["A4"]!, teams["A2"]!,  MatchType.group),

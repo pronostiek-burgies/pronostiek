@@ -1,15 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pronostiek/models/team.dart';
 
-enum MatchStatus {
-  notStarted,
-  inPlay,
-  overTime,
-  penalties,
-  ended
-}
+enum MatchStatus { notStarted, inPlay, overTime, penalties, ended }
 
 enum MatchType {
   group,
@@ -24,26 +17,33 @@ class Match {
   String id;
   MatchType type;
   int? sportDataApiId;
+  int? sporzaApi;
   DateTime startDateTime;
   String? linkHome;
   String? linkAway;
-  Function? getHome;  
-  Function? getAway;  
+  Function? getHome;
+  Function? getAway;
   Team? home;
   Team? away;
   late bool knockout;
   MatchStatus status = MatchStatus.notStarted;
   int? time;
+
   /// goals after 90 mins
   int? goalsHomeFT;
+
   /// goals after 90 mins
   int? goalsAwayFT;
+
   /// goals FT + OT
   int? goalsHomeOT;
+
   /// goals FT + OT
   int? goalsAwayOT;
+
   /// goals in pen shoutout
   int? goalsHomePen;
+
   /// goals in pen shoutout
   int? goalsAwayPen;
 
@@ -52,38 +52,43 @@ class Match {
     this.startDateTime,
     this.home,
     this.away,
-    this.type,
-    {this.sportDataApiId}
-  ) {knockout = false;}
+    this.type, {
+    this.sportDataApiId,
+    this.sporzaApi,
+  }) {
+    knockout = false;
+  }
 
-  Map<String,dynamic> toJson() {
+  Map<String, dynamic> toJson() {
     return {
       "id": id,
       "status": status.index,
-      "time": time, 
-      "goals_home_FT": goalsHomeFT, 
-      "goals_Away_FT": goalsAwayFT, 
-      "goals_Home_OT": goalsHomeOT, 
-      "goals_Away_OT": goalsAwayOT, 
-      "goals_Home_Pen": goalsHomePen, 
-      "goals_Away_Pen": goalsAwayPen, 
+      "time": time,
+      "goals_Home_FT": goalsHomeFT,
+      "goals_Away_FT": goalsAwayFT,
+      "goals_Home_OT": goalsHomeOT,
+      "goals_Away_OT": goalsAwayOT,
+      "goals_Home_Pen": goalsHomePen,
+      "goals_Away_Pen": goalsAwayPen,
     };
   }
 
-  static void updateFromJson(Map<String,dynamic> json, Map<String,Match> matches) {
+  static void updateFromJson(
+      Map<String, dynamic> json, Map<String, Match> matches) {
     Match? temp = matches[json["id"]];
-    if (temp == null) {return;}
+    if (temp == null) {
+      return;
+    }
     Match match = temp;
     match.status = MatchStatus.values[json["status"] as int];
     match.time = json["time"] as int?;
-    match.goalsHomeFT = json["goals_home_FT"] as int?; 
-    match.goalsAwayFT = json["goals_Away_FT"] as int?; 
-    match.goalsHomeOT = json["goals_Home_OT"] as int?; 
-    match.goalsAwayOT = json["goals_Away_OT"] as int?; 
-    match.goalsHomePen = json["goals_Home_Pen"] as int?; 
+    match.goalsHomeFT = json["goals_home_FT"] ?? json["goals_Home_FT"] as int?;
+    match.goalsAwayFT = json["goals_Away_FT"] as int?;
+    match.goalsHomeOT = json["goals_Home_OT"] as int?;
+    match.goalsAwayOT = json["goals_Away_OT"] as int?;
+    match.goalsHomePen = json["goals_Home_Pen"] as int?;
     match.goalsAwayPen = json["goals_Away_Pen"] as int?;
   }
-
 
   Match.knockout(
     this.id,
@@ -92,23 +97,26 @@ class Match {
     this.linkAway,
     this.getHome,
     this.getAway,
-    this.type,
-    {this.sportDataApiId,}
-  ) {knockout = true;}
+    this.type, {
+    this.sportDataApiId,
+  }) {
+    knockout = true;
+  }
 
   // Tries to set home if still null, returns if home is != after this call
   bool trySetHome() {
     if (home != null) {
       return true;
-    } 
+    }
     home = getHome?.call();
     return home != null;
   }
+
   // Tries to set away if still null, returns if away is != after this call
   bool trySetAway() {
     if (away != null) {
       return true;
-    } 
+    }
     away = getAway?.call();
     return away != null;
   }
@@ -138,7 +146,9 @@ class Match {
     if (goalsHomeFT! != goalsAwayFT!) {
       return goalsHomeFT! > goalsAwayFT! ? home : away;
     }
-    if (knockout == false) {return null;}
+    if (knockout == false) {
+      return null;
+    }
     if (goalsHomeOT! != goalsAwayOT!) {
       return goalsHomeOT! > goalsAwayOT! ? home : away;
     }
@@ -152,7 +162,9 @@ class Match {
     if (goalsHomeFT! != goalsAwayFT!) {
       return goalsHomeFT! < goalsAwayFT! ? home : away;
     }
-    if (knockout == false) {return null;}
+    if (knockout == false) {
+      return null;
+    }
     if (goalsHomeOT! != goalsAwayOT!) {
       return goalsHomeOT! < goalsAwayOT! ? home : away;
     }
@@ -164,22 +176,24 @@ class Match {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         if (status == MatchStatus.notStarted) ...[
-          Text(DateFormat('dd/MM').format(startDateTime.toLocal()), textScaleFactor: 0.75,),
-          Text(DateFormat('kk:mm').format(startDateTime.toLocal()), textScaleFactor: 0.75,),
-        ]
-        else if (status == MatchStatus.inPlay) ...[
+          Text(
+            DateFormat('dd/MM').format(startDateTime.toLocal()),
+            textScaleFactor: 0.75,
+          ),
+          Text(
+            DateFormat('kk:mm').format(startDateTime.toLocal()),
+            textScaleFactor: 0.75,
+          ),
+        ] else if (status == MatchStatus.inPlay) ...[
           Text("$time'"),
           Text("$goalsHomeFT - $goalsAwayFT"),
-        ]
-        else if (status == MatchStatus.overTime) ...[
+        ] else if (status == MatchStatus.overTime) ...[
           Text("$time'"),
           Text("$goalsHomeOT - $goalsAwayOT"),
-        ]
-        else if (status == MatchStatus.penalties) ...[
+        ] else if (status == MatchStatus.penalties) ...[
           Text("$goalsHomeOT - $goalsAwayOT"),
           Text("($goalsHomePen- $goalsAwayPen)", textScaleFactor: 0.75),
-        ]
-        else if (status == MatchStatus.ended) ...[
+        ] else if (status == MatchStatus.ended) ...[
           if (goalsHomeOT == null) ...[
             const Text("FT"),
             Text("$goalsHomeFT - $goalsAwayFT"),
@@ -189,144 +203,155 @@ class Match {
             if (goalsHomePen != null) ...[
               Text("($goalsHomePen-$goalsAwayPen)", textScaleFactor: 0.75),
             ]
-
           ]
         ]
       ],
     );
   }
 
-  ListTile getListTile({bool leading=true}) {
+  ListTile getListTile({bool leading = true}) {
     return ListTile(
-      leading: leading ? Text(id): null,
-      title: Row(
-        children: [
-          Expanded(child: Row(children: [
-            if (home != null) ... [
-              home!.getFlag(),
-              const VerticalDivider(thickness: 0,),
-              Text(home!.name)
-            ] else ...[
-              Text(linkHome!),
-            ],
-          ])),
-          
-          Column(children: [
+      leading: leading ? Text(id) : null,
+      title: Row(children: [
+        Expanded(
+            child: Row(children: [
+          if (home != null) ...[
+            home!.getFlag(),
+            const VerticalDivider(
+              thickness: 0,
+            ),
+            Expanded(child:Text(home!.name))
+          ] else ...[
+            Expanded(child:Text(linkHome!)),
+          ],
+        ])),
+        Column(
+          children: [
             if (status == MatchStatus.notStarted) ...[
-              Text(DateFormat('dd/MM').format(startDateTime.toLocal()), textScaleFactor: 0.75,),
-              Text(DateFormat('kk:mm').format(startDateTime.toLocal()), textScaleFactor: 0.75,),
-            ]
-            else if (status == MatchStatus.inPlay) ...[
+              Text(
+                DateFormat('dd/MM').format(startDateTime.toLocal()),
+                textScaleFactor: 0.75,
+              ),
+              Text(
+                DateFormat('kk:mm').format(startDateTime.toLocal()),
+                textScaleFactor: 0.75,
+              ),
+            ] else if (status == MatchStatus.inPlay) ...[
               Text("$time'"),
               Text("$goalsHomeFT - $goalsAwayFT"),
-            ]
-            else if (status == MatchStatus.overTime) ...[
+            ] else if (status == MatchStatus.overTime) ...[
               Text("$time'"),
               Text("$goalsHomeOT - $goalsAwayOT"),
-            ]
-            else if (status == MatchStatus.penalties) ...[
+            ] else if (status == MatchStatus.penalties) ...[
               Text("$goalsHomeOT - $goalsAwayOT"),
               Text("($goalsHomePen- $goalsAwayPen)", textScaleFactor: 0.75),
-            ]
-            else if (status == MatchStatus.ended) ...[
+            ] else if (status == MatchStatus.ended) ...[
               Text("FT${goalsAwayOT != null ? " (+OT)" : ""}"),
-              Text("${goalsHomeOT ?? goalsHomeFT} - ${goalsAwayOT ?? goalsAwayFT}"),
-              if (goalsHomePen != null) ... [
+              Text(
+                  "${goalsHomeOT ?? goalsHomeFT} - ${goalsAwayOT ?? goalsAwayFT}"),
+              if (goalsHomePen != null) ...[
                 Text("($goalsHomePen- $goalsAwayPen)", textScaleFactor: 0.75),
               ]
             ]
-          ],),
-
-          Expanded(child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              if (away != null) ...[
-                Text(away!.name),
-                const VerticalDivider(thickness: 0,),
-                away!.getFlag(),
-              ] else ...[
-                Text(linkAway!),
-              ]
-            ]
-          )),
-        ]
-      ),
+          ],
+        ),
+        Expanded(
+            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+          if (away != null) ...[
+            Expanded(child: Text(away!.name)),
+            const VerticalDivider(
+              thickness: 0,
+            ),
+            away!.getFlag(),
+          ] else ...[
+            Expanded(child:Text(linkAway!)),
+          ]
+        ])),
+      ]),
     );
   }
 
-  Widget getMatchCard({bool showMatchId=false}) {
+  Widget getMatchCard({bool showMatchId = false}) {
     return Card(
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 280),
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-        child: IntrinsicHeight(child: Row(
-          children: [
-            Text(id),
-            const VerticalDivider(),
-            Expanded(child:Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ConstrainedBox(
-                  constraints: const BoxConstraints(minHeight: 20),
-                  child: Row(
-                    children: [
-                      if (home != null) ...[
-                        home!.getFlag(),
-                      ],
-                      const SizedBox(width: 8),
-                      Text(home?.name ?? linkHome!),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16,),
-                ConstrainedBox(
-                  constraints: const BoxConstraints(minHeight: 20),
-                  child: Row(
-                    children: [
-                      if (away != null) ...[
-                        away!.getFlag(),
-                      ],
-                      const SizedBox(width: 8),
-                      Text(away?.name ?? linkAway!),
-                    ],
-                  ),
-                ),
-              ],
-            )),
-            Container(
-              // padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+        child: Container(
+      constraints: const BoxConstraints(maxWidth: 280),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: IntrinsicHeight(
+          child: Row(
+        children: [
+          Text(id),
+          const VerticalDivider(),
+          Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (status == MatchStatus.notStarted) ...[
-                    Text(DateFormat("dd/MM").format(startDateTime.toLocal())),
-                    Text(DateFormat("HH:mm").format(startDateTime.toLocal())),
-                  ] else if (status == MatchStatus.ended) ...[
-                    Text(goalsHomeOT != null ? "FT\n(+OT)" : "FT", textAlign: TextAlign.center,),
-                  ] else ...[
-                    Text("$time'")
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 20),
+                child: Row(
+                  children: [
+                    if (home != null) ...[
+                      home!.getFlag(),
+                    ],
+                    const SizedBox(width: 8),
+                    Text(home?.name ?? linkHome!),
                   ],
-                ],
+                ),
               ),
+              const SizedBox(
+                height: 16,
+              ),
+              ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 20),
+                child: Row(
+                  children: [
+                    if (away != null) ...[
+                      away!.getFlag(),
+                    ],
+                    const SizedBox(width: 8),
+                    Text(away?.name ?? linkAway!),
+                  ],
+                ),
+              ),
+            ],
+          )),
+          Container(
+            // padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (status == MatchStatus.notStarted) ...[
+                  Text(DateFormat("dd/MM").format(startDateTime.toLocal())),
+                  Text(DateFormat("HH:mm").format(startDateTime.toLocal())),
+                ] else if (status == MatchStatus.ended) ...[
+                  Text(
+                    goalsHomeOT != null ? "FT\n(+OT)" : "FT",
+                    textAlign: TextAlign.center,
+                  ),
+                ] else ...[
+                  Text("$time'")
+                ],
+              ],
             ),
-            Container(
-              // padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (status == MatchStatus.ended || isBusy()) ...[
-                    Text("${goalsHomePen != null ? "($goalsHomePen)": ""} ${goalsHomeOT ?? goalsHomeFT!}"),
-                    const SizedBox(height: 16),
-                    Text("${goalsAwayPen != null ? "($goalsAwayPen)": ""} ${goalsAwayOT ?? goalsAwayFT!}"),
-                  ]
-                ],
-              ),
-            ),                     
-          ],
-        )),
-      )
-    );
+          ),
+          Container(
+            // padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (status == MatchStatus.ended || isBusy()) ...[
+                  Text(
+                      "${goalsHomePen != null ? "($goalsHomePen)" : ""} ${goalsHomeOT ?? goalsHomeFT!}"),
+                  const SizedBox(height: 16),
+                  Text(
+                      "${goalsAwayPen != null ? "($goalsAwayPen)" : ""} ${goalsAwayOT ?? goalsAwayFT!}"),
+                ]
+              ],
+            ),
+          ),
+        ],
+      )),
+    ));
   }
 }

@@ -38,6 +38,8 @@ class MatchController extends GetxController {
 
   Future<void> init() async {
     await updateAllMatches();
+    utcTime = await timeClient.getTime();
+    fetchLiveResults(matches.values.where((Match e) => e.isBusy() || (e.status != MatchStatus.ended && e.startDateTime.isBefore(utcTime))).toList());
     await setRefresher();
   }
 
@@ -60,8 +62,9 @@ class MatchController extends GetxController {
     if (timeUntilUpdate > const Duration(minutes: 30)) {
       timeUntilUpdate = const Duration(minutes: 30);
     }
+    print("fetching live results in $timeUntilUpdate");
     Future.delayed(timeUntilUpdate, () {
-      // fetchLiveResults();
+      fetchLiveResults(matches.values.where((Match e) => e.isBusy() || (e.status != MatchStatus.ended && e.startDateTime.isBefore(utcTime))).toList());
       setRefresher();
     });
   }
@@ -98,11 +101,13 @@ class MatchController extends GetxController {
   }
 
   void getLiveMatches() {
-    repo.fetchLiveMatchResults(matches, DateTime.now());
+    repo.fetchLiveMatchResults(matches, matches.values.toList());
+    update();
   }
 
-  void fetchLiveResults() {
-    repo.fetchLiveMatchResults(matches, DateTime.now());
+  void fetchLiveResults(List<Match> matchesToUpdate) {
+    repo.fetchLiveMatchResults(matches, matchesToUpdate);
+    update();
   }
 
 

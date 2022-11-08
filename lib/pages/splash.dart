@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pronostiek/api/client.dart';
 import 'package:pronostiek/api/repository.dart';
+import 'package:pronostiek/api/sporza_client.dart';
 import 'package:pronostiek/api/time_client.dart';
 import 'package:pronostiek/controllers/base_page_controller.dart';
 import 'package:pronostiek/controllers/dashboard_controller.dart';
