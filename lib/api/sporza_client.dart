@@ -23,7 +23,7 @@ class SporzaClient {
 
   SporzaClient() {
     if (kIsWeb) {
-      dio.options.baseUrl = "https://thingproxy.freeboard.io/fetch/https://api.sporza.be/soccer/";
+      dio.options.baseUrl = "https://corsproxy.io/?https://api.sporza.be/web/soccer/";
     } else {
       dio.options.baseUrl = "https://api.sporza.be/soccer/";
     }

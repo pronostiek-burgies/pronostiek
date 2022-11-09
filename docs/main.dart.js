@@ -90078,7 +90078,7 @@ $S:47}
 A.app.prototype={
 a3O(){var s,r=null,q=this.a,p=q.ae$
 p===$&&A.b()
-p.dF$="https://thingproxy.freeboard.io/fetch/https://api.sporza.be/soccer/"
+p.dF$="https://corsproxy.io/?https://api.sporza.be/web/soccer/"
 p.ee$=1e4
 p.d=5000
 p.szj(0,"application/x-www-form-urlencoded")
