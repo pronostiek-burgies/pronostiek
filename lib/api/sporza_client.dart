@@ -84,7 +84,7 @@ class SporzaClient {
     try {
       response = await secondDio.get("fixtures", queryParameters: {"id": matchId});
     } catch (e) {
-      return [null, null];
+      return await getFTScore(matchId);
     }
     print(response.data);
     int? home = response.data["response"][0]["score"]["fulltime"]["home"];
