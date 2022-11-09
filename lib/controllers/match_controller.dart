@@ -63,7 +63,8 @@ class MatchController extends GetxController {
       timeUntilUpdate = const Duration(minutes: 30);
     }
     print("fetching live results in $timeUntilUpdate");
-    Future.delayed(timeUntilUpdate, () {
+    Future.delayed(timeUntilUpdate, () async {
+      await updateAllMatches();
       fetchLiveResults(matches.values.where((Match e) => e.isBusy() || (e.status != MatchStatus.ended && e.startDateTime.isBefore(utcTime))).toList());
       setRefresher();
     });

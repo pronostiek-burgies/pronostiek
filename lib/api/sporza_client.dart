@@ -73,7 +73,7 @@ class SporzaClient {
     try {
       response = await dio.get("matches/$matchId");
     } catch (e) {
-      return null;
+      return getMatch(matchId);
     }
     return Map<String,dynamic>.from(response.data);
   }
@@ -84,9 +84,8 @@ class SporzaClient {
     try {
       response = await secondDio.get("fixtures", queryParameters: {"id": matchId});
     } catch (e) {
-      return await getFTScore(matchId);
+      return [null, null];
     }
-    print(response.data);
     int? home = response.data["response"][0]["score"]["fulltime"]["home"];
     int? away = response.data["response"][0]["score"]["fulltime"]["away"];
     return [home, away];
