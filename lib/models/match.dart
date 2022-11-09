@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pronostiek/models/team.dart';
 
-enum MatchStatus { notStarted, inPlay, overTime, penalties, ended }
+enum MatchStatus {notStarted, inPlay, ended}
+
+enum LiveMatchStatus {regularTime, halfTime, overTime, penalties, unknown}
 
 enum MatchType {
   group,
@@ -18,6 +21,7 @@ class Match {
   MatchType type;
   int? sportDataApiId;
   int? sporzaApi;
+  int? apiSports;
   DateTime startDateTime;
   String? linkHome;
   String? linkAway;
@@ -27,7 +31,10 @@ class Match {
   Team? away;
   late bool knockout;
   MatchStatus status = MatchStatus.notStarted;
+  LiveMatchStatus? liveStatus;
   int? time;
+  int? extraTime;
+  bool scoreFTChecked = false;
 
   /// goals after 90 mins
   int? goalsHomeFT;
@@ -55,15 +62,18 @@ class Match {
     this.type, {
     this.sportDataApiId,
     this.sporzaApi,
-  }) {
-    knockout = false;
-  }
+    this.apiSports,
+    this.knockout=false,
+  });
 
   Map<String, dynamic> toJson() {
     return {
       "id": id,
-      "status": status.index,
+      "status": status.name,
+      "live_status": liveStatus?.name,
       "time": time,
+      "extra_time": extraTime,
+      "score_FT_checked": scoreFTChecked,
       "goals_Home_FT": goalsHomeFT,
       "goals_Away_FT": goalsAwayFT,
       "goals_Home_OT": goalsHomeOT,
@@ -80,8 +90,11 @@ class Match {
       return;
     }
     Match match = temp;
-    match.status = MatchStatus.values[json["status"] as int];
+    match.status = MatchStatus.values.firstWhere((element) => element.name == json["status"]);
+    match.liveStatus = LiveMatchStatus.values.firstWhereOrNull((element) => element.name == json["live_status"]);
     match.time = json["time"] as int?;
+    match.extraTime = json["extra_time"] as int?;
+    match.scoreFTChecked = (json["score_FT_checked"] ?? false) as bool;
     match.goalsHomeFT = json["goals_home_FT"] ?? json["goals_Home_FT"] as int?;
     match.goalsAwayFT = json["goals_Away_FT"] as int?;
     match.goalsHomeOT = json["goals_Home_OT"] as int?;
@@ -103,21 +116,21 @@ class Match {
     knockout = true;
   }
 
-  // Tries to set home if still null, returns if home is != after this call
+  // Tries to set home if still null, returns if home is != null after this call
   bool trySetHome() {
-    if (home != null) {
+    if (getHome == null) {
       return true;
     }
-    home = getHome?.call();
+    home = getHome!.call();
     return home != null;
   }
 
-  // Tries to set away if still null, returns if away is != after this call
+  // Tries to set away if still null, returns if away is != null after this call
   bool trySetAway() {
-    if (away != null) {
+    if (getAway == null) {
       return true;
     }
-    away = getAway?.call();
+    away = getAway!.call();
     return away != null;
   }
 
@@ -185,14 +198,16 @@ class Match {
             textScaleFactor: 0.75,
           ),
         ] else if (status == MatchStatus.inPlay) ...[
-          Text("$time'"),
-          Text("$goalsHomeFT - $goalsAwayFT"),
-        ] else if (status == MatchStatus.overTime) ...[
-          Text("$time'"),
-          Text("$goalsHomeOT - $goalsAwayOT"),
-        ] else if (status == MatchStatus.penalties) ...[
-          Text("$goalsHomeOT - $goalsAwayOT"),
-          Text("($goalsHomePen- $goalsAwayPen)", textScaleFactor: 0.75),
+          if (liveStatus == LiveMatchStatus.regularTime) ...[
+            Text("$time'"),
+            Text("$goalsHomeFT - $goalsAwayFT"),
+          ] else if (status == LiveMatchStatus.overTime) ...[
+            Text("$time'"),
+            Text("$goalsHomeOT - $goalsAwayOT"),
+          ] else if (status == LiveMatchStatus.penalties) ...[
+            Text("$goalsHomeOT - $goalsAwayOT"),
+            Text("($goalsHomePen- $goalsAwayPen)", textScaleFactor: 0.75),
+          ] 
         ] else if (status == MatchStatus.ended) ...[
           if (goalsHomeOT == null) ...[
             const Text("FT"),
@@ -225,36 +240,7 @@ class Match {
             Expanded(child:Text(linkHome!)),
           ],
         ])),
-        Column(
-          children: [
-            if (status == MatchStatus.notStarted) ...[
-              Text(
-                DateFormat('dd/MM').format(startDateTime.toLocal()),
-                textScaleFactor: 0.75,
-              ),
-              Text(
-                DateFormat('kk:mm').format(startDateTime.toLocal()),
-                textScaleFactor: 0.75,
-              ),
-            ] else if (status == MatchStatus.inPlay) ...[
-              Text("$time'"),
-              Text("$goalsHomeFT - $goalsAwayFT"),
-            ] else if (status == MatchStatus.overTime) ...[
-              Text("$time'"),
-              Text("$goalsHomeOT - $goalsAwayOT"),
-            ] else if (status == MatchStatus.penalties) ...[
-              Text("$goalsHomeOT - $goalsAwayOT"),
-              Text("($goalsHomePen- $goalsAwayPen)", textScaleFactor: 0.75),
-            ] else if (status == MatchStatus.ended) ...[
-              Text("FT${goalsAwayOT != null ? " (+OT)" : ""}"),
-              Text(
-                  "${goalsHomeOT ?? goalsHomeFT} - ${goalsAwayOT ?? goalsAwayFT}"),
-              if (goalsHomePen != null) ...[
-                Text("($goalsHomePen- $goalsAwayPen)", textScaleFactor: 0.75),
-              ]
-            ]
-          ],
-        ),
+        getScoreBoardMiddle(),
         Expanded(
             child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           if (away != null) ...[

@@ -77,6 +77,17 @@ class MyDrawer extends StatelessWidget {
               ),
               const Divider(),
               if (controller.isLogged) ...[
+                if (controller.user?.admin ?? false) ...[
+                  ListTile(
+                    leading: const Icon(Icons.admin_panel_settings_outlined),
+                    title: const Text("Admin"),
+                    onTap: () {
+                      Get.find<BasePageController>().changeTabIndex(4);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  const Divider(),
+                ],
                 ListTile(
                   leading: const Icon(Icons.logout),
                   title: const Text("Log out"),

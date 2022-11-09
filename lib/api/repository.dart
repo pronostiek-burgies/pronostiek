@@ -4,8 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pronostiek/api/dropbox.dart';
+import 'package:pronostiek/controllers/pronostiek_controller.dart';
 import 'package:pronostiek/controllers/user_controller.dart';
 import 'package:pronostiek/models/pronostiek/pronostiek.dart';
+import 'package:pronostiek/models/pronostiek/random_pronostiek.dart';
 import 'package:pronostiek/models/user.dart';
 
 class Repository {
@@ -107,5 +109,22 @@ class Repository {
     return await writeDropboxFile("/pronostiek/$username.json", jsonEncode(pronostiek.toJson()));
   }
 
+  Future<List<RandomPronostiek>> getRandomSolution() async {
+    String username = "admin";
+    return Pronostiek.fromJson(jsonDecode(await readDropboxFile("/pronostiek/$username.json"))).random;
+  }
+
+  // Future<List<Pronostiek>> getOtherUsersPronostiek() async {
+  //   UserController userController = Get.find<UserController>();
+  //   if (!userController.isLogged || userController.user == null) {
+  //     Get.defaultDialog(
+  //       title: "Could not find your pronostiek.",
+  //       content: const Text("Try again")
+  //     );
+  //     return null;
+  //   }
+  //   String username = userController.user!.username;
+  //   return Pronostiek.fromJson(jsonDecode(await readDropboxFile("/pronostiek/$username.json")));
+  // }
 
 }

@@ -40,14 +40,12 @@ class MatchRepository {
     //   await getAllMatches(matches);
     //   return;
     // }
-    await Future.wait(matchesToUpdate.map((e) {
-      return sporzaClient.getMatch(e.sporzaApi).then((data) {
-        if (data == null) {return null;}
-        data["id"] = e.id;
-        data = SporzaClient.mapToOurInterface(data);
-        Match.updateFromJson(data, matches);
-      });
-    },));
+    for (Match match in matchesToUpdate) {
+      Map<String,dynamic>? data = await sporzaClient.getMatch(match.sporzaApi);
+      if (data == null) {return;}
+      data = await sporzaClient.mapToOurInterface(data, match);
+      Match.updateFromJson(data, matches);
+    }
     saveAllMatches(matches);
     // client data not up to date with dropbox -> first update from dropbox
     // if ((int.tryParse(jsonDecode(await repo.readDropboxFile("/sportdataapi.json"))["remaining_requests"]) ?? 500) < sportdataapiRemainingRequests!) {

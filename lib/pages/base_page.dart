@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pronostiek/controllers/base_page_controller.dart';
+import 'package:pronostiek/pages/admin_page.dart';
 import 'package:pronostiek/pages/dashboard_page.dart';
 import 'package:pronostiek/pages/drawer.dart';
 import 'package:pronostiek/pages/match_page.dart';
@@ -22,6 +23,7 @@ class BasePage extends StatelessWidget {
             const PronostiekPage(drawer),
             const ResultPage(drawer),
             RulesPage(drawer),
+            const AdminPage(drawer),
           ]
         )
       );

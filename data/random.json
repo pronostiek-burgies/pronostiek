@@ -1,0 +1,42 @@
+[
+    {
+        "id": "cards_player",
+        "answer": null
+    },
+    {
+        "id": "loser",
+        "answer": null
+    },
+    {
+        "id": "penalty",
+        "answer": null
+    },
+    {
+        "id": "goals_stoppage",
+        "answer": null
+    },
+    {
+        "id": "total_goals",
+        "answer": null
+    },
+    {
+        "id": "hazard",
+        "answer": null
+    },
+    {
+        "id": "top_scorer",
+        "answer": null
+    },
+    {
+        "id": "top_assists",
+        "answer": null
+    },
+    {
+        "id": "hattricks",
+        "answer": null
+    },
+    {
+        "id": "own_goals",
+        "answer": null
+    }
+]

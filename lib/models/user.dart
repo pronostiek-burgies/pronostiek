@@ -3,12 +3,14 @@ class User {
   late String firstname;
   late String lastname;
   late List<dynamic> pwDigest;
+  late bool admin;
 
   User(
     this.username,
     this.firstname,
     this.lastname,
     this.pwDigest,
+    {this.admin=false}
   );
 
   /// Constructor for a User instance from [json] (Json format)
@@ -17,6 +19,7 @@ class User {
     firstname = json["firstname"];
     lastname = json["lastname"];
     pwDigest = json["pw_digest"];
+    admin = (json["admin"] ?? false) as bool;
   }
 
   Map<String,dynamic> toJson() {
@@ -25,6 +28,7 @@ class User {
       "firstname": firstname,
       "lastname": lastname,
       "pw_digest": pwDigest,
+      "admin": admin,
     };
   }
 }

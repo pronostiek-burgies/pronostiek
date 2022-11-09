@@ -54,7 +54,7 @@ class MatchController extends GetxController {
       List<DateTime> startTimes = matches.values.where((Match e) => e.status != MatchStatus.ended).map((Match e) => e.startDateTime).toList();
       DateTime timeUntilMatch = startTimes.reduce((value, element) => value.isBefore(element) ? value : element);
       if (timeUntilMatch.isBefore(utcTime)) {
-        timeUntilUpdate = Duration(minutes: 1, seconds: random.nextInt(60));
+        timeUntilUpdate = Duration(minutes: 0, seconds: random.nextInt(60));
       } else {
         timeUntilUpdate = timeUntilMatch.difference(utcTime) + Duration(minutes: 1, seconds: random.nextInt(60));
       }
@@ -83,6 +83,13 @@ class MatchController extends GetxController {
 
   void saveAllMatches() {
     repo.saveAllMatches(matches);
+  }
+
+  Future<bool> editMatchResult(Map<String,dynamic> data) async {
+    Match.updateFromJson(data, matches);
+    bool saved = await repo.saveAllMatches(matches);
+    updateAllMatches();
+    return saved;
   }
 
   /// update match results based on dropbox state (does not call api for live results)

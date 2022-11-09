@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pronostiek/api/repository.dart';
 import 'package:pronostiek/controllers/match_controller.dart';
 import 'package:pronostiek/models/group.dart';
 import 'package:pronostiek/models/match.dart';
@@ -23,12 +24,21 @@ class ResultController extends GetxController {
   List<RandomPronostiek> randomQuestions = RandomPronostiek.getQuestions();
 
   MatchController matchController = Get.find<MatchController>();
+  Repository repo = Get.find<Repository>();
+
+  List<Pronostiek> pronostieks = [];
 
 
   static ResultController get to => Get.find<ResultController>();
 
   ResultController() {
     progression[0] = matchController.teams.values.toList();
+  }
+
+  void init() async {
+    randomQuestions = await repo.getRandomSolution();
+    // pronostieks = await repo.getOtherUsersPronostiek();
+    update();
   }
 
   void updateTeamsEndStage() {
