@@ -73,7 +73,7 @@ class SporzaClient {
     try {
       response = await dio.get("matches/$matchId");
     } catch (e) {
-      return getMatch(matchId);
+      return Future.delayed(const Duration(seconds: 2), () => getMatch(matchId));
     }
     return Map<String,dynamic>.from(response.data);
   }
@@ -111,7 +111,7 @@ class SporzaClient {
       "END": MatchStatus.ended.name,
       "NOT_STARTED": MatchStatus.notStarted.name,
       "LIVE": MatchStatus.inPlay.name
-      }[data["status"]];
+      }[data["status"]] ?? MatchStatus.notStarted.name;
     List<int?> time = _parseLiveTime(data["liveTime"]);
     data["time"] = time[0];
     data["extra_time"] = time[1];
