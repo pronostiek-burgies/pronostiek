@@ -63,8 +63,8 @@ class ResultController extends GetxController {
     return pronostieks.map((key, Pronostiek value) => MapEntry(key, value.random.fold(0, (v,e) => v + (getRandomPoints(e) ?? 0))));
   }
 
-  Map<String,Map<DateTime,dynamic>> getPointsPerDay(DateTime startDate, DateTime endDate) {
-    Map<String,Map<DateTime,dynamic>> points = pronostieks.map<String,Map<DateTime,dynamic>>((k, v) => MapEntry(k, {}));
+  Map<String,Map<DateTime,dynamic>> getPointsPerDay(DateTime startDate, DateTime endDate, {startZero=false}) {
+    Map<String,Map<DateTime,dynamic>> points = pronostieks.map<String,Map<DateTime,dynamic>>((k, v) => MapEntry(k, startZero ? {startDate.subtract(const Duration(days: 1)): [0, ""]} : {}));
     for (String username in points.keys) {
       DateTime currentDay = startDate;
       while (currentDay.year <= endDate.year && currentDay.month <= endDate.month && currentDay.day <= endDate.day) {

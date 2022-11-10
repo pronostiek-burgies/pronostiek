@@ -65,6 +65,7 @@ class DashboardPage extends StatelessWidget {
                 ),
                 Container(
                     margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     color: Get.theme.cardColor,
                     height: controller.usernames.length * 100.0,
                     child: charts.LineChart(
@@ -76,7 +77,7 @@ class DashboardPage extends StatelessWidget {
                       ),
                       domainAxis: charts.NumericAxisSpec(
                           renderSpec: const charts.SmallTickRendererSpec(labelRotation: 45, labelAnchor: charts.TickLabelAnchor.inside,),
-                          tickProviderSpec: charts.BasicNumericTickProviderSpec(desiredTickCount: evolution.domainTicks.length),
+                          tickProviderSpec: charts.BasicNumericTickProviderSpec(desiredTickCount: evolution.domainTicks.length+1, zeroBound: true),
                           tickFormatterSpec:
                               charts.BasicNumericTickFormatterSpec((i) {
                                 if (evolution.domainTicks[i!.toInt()] != null) {
@@ -179,7 +180,7 @@ List<charts.Series<UserPoints, String>> getRankingData(
 
 PointsPerDayWrapper getEvolutionData(ResultController controller) {
   Map<String, Map<DateTime, dynamic>> points = controller.getPointsPerDay(
-      DateTime(2022, 11, 19), DateTime(2022, 12, 30));
+      DateTime(2022, 11, 19), DateTime(2022,12,30), startZero:true);
   List<DateTime> matchDays = points[controller.usernames[0]]!
       .keys
       .where(

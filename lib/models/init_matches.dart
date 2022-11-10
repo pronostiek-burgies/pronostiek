@@ -23,10 +23,6 @@ Map<String,Match> getMatches(Map<String,Team> teams, MatchController controller)
   }
   
   return {
-    "WDM-KVK": Match("WDM-KVK", DateTime.utc(2022, 11, 10, 19, 0), Team("RWDM", "WDM", "eu", "RWDM"), Team("KV Kortrijk", "KVK", "eu", "KV Kortrijk"), MatchType.group, sporzaApi: 3324003, apiSports: 963360, knockout: true),
-    "BEV-ANT": Match("BEV-ANT", DateTime.utc(2022, 11, 10, 19, 0), Team("SK Beveren", "BEV", "eu", "SK Beveren"), Team("Antwerp", "ANT", "eu", "Antwerp"), MatchType.group, sporzaApi: 3324014, apiSports: 963353, knockout: true),
-    "LIE-AND": Match("LIE-AND", DateTime.utc(2022, 11, 10, 19, 45), Team("Lierse K.", "LIE", "eu", "Lierse K."), Team("Anderlecht", "AND", "eu", "Anderlecht"), MatchType.group, sporzaApi: 3324012, apiSports: 963349, knockout: true),
-
     "A1": Match("A1", DateTime.utc(2022, 11, 20, 17-1, 00), teams["A1"]!, teams["A2"]!,  MatchType.group),
     "A2": Match("A2", DateTime.utc(2022, 11, 21, 17-1, 00), teams["A3"]!, teams["A4"]!,  MatchType.group),
     "A3": Match("A3", DateTime.utc(2022, 11, 25, 14-1, 00), teams["A1"]!, teams["A3"]!,  MatchType.group),

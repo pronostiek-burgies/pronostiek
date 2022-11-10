@@ -418,7 +418,7 @@ class _AdminMatchTileState extends State<AdminMatchTile> {
                   )),
                 ]),
             if (match.away == null) ...[
-              Expanded(child: Text(match.linkAway!))
+              Expanded(child: Text(match.linkAway!, textAlign: TextAlign.end,))
             ] else ...[
               Expanded(child: match.away!.getWidget(flagFirst: false)),
             ],

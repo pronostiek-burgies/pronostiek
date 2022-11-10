@@ -73,9 +73,9 @@ class ProgressionPronostiek {
       return [getCorrection(quarterFinals.map((e) => teams[e]).toList(), 2).fold<int>(0, (v, e) => e??false ? v+getPointsPerTeam(2) : v), "Quarter Finals"];
     } else if (isSameDay(day, DateTime(2022, 12, 11))) {
       return [getCorrection(semiFinals.map((e) => teams[e]).toList(), 3).fold<int>(0, (v, e) => e??false ? v+getPointsPerTeam(3) : v), "Semi-Finals"];
-    } else if (isSameDay(day, DateTime(2022, 17, 15))) {
+    } else if (isSameDay(day, DateTime(2022, 12, 15))) {
       return [getCorrection(wcFinal.map((e) => teams[e]).toList(), 4).fold<int>(0, (v, e) => e??false ? v+getPointsPerTeam(4) : v), "Final"];
-    } else if (isSameDay(day, DateTime(2022, 17, 19))) {
+    } else if (isSameDay(day, DateTime(2022, 12, 19))) {
       return [getCorrection([winner].map((e) => teams[e]).toList(), 5).fold<int>(0, (v, e) => e??false ? v+getPointsPerTeam(5) : v), "Winner"];
     }
     return null;
