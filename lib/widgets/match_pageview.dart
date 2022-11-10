@@ -78,7 +78,7 @@ class MatchPageView extends StatelessWidget {
                                   ] else if (match.status == MatchStatus.ended) ...[
                                     Text(match.goalsHomeOT != null ? "FT\n(+OT)" : "FT", textAlign: TextAlign.center,),
                                   ] else ...[
-                                    Text("${match.time}'")
+                                    Text(match.timeToString()),
                                   ],
                                 ],
                               ),
@@ -89,8 +89,8 @@ class MatchPageView extends StatelessWidget {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                      Text("${match.goalsHomePen != null ? "(${match.goalsHomePen})": ""} ${match.goalsHomeOT ?? match.goalsHomeFT!}"),
-                                      Text("${match.goalsAwayPen != null ? "(${match.goalsAwayPen})": ""} ${match.goalsAwayOT ?? match.goalsAwayFT!}"),
+                                      Text("${match.goalsHomeOT ?? match.goalsHomeFT!} ${match.goalsHomePen != null ? "(${match.goalsHomePen})": ""}"),
+                                      Text("${match.goalsAwayOT ?? match.goalsAwayFT!} ${match.goalsAwayPen != null ? "(${match.goalsAwayPen})": ""}"),
                                     ]
                                 ),
                               ),                     

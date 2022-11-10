@@ -184,6 +184,16 @@ class Match {
     return goalsHomePen! < goalsAwayPen! ? home : away;
   }
 
+  String timeToString() {
+    if (liveStatus == LiveMatchStatus.halfTime) {return "HT";}
+    if (time == null) {return "";}
+    if (extraTime == null) {
+      return "$time'";
+    } else {
+      return "$time+$extraTime'";
+    }
+  }
+
   Widget getScoreBoardMiddle() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

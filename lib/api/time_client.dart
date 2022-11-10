@@ -31,7 +31,7 @@ class TimeClient {
       Response response = await dio.get("/timezone/Etc/UTC");
       return DateTime.parse(response.data["datetime"]);
     } catch (e) {
-      return getTime();
+      return Future.delayed(const Duration(seconds: 2), () => getTime());
     }
   }
 

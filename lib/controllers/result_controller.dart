@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:pronostiek/api/repository.dart';
 import 'package:pronostiek/controllers/match_controller.dart';
 import 'package:pronostiek/models/group.dart';
@@ -26,7 +28,9 @@ class ResultController extends GetxController {
   MatchController matchController = Get.find<MatchController>();
   Repository repo = Get.find<Repository>();
 
-  List<Pronostiek> pronostieks = [];
+  List<String> usernames = [];
+  Map<String,Pronostiek> pronostieks = {};
+  late List<RandomPronostiek> solutionRandom;
 
 
   static ResultController get to => Get.find<ResultController>();
@@ -35,10 +39,84 @@ class ResultController extends GetxController {
     progression[0] = matchController.teams.values.toList();
   }
 
-  void init() async {
+  Future<void> init() async {
     randomQuestions = await repo.getRandomSolution();
-    // pronostieks = await repo.getOtherUsersPronostiek();
+    usernames = (await repo.getUsernames()).where((element) => element != "admin").toList();
+    pronostieks = await repo.getOtherUsersPronostiek(usernames);
+    solutionRandom = (await repo.getOtherUsersPronostiek(["admin"]))["admin"]!.random;
     update();
+  }
+
+  void refreshSolution() {
+    init();
+  }
+
+  Map<String,int> getAllMatchPoints() {
+    return pronostieks.map((key, Pronostiek value) => MapEntry(key, value.getAllMatchPoints()));
+  }
+
+  Map<String,int> getAllProgressionPoints() {
+    return pronostieks.map((key, Pronostiek value) => MapEntry(key, value.progression.getTotalPoints()));
+  }
+
+  Map<String,int> getAllRandomPoints() {
+    return pronostieks.map((key, Pronostiek value) => MapEntry(key, value.random.fold(0, (v,e) => v + (getRandomPoints(e) ?? 0))));
+  }
+
+  Map<String,Map<DateTime,dynamic>> getPointsPerDay(DateTime startDate, DateTime endDate) {
+    Map<String,Map<DateTime,dynamic>> points = pronostieks.map<String,Map<DateTime,dynamic>>((k, v) => MapEntry(k, {}));
+    for (String username in points.keys) {
+      DateTime currentDay = startDate;
+      while (currentDay.year <= endDate.year && currentDay.month <= endDate.month && currentDay.day <= endDate.day) {
+        int? pointsCurrentDay = pronostieks[username]!.getDayMatchPoints(currentDay);
+        if (pointsCurrentDay != null) {
+          points[username]![currentDay] = [pronostieks[username]!.getDayMatchPoints(currentDay), DateFormat("dd/MM").format(currentDay)];
+        }
+        points[username]![currentDay.add(const Duration(hours: 1))] = pronostieks[username]!.progression.getPointsPerDay(currentDay);
+        currentDay = currentDay.add(const Duration(days: 1));
+      }
+      points[username]!.removeWhere((key, value) => value == null);
+    }
+    return points;
+  }
+
+  String? getCorrectAnswer(RandomPronostiek question) {
+    return solutionRandom.firstWhereOrNull((element) => element.id == question.id)?.answer;
+  }
+
+  String? getClosestAnswer(RandomPronostiek question) {
+    int? correctAnswer = int.tryParse(getCorrectAnswer(question) ?? "");
+    if (correctAnswer == null) {return null;}
+    List<int> otherAnswers = [];
+    for (Pronostiek pronostiek in pronostieks.values) {
+      int? answer = int.tryParse(pronostiek.random.firstWhereOrNull((element) => element.id == question.id)?.answer ?? "");
+      if (answer != null) {
+        otherAnswers.add(answer);
+      }
+    }
+    if (otherAnswers.isEmpty) {return null;}
+    String answer = otherAnswers[0].toString();
+    int distance = (otherAnswers[0] - correctAnswer).abs();
+    for (int i in List.generate(otherAnswers.length-1, (index) => index+1)) {
+      if ((otherAnswers[i] - correctAnswer).abs() < distance) {
+        answer = otherAnswers[i].toString();
+        distance = (otherAnswers[0] - correctAnswer).abs();
+      } else if ((otherAnswers[i] - correctAnswer).abs() == distance) {
+        answer += ";${otherAnswers[i]}";
+      }
+    }
+    return answer;
+  }
+
+  int? getRandomPoints(RandomPronostiek question) {
+    String? answer;
+    if (question.criterium == ScoreCriterium.exact) {
+      answer = getCorrectAnswer(question);
+    } else if (question.criterium == ScoreCriterium.closest) {
+      answer = getClosestAnswer(question);
+    }
+    if (answer == null) {return null;}
+    return answer.split(";").contains(question.answer) ? RandomPronostiek.points : 0;
   }
 
   void updateTeamsEndStage() {

@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
+import 'package:pronostiek/controllers/match_controller.dart';
 import 'package:pronostiek/models/pronostiek/match_pronostiek.dart';
+import 'package:pronostiek/models/match.dart';
 import 'package:pronostiek/models/pronostiek/progression_pronostiek.dart';
 import 'package:pronostiek/models/pronostiek/random_pronostiek.dart';
 
@@ -79,6 +82,26 @@ class Pronostiek {
       "progression": progression.toJson(),
       "random": random.map((question) => question.toJson()).toList(),
     };
+  }
+
+  int getAllMatchPoints() {
+    return matches.values.fold(0, (v, e) => v + (e.getPronostiekPoints() ?? 0));
+  }
+
+  int? getDayMatchPoints(DateTime date) {
+    bool isSameDay(DateTime a, DateTime b) {
+      return a.year == b.year && a.month == b.month && a.day == b.day;
+    }
+    Map<String,Match> matches = Get.find<MatchController>().matches;
+    int points = 0;
+    bool matchDay = false;
+    for (MatchPronostiek matchPronostiek in this.matches.values) {
+      if (isSameDay(matches[matchPronostiek.matchId]!.startDateTime, date)) {
+        matchDay = true;
+        points += matchPronostiek.getPronostiekPoints() ?? 0;
+      }
+    }
+    return matchDay ? points : null;
   }
 
 }

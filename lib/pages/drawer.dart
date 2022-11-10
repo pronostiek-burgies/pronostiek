@@ -50,14 +50,16 @@ class MyDrawer extends StatelessWidget {
                 },
               ),
               ListTile(
-                textColor: controller.isLogged ? null : Colors.grey,
+                textColor: controller.isLogged && !(controller.user?.admin ?? true) ? null : Colors.grey,
                 leading: const Icon(Icons.sports_soccer),
                 title: const Text("My Pronostiek"),
-                onTap: controller.isLogged ? () {
+                onTap: controller.isLogged && !(controller.user?.admin ?? false) ? () {
                     Get.find<BasePageController>().changeTabIndex(1);
                     Navigator.pop(context);
                   }
-                  : () => Get.defaultDialog(title: "No access to your pronostiek", content: const Text("Log in to get access."))
+                  : (controller.user?.admin ?? false)
+                    ? () => Get.defaultDialog(title: "No access to your pronostiek", content: const Text("Admin has no pronostiek."))
+                    : () => Get.defaultDialog(title: "No access to your pronostiek", content: const Text("Log in to get access."))
               ),
               ListTile(
                 leading: const Icon(Icons.info),
@@ -92,6 +94,7 @@ class MyDrawer extends StatelessWidget {
                   leading: const Icon(Icons.logout),
                   title: const Text("Log out"),
                   onTap: () {
+                    Get.find<BasePageController>().changeTabIndex(0);
                     controller.logout();
                   },
                 ),
@@ -104,6 +107,7 @@ class MyDrawer extends StatelessWidget {
                 ),
                 if (controller.loginOpen) ...[
                   GetBuilder<LoginController>(
+                    global: false,
                     init: LoginController(),
                     builder: (controller) {
                       return Form(
@@ -146,8 +150,8 @@ class MyDrawer extends StatelessWidget {
                               height: 20,
                             ),
                             OutlinedButton(
-                              onPressed: controller.busy ? null : () {
-                                controller.login();
+                              onPressed: controller.busy ? null : () async {
+                                await controller.login();
                               },
                               child: controller.busy ? const CircularProgressIndicator() : const Text("Login"),
                             ),
@@ -165,6 +169,7 @@ class MyDrawer extends StatelessWidget {
                 ),
                 if (controller.registerOpen) ...[
                   GetBuilder<RegisterController>(
+                    global: false,
                     init: RegisterController(),
                     builder: (controller) {
                       return Form(

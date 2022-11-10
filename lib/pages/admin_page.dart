@@ -17,6 +17,7 @@ class AdminPage extends StatefulWidget {
 
 class _AdminPageState extends State<AdminPage> {
   int tabIndex = 0;
+  static final randomAdminFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +80,7 @@ class _AdminPageState extends State<AdminPage> {
           controller.pronostiek!.random.length, filledIn, pastDeadline, 0),
       Form(
           autovalidateMode: AutovalidateMode.always,
-          key: controller.randomFormKey,
+          key: randomAdminFormKey,
           child: Expanded(
               child: ListView.builder(
             shrinkWrap: true,
@@ -88,7 +89,7 @@ class _AdminPageState extends State<AdminPage> {
               if (index % 2 == 0) {
                 return controller.pronostiek!.random[index >> 1].getListTile(
                     controller.textControllersRandom[index >> 1],
-                    controller.randomFormKey,
+                    randomAdminFormKey,
                     controller,
                     pastDeadline);
               }
@@ -219,6 +220,21 @@ class _AdminMatchTileState extends State<AdminMatchTile> {
 
   }
 
+  void updateState(Match match) {
+    print("update");
+    _timeController.text = match.time?.toString() ?? "";
+    _extraTimeController.text = match.extraTime?.toString() ?? "";
+    _goalsHomeFTController.text = match.goalsHomeFT?.toString() ?? "";
+    _goalsAwayFTController.text = match.goalsAwayFT?.toString() ?? "";
+    _goalsHomeOTController.text = match.goalsHomeOT?.toString() ?? "";
+    _goalsAwayOTController.text = match.goalsAwayOT?.toString() ?? "";
+    _goalsHomePenController.text = match.goalsHomePen?.toString() ?? "";
+    _goalsAwayPenController.text = match.goalsAwayPen?.toString() ?? "";
+    _status = match.status;
+    _liveStatus = match.liveStatus;
+    _scoreFTChecked = match.scoreFTChecked;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MatchController>(
@@ -226,6 +242,7 @@ class _AdminMatchTileState extends State<AdminMatchTile> {
         Match match = controller.matches[widget.matchId]!;
         return Row(
           children: [
+            IconButton(icon: Icon(Icons.refresh), onPressed: () => updateState(match),),
             const SizedBox(
               width: 8.0,
             ),

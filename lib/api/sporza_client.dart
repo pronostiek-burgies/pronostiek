@@ -43,7 +43,7 @@ class SporzaClient {
         handler.next(options);
       },
       onResponse: (response, handler) {
-        // responseInterceptors(response);
+        responseInterceptors(response);
         handler.next(response);
       },
       onError: (err, handler) {
@@ -57,7 +57,7 @@ class SporzaClient {
         handler.next(options);
       },
       onResponse: (response, handler) {
-        // responseInterceptors(response);
+        responseInterceptors(response);
         handler.next(response);
       },
       onError: (err, handler) {
@@ -113,21 +113,23 @@ class SporzaClient {
       "LIVE": MatchStatus.inPlay.name
       }[data["status"]] ?? MatchStatus.notStarted.name;
     List<int?> time = _parseLiveTime(data["liveTime"]);
-    data["time"] = time[0];
-    data["extra_time"] = time[1];
+    re["time"] = time[0];
+    re["extra_time"] = time[1];
     if (data["status"] == "LIVE") {
       re["live_status"] = {
         "FIRST_HALF": LiveMatchStatus.regularTime.name,
         "SECOND_HALF": LiveMatchStatus.regularTime.name,
         "HALF_TIME": LiveMatchStatus.halfTime.name,
-        "FIRST_EXTRA_TIME": LiveMatchStatus.overTime,
-        "SECOND_EXTRA_TIME": LiveMatchStatus.overTime,
-        "PENALTY_SHOOTOUT": LiveMatchStatus.penalties,
-        "UNKNOWN": LiveMatchStatus.unknown,
+        "FIRST_EXTRA_TIME": LiveMatchStatus.overTime.name,
+        "SECOND_EXTRA_TIME": LiveMatchStatus.overTime.name,
+        "PENALTY_SHOOTOUT": LiveMatchStatus.penalties.name,
+        "UNKNOWN": LiveMatchStatus.unknown.name,
       }[data["liveMatchPhase"]];
     } else {
       re["live_status"] = null;
     }
+
+    if (re["status"] == MatchStatus.notStarted.name) {return re;}
 
     if (!match.knockout) {
       re["goals_Home_FT"] = data["homeScore"];
@@ -152,9 +154,9 @@ class SporzaClient {
             re["goals_Away_OT"] = data["awayScore"];
           }
         }
-        if (data["endedAfter"] == "SHOUTOUTS") {
-          re["goals_Home_Pen"] = data["shoutoutHomeScore"];
-          re["goals_Away_Pen"] = data["shoutoutAwayScore"];
+        if (data["endedAfter"] == "SHOOTOUTS") {
+          re["goals_Home_Pen"] = data["shootoutHomeScore"];
+          re["goals_Away_Pen"] = data["shootoutAwayScore"];
         }
       }
     }

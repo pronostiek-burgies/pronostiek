@@ -104,6 +104,14 @@ class Repository {
     return Pronostiek.fromJson(jsonDecode(await readDropboxFile("/pronostiek/$username.json")));
   }
 
+  Future<Map<String,Pronostiek>> getOtherUsersPronostiek(List<String> usernames) async {
+    Map<String,Pronostiek> pronostieks = {};
+    for (String username in usernames) {
+      pronostieks[username] = Pronostiek.fromJson(jsonDecode(await readDropboxFile("/pronostiek/$username.json")));
+    }
+    return pronostieks;
+  }
+
   Future<bool> savePronostiek(Pronostiek pronostiek) async {
     String username = Get.find<UserController>().user!.username;
     return await writeDropboxFile("/pronostiek/$username.json", jsonEncode(pronostiek.toJson()));

@@ -62,6 +62,25 @@ class ProgressionPronostiek {
     return s;
   }
 
+  dynamic getPointsPerDay(DateTime day) {
+    bool isSameDay(DateTime a, DateTime b) {
+      return a.year == b.year && a.month == b.month && a.day == b.day;
+    }
+    Map<String,Team> teams = MatchController.to.teams;
+    if (isSameDay(day, DateTime(2022, 12, 3))) {
+      return [getCorrection(round16.map((e) => teams[e]).toList(), 1).fold<int>(0, (v, e) => e??false ? v+getPointsPerTeam(1) : v), "Round of 16"];
+    } else if (isSameDay(day, DateTime(2022, 12, 7))) {
+      return [getCorrection(quarterFinals.map((e) => teams[e]).toList(), 2).fold<int>(0, (v, e) => e??false ? v+getPointsPerTeam(2) : v), "Quarter Finals"];
+    } else if (isSameDay(day, DateTime(2022, 12, 11))) {
+      return [getCorrection(semiFinals.map((e) => teams[e]).toList(), 3).fold<int>(0, (v, e) => e??false ? v+getPointsPerTeam(3) : v), "Semi-Finals"];
+    } else if (isSameDay(day, DateTime(2022, 17, 15))) {
+      return [getCorrection(wcFinal.map((e) => teams[e]).toList(), 4).fold<int>(0, (v, e) => e??false ? v+getPointsPerTeam(4) : v), "Final"];
+    } else if (isSameDay(day, DateTime(2022, 17, 19))) {
+      return [getCorrection([winner].map((e) => teams[e]).toList(), 5).fold<int>(0, (v, e) => e??false ? v+getPointsPerTeam(5) : v), "Winner"];
+    }
+    return null;
+  }
+
   static int getPointsPerTeam(int round) {
     switch (round) {
       case 1:

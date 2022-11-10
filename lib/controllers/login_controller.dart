@@ -7,7 +7,7 @@ class LoginController extends GetxController {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   bool busy = false;
-  UserController userController = Get.find();
+  UserController userController = Get.find<UserController>();
 
   @override
   void onClose() {
@@ -16,20 +16,20 @@ class LoginController extends GetxController {
     super.onClose();
   }
 
-  void login() {
+  Future<void> login() async {
     if (loginFormKey.currentState!.validate()) {
       busy = true;
       update();
-      userController
-          .login(
+      bool auth = await userController.login(
             usernameController.text.trim(),
             passwordController.text.trim(),
-          ).then((auth) {
-              busy = false;
-              update();
-              passwordController.clear();
-          });
-
+          );
+      busy = false;
+      update();
+      passwordController.clear();
+      if (auth) {
+        userController.toggleLogin();
+      }
     }
   }
 }

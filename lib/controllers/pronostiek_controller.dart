@@ -124,6 +124,7 @@ class PronostiekController extends GetxController {
     utcTime = await timeClient.getTime();
     setUtcTime(update: false);
     repo.getPronostiek().then((pronostiek) {
+      textControllersRandom = [];
       this.pronostiek = pronostiek;
       for (var element in matchIds) {textControllers[element] = [TextEditingController(text: pronostiek!.matches[element]?.goalsHomeFT?.toString() ?? ""),TextEditingController(text: pronostiek.matches[element]!.goalsAwayFT?.toString() ?? "")];}
       for (RandomPronostiek element in pronostiek!.random) {textControllersRandom.add(TextEditingController(text: element.answer ?? ""));}
@@ -139,6 +140,7 @@ class PronostiekController extends GetxController {
     }
     for (int i=0; i<pronostiek!.random.length; i++) {
       pronostiek!.random[i].answer = textControllersRandom[i].text == "" ? null : textControllersRandom[i].text;
+      print(textControllersRandom[i].text);
     }
     bool success = await repo.savePronostiek(pronostiek!);
     if (success) {

@@ -200,7 +200,7 @@ class PronostiekPage extends StatelessWidget {
     List<bool?> correction = controller.pronostiek!.progression.getCorrection(teamIds.map((e) => Get.find<MatchController>().teams[e]).toList(), pageIdx);
     return Card(child: SingleChildScrollView(child: Column(mainAxisAlignment:MainAxisAlignment.spaceEvenly, children: [
       Text(title, style: const TextStyle(fontWeight: FontWeight.bold), textScaleFactor: 1.5,),
-      if (!disable) ...[
+      if (!disable && pastDeadline) ...[
         Text(
           "Points: ${correction.fold(0, (v, e) => e ?? false ? v+1 : v)*ProgressionPronostiek.getPointsPerTeam(pageIdx)}",
           style: const TextStyle(fontWeight: FontWeight.bold), textScaleFactor: 1.5,
@@ -235,7 +235,7 @@ class PronostiekPage extends StatelessWidget {
                       ]
                     )
                   ))),
-                  if (!disable) ...[
+                  if (!disable & pastDeadline) ...[
                     correction[index] == null
                       ? const Icon(Icons.help_outline,)
                       : correction[index]!
