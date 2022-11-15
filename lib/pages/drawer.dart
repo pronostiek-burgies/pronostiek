@@ -46,6 +46,7 @@ class MyDrawer extends StatelessWidget {
                     XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
                     if (pickedFile == null) {return;}
                     await controller.repo.saveProfilePicture(await pickedFile.readAsBytes());
+                    controller.user!.customProfilePicture = true;
                     controller.user!.profilePicture = await controller.repo.getProfilePicture(controller.user!);
                     controller.update();
                   },
