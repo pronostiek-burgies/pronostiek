@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'dart:math';
 import 'package:intl/intl.dart';
 import 'package:pronostiek/api/repository.dart';
 import 'package:pronostiek/controllers/match_controller.dart';
@@ -8,6 +10,7 @@ import 'package:pronostiek/models/match.dart';
 import 'package:pronostiek/models/pronostiek/pronostiek.dart';
 import 'package:pronostiek/models/pronostiek/random_pronostiek.dart';
 import 'package:pronostiek/models/team.dart';
+import 'package:pronostiek/models/user.dart';
 
 
 class ResultController extends GetxController {
@@ -23,6 +26,11 @@ class ResultController extends GetxController {
   /// The second element of [progression] contains all the teams who reached the round of 16...
   List<List<Team>> progression = [[], [], [], [], [], []];
 
+  Random random = Random();
+
+  bool initialized = false;
+
+
   List<RandomPronostiek> randomQuestions = RandomPronostiek.getQuestions();
 
   MatchController matchController = Get.find<MatchController>();
@@ -30,8 +38,9 @@ class ResultController extends GetxController {
 
   List<String> usernames = [];
   Map<String,Pronostiek> pronostieks = {};
-  late List<RandomPronostiek> solutionRandom;
-
+  List<RandomPronostiek> solutionRandom = [];
+  Map<String,User> users = {};
+  Map<String,Color> profileColors = {};
 
   static ResultController get to => Get.find<ResultController>();
 
@@ -44,6 +53,13 @@ class ResultController extends GetxController {
     usernames = (await repo.getUsernames()).where((element) => element != "admin").toList();
     pronostieks = await repo.getOtherUsersPronostiek(usernames);
     solutionRandom = (await repo.getOtherUsersPronostiek(["admin"]))["admin"]!.random;
+    for (String username in usernames) {
+      User user = await repo.getUserDetails(username);
+      profileColors[username] = user.color;
+      users[username] = user;
+      user.profilePicture = await repo.getProfilePicture(user);
+    }
+    initialized = true;
     update();
   }
 

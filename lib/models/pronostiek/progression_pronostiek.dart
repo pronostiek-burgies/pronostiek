@@ -67,15 +67,15 @@ class ProgressionPronostiek {
       return a.year == b.year && a.month == b.month && a.day == b.day;
     }
     Map<String,Team> teams = MatchController.to.teams;
-    if (isSameDay(day, DateTime(2022, 12, 3))) {
+    if (isSameDay(day, DateTime(2022, 12, 2))) {
       return [getCorrection(round16.map((e) => teams[e]).toList(), 1).fold<int>(0, (v, e) => e??false ? v+getPointsPerTeam(1) : v), "Round of 16"];
-    } else if (isSameDay(day, DateTime(2022, 12, 7))) {
+    } else if (isSameDay(day, DateTime(2022, 12, 6))) {
       return [getCorrection(quarterFinals.map((e) => teams[e]).toList(), 2).fold<int>(0, (v, e) => e??false ? v+getPointsPerTeam(2) : v), "Quarter Finals"];
-    } else if (isSameDay(day, DateTime(2022, 12, 11))) {
+    } else if (isSameDay(day, DateTime(2022, 12, 10))) {
       return [getCorrection(semiFinals.map((e) => teams[e]).toList(), 3).fold<int>(0, (v, e) => e??false ? v+getPointsPerTeam(3) : v), "Semi-Finals"];
-    } else if (isSameDay(day, DateTime(2022, 12, 15))) {
+    } else if (isSameDay(day, DateTime(2022, 12, 14))) {
       return [getCorrection(wcFinal.map((e) => teams[e]).toList(), 4).fold<int>(0, (v, e) => e??false ? v+getPointsPerTeam(4) : v), "Final"];
-    } else if (isSameDay(day, DateTime(2022, 12, 19))) {
+    } else if (isSameDay(day, DateTime(2022, 12, 18))) {
       return [getCorrection([winner].map((e) => teams[e]).toList(), 5).fold<int>(0, (v, e) => e??false ? v+getPointsPerTeam(5) : v), "Winner"];
     }
     return null;

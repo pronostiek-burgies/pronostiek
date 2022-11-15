@@ -26,8 +26,9 @@ class SplashPage extends StatelessWidget {
     Get.put(PronostiekController());
     await userController.tryLoginWithBrowserToken();
     MatchController matchController = Get.put(MatchController());
-    await Get.put(ResultController()).init();
-    await matchController.init();
+    matchController.utcTime = await matchController.timeClient.getTime();
+    Get.put(ResultController()).init();
+    matchController.init();
     print("init complete!");
   }
 

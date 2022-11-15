@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pronostiek/api/dropbox.dart';
@@ -32,6 +33,20 @@ class Repository {
   Future<List<String>> getUsernames() async {
     return List<String>.from(jsonDecode(await readDropboxFile("/users/usernames.json")));
   }
+
+  Future<User> getUserDetails(String username) async {
+    return User.fromJson(jsonDecode(await readDropboxFile("/users/$username.json")));
+  }
+  Future<void> saveProfilePicture(Uint8List data) async {
+    UserController userController = Get.find<UserController>();
+    writeDropboxFile("/users/${userController.user!.username}_picture", data.toString());
+  }
+  Future<Image?> getProfilePicture(User user) async {
+    if (!user.customProfilePicture) {return null;}
+    String bitmap = await readDropboxFile("/users/${user.username}_picture");
+    if (bitmap.isEmpty) {return null;}
+    return Image.memory(Uint8List.fromList(List.from(jsonDecode(bitmap))));
+  }
   
   Future<User?> loginUser(String username, String password, {bool token=false}) async {
     List<dynamic> usernames = jsonDecode(await readDropboxFile("/users/usernames.json"));
@@ -44,10 +59,12 @@ class Repository {
     }
     User user = User.fromJson(jsonDecode(await readDropboxFile("/users/$username.json")));
     if (token) {
+      user.profilePicture = await getProfilePicture(user);
       return user;
     }
     bool checkPassword= await Get.find<UserController>().checkPassword(user, password);
     if (checkPassword) {
+      user.profilePicture = await getProfilePicture(user);
       return user;
     } else {
       Get.defaultDialog(
@@ -56,6 +73,11 @@ class Repository {
       );
       return null;
     }
+  }
+
+  Future<void> saveUserDetails() {
+    UserController userController = Get.find<UserController>();
+    return writeDropboxFile("/users/${userController.user!.username}.json", jsonEncode(userController.user!.toJson()));
   }
   
   Future<User?> registerUser(String username, String firstname, String lastname, String password, String password2) async {

@@ -37,9 +37,8 @@ class MatchController extends GetxController {
   }
 
   Future<void> init() async {
-    await updateAllMatches();
-    fetchLiveResults(matches.values.where((Match e) => e.sporzaApi == 3324002).toList());
     utcTime = await timeClient.getTime();
+    await updateAllMatches();
     fetchLiveResults(matches.values.where((Match e) => e.isBusy() || (e.status != MatchStatus.ended && e.startDateTime.isBefore(utcTime))).toList());
     await setRefresher();
   }

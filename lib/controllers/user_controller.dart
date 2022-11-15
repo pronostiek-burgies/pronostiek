@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pronostiek/api/client.dart';
 import 'package:pronostiek/api/repository.dart';
+import 'package:pronostiek/colors.dart/wc_red.dart';
 import 'package:pronostiek/controllers/pronostiek_controller.dart';
 import 'package:pronostiek/models/user.dart';
 import 'package:cryptography/cryptography.dart';
@@ -9,7 +11,10 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 class UserController extends GetxController {
   User? user;
+  bool detailsOpen = false;
   bool isLogged = false;
+
+  Color pickerColor = wcRed[900]!;
 
   bool loginOpen = false;
   bool registerOpen = false;
@@ -65,6 +70,22 @@ class UserController extends GetxController {
 
   void toggleRegister() {
     registerOpen = !registerOpen;
+    update();
+  }
+
+  void toggleDetailOpen() {
+    detailsOpen = !detailsOpen;
+    update();
+  }
+
+  void setPickerColor(Color color) {
+    pickerColor = color;
+    update();
+  }
+
+  Future<void> setColor(Color color) async {
+    user!.color = color;
+    await repo.saveUserDetails();
     update();
   }
 

@@ -1,13 +1,20 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
+import 'package:pronostiek/api/repository.dart';
 import 'package:pronostiek/colors.dart/wc_red.dart';
 import 'package:pronostiek/controllers/base_page_controller.dart';
 import 'package:pronostiek/controllers/login_controller.dart';
 import 'package:pronostiek/controllers/register_controller.dart';
 import 'package:pronostiek/controllers/user_controller.dart';
+import 'package:image_picker/image_picker.dart';
+
+
 
 class MyDrawer extends StatelessWidget {
-  const MyDrawer({Key? key}) : super(key: key);
+  final _picker = ImagePicker();
+  MyDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,22 +31,51 @@ class MyDrawer extends StatelessWidget {
               ),
               if (controller.isLogged) ...[
                 UserAccountsDrawerHeader(
+                  onDetailsPressed: () => controller.toggleDetailOpen(),
                   accountName: Text("${controller.user?.firstname ?? "???"} ${controller.user?.lastname ?? "???"}"),
                   accountEmail: Text(controller.user?.username ?? "??"),
-                  currentAccountPicture: Container(
-                    height: 46,
-                    width: 46,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.green,
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      controller.user?.firstname.substring(0,1) ?? "?",
-                      style: const TextStyle(fontSize: 45, color: Colors.white),
-                    ),
-                  ),
+                  currentAccountPicture: controller.user?.getProfilePicture(),
+                )
+              ],
+              if (controller.detailsOpen) ...[
+                Visibility(visible: kIsWeb, child: ListTile(
+                  leading: SizedBox(width: Get.theme.iconTheme.size, child: controller.user!.getProfilePicture(border:false),),
+                  trailing: const Icon(Icons.edit),
+                  title: const Text("Change profile picture"),
+                  onTap: () async {
+                    XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+                    if (pickedFile == null) {return;}
+                    await controller.repo.saveProfilePicture(await pickedFile.readAsBytes());
+                    controller.user!.profilePicture = await controller.repo.getProfilePicture(controller.user!);
+                    controller.update();
+                  },
+                )),
+                ListTile(
+                  leading: Icon(Icons.circle, color: controller.user!.color),
+                  trailing: const Icon(Icons.edit),
+                  title: const Text("Change profile color"),
+                  onTap: () async {
+                    Get.defaultDialog(
+                      title: 'Pick a color!',
+                      content: SingleChildScrollView(
+                        child: ColorPicker(
+                          pickerColor: controller.user!.color,
+                          onColorChanged: (Color color) => controller.setPickerColor(color),
+                        ),
+                      ),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          child: const Text('Got it'),
+                          onPressed: () async {
+                            await controller.setColor(controller.pickerColor);
+                            Get.back();
+                          },
+                        ),
+                      ],
+                    );                    
+                  },
                 ),
+                const Divider(),
               ],
               ListTile(
                 leading: const Icon(Icons.home),

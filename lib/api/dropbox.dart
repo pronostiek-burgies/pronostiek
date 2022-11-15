@@ -1,14 +1,21 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 
 Future<String> readFile(Dio dio, String pathToFile) async {
-  Response response = await dio.get('/files/download',
-    options: Options(
-      headers: {
-        "Dropbox-API-Arg": '{"path":"$pathToFile"}',
-      }
-    )
-  );
+  Response response;
+  try {
+    response = await dio.get('/files/download',
+      options: Options(
+        headers: {
+          "Dropbox-API-Arg": '{"path":"$pathToFile"}',
+        }
+      )
+    );
   return response.data;
+  } catch (e) {
+    return "";
+  }
 }
 
 Future<bool> writeFile(Dio dio, String pathToFile, String data) async {

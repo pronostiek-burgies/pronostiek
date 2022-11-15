@@ -7,6 +7,7 @@ import 'package:pronostiek/colors.dart/wc_orange.dart';
 import 'package:pronostiek/colors.dart/wc_purple.dart';
 import 'package:pronostiek/colors.dart/wc_red.dart';
 import 'package:pronostiek/controllers/result_controller.dart';
+import 'package:pronostiek/models/user.dart';
 import 'package:pronostiek/widgets/match_pageview.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -27,7 +28,7 @@ class DashboardPage extends StatelessWidget {
           ],
         ),
         body: GetBuilder<ResultController>(builder: (controller) {
-          PointsPerDayWrapper evolution = getEvolutionData(controller);
+          PointsPerDayWrapper? evolution = getEvolutionData(controller);
           return SingleChildScrollView(
             child: Column(
               children: [
@@ -42,55 +43,103 @@ class DashboardPage extends StatelessWidget {
                   textScaleFactor: 2.0,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Container(
-                    margin: const EdgeInsets.all(10),
-                    color: Get.theme.cardColor,
-                    height: controller.usernames.length * 100.0,
-                    child: charts.BarChart(
-                      getRankingData(controller),
-                      animate: true,
-                      behaviors: [charts.SeriesLegend()],
-                      barGroupingType: charts.BarGroupingType.stacked,
-                      vertical: false,
-                      barRendererDecorator: charts.BarLabelDecorator<String>(),
-                      primaryMeasureAxis: const charts.NumericAxisSpec(
-                        showAxisLine: true,
+                !controller.initialized
+                    ? const CircularProgressIndicator()
+                    : Container(
+                        margin: const EdgeInsets.all(10),
+                        color: Get.theme.cardColor,
+                        height: controller.usernames.length * 100.0,
+                        child: Row(children: [
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 35),
+                                // const SizedBox(height: 21,),
+                                Expanded(
+                                    child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    ...controller.users.values
+                                      .map((User e) => Flexible(
+                                        child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+                                          e.getProfilePicture(),
+                                          SizedBox(width: 64, child: Text(e.username, textAlign: TextAlign.center, textScaleFactor: 0.75, maxLines: 2, overflow: TextOverflow.ellipsis,))
+                                        ])
+                                      ))
+                                      .toList(),
+                                  ]
+                                )),
+                                // const SizedBox(height: 0),
+                                const SizedBox(height: 28),
+                              ]),
+                          Expanded(
+                              child: charts.BarChart(
+                            getRankingData(controller),
+                            layoutConfig: charts.LayoutConfig(
+                                leftMarginSpec: charts.MarginSpec.fixedPixel(4),
+                                topMarginSpec: charts.MarginSpec.defaultSpec,
+                                rightMarginSpec: charts.MarginSpec.defaultSpec,
+                                bottomMarginSpec: charts.MarginSpec.fixedPixel(28)),
+                            animate: true,
+                            behaviors: [charts.SeriesLegend()],
+                            barGroupingType: charts.BarGroupingType.stacked,
+                            vertical: false,
+                            barRendererDecorator:
+                                charts.BarLabelDecorator<String>(),
+                            domainAxis: const charts.OrdinalAxisSpec(
+                                renderSpec: charts.NoneRenderSpec()),
+                            primaryMeasureAxis: const charts.NumericAxisSpec(
+                              showAxisLine: true,
+                            ),
+                            defaultInteractions: false,
+                          )),
+                        ]),
                       ),
-                      defaultInteractions: false,
-                    )),
                 const Text(
                   "Evolution",
                   textScaleFactor: 2.0,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Container(
-                    margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
-                    color: Get.theme.cardColor,
-                    height: controller.usernames.length * 100.0,
-                    child: charts.LineChart(
-                      evolution.data,
-                      animate: true,
-                      behaviors: [charts.SeriesLegend()],
-                      primaryMeasureAxis: const charts.NumericAxisSpec(
-                        showAxisLine: true,
-                      ),
-                      domainAxis: charts.NumericAxisSpec(
-                          renderSpec: const charts.SmallTickRendererSpec(labelRotation: 45, labelAnchor: charts.TickLabelAnchor.inside,),
-                          tickProviderSpec: charts.BasicNumericTickProviderSpec(desiredTickCount: evolution.domainTicks.length+1, zeroBound: true),
-                          tickFormatterSpec:
-                              charts.BasicNumericTickFormatterSpec((i) {
+                evolution == null
+                    ? const CircularProgressIndicator()
+                    : Container(
+                        margin: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
+                        color: Get.theme.cardColor,
+                        height: controller.usernames.length * 100.0,
+                        child: charts.LineChart(
+                          evolution.data,
+                          animate: true,
+                          behaviors: [charts.SeriesLegend()],
+                          primaryMeasureAxis: const charts.NumericAxisSpec(
+                            showAxisLine: true,
+                          ),
+                          domainAxis: charts.NumericAxisSpec(
+                              renderSpec: const charts.SmallTickRendererSpec(
+                                labelRotation: 45,
+                                labelAnchor: charts.TickLabelAnchor.inside,
+                              ),
+                              tickProviderSpec:
+                                  charts.BasicNumericTickProviderSpec(
+                                      desiredTickCount:
+                                          evolution.domainTicks.length + 1,
+                                      zeroBound: true),
+                              tickFormatterSpec:
+                                  charts.BasicNumericTickFormatterSpec((i) {
                                 if (evolution.domainTicks[i!.toInt()] != null) {
                                   return evolution.domainTicks[i.toInt()]!;
                                 } else {
                                   return "";
                                 }
-                            })
-                      ),
-                      defaultInteractions: false,
-                      defaultRenderer:
-                          charts.LineRendererConfig(includePoints: true),
-                    ))
+                              })),
+                          defaultInteractions: false,
+                          defaultRenderer:
+                              charts.LineRendererConfig(includePoints: true),
+                        ))
               ],
             ),
           );
@@ -178,9 +227,16 @@ List<charts.Series<UserPoints, String>> getRankingData(
   ];
 }
 
-PointsPerDayWrapper getEvolutionData(ResultController controller) {
+PointsPerDayWrapper? getEvolutionData(ResultController controller) {
+  if (controller.usernames.isEmpty) {
+    return null;
+  }
   Map<String, Map<DateTime, dynamic>> points = controller.getPointsPerDay(
-      DateTime(2022, 11, 19), DateTime(2022,12,30), startZero:true);
+      DateTime(2022, 11, 19), DateTime(2022, 12, 30),
+      startZero: true);
+  if (points.isEmpty) {
+    return null;
+  }
   List<DateTime> matchDays = points[controller.usernames[0]]!
       .keys
       .where(
@@ -193,7 +249,7 @@ PointsPerDayWrapper getEvolutionData(ResultController controller) {
       );
   return PointsPerDayWrapper(
       points.keys.map<charts.Series<PointsPerDay, int>>((key) {
-        Map<DateTime,int> cumSomList = {};
+        Map<DateTime, int> cumSomList = {};
         int cumSom = 0;
         for (DateTime date in points[key]!.keys) {
           cumSom += points[key]![date]![0] as int;
@@ -203,12 +259,15 @@ PointsPerDayWrapper getEvolutionData(ResultController controller) {
           id: key,
           domainFn: (PointsPerDay e, _) => e.matchDay,
           measureFn: (PointsPerDay e, _) => e.points,
+          colorFn: (PointsPerDay e, _) =>
+              charts.ColorUtil.fromDartColor(controller.profileColors[key]!),
           data: points[key]!.entries.map<PointsPerDay>((e) {
             return PointsPerDay(matchDaysMap[e.key]!, cumSomList[e.key]!);
           }).toList(),
         );
       }).toList(),
-      matchDays.asMap().map((key, value) => MapEntry(key,points[controller.usernames[0]]![value][1])));
+      matchDays.asMap().map((key, value) =>
+          MapEntry(key, points[controller.usernames[0]]![value][1])));
 }
 
 class PointsPerDayWrapper {
