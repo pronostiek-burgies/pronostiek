@@ -58,28 +58,6 @@ class User {
     return Color(value);
   }
 
-  static Widget getProfilePictureFromImage(Image? profilePicture, Color color, String username, {bool border=true}) {
-    return Container(
-      width: 46,
-      height: 46,
-      decoration: BoxDecoration(
-        color: color,
-        border: border ? Border.all(color: color, width: 5.0) : null,
-        shape: BoxShape.circle,
-        image: profilePicture == null ? null : DecorationImage(
-          fit: BoxFit.fill,
-          image: profilePicture.image,
-        ),
-      ),
-      alignment: Alignment.center,
-      child: profilePicture != null ? null
-        : Text(
-        username.substring(0,1),
-        style: const TextStyle(fontSize: 45, color: Colors.white),
-      ),
-    );
-  }
-
   Widget getProfilePicture({bool border=true}) {
     return Container(
       width: 46,

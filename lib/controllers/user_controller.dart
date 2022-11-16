@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pronostiek/api/client.dart';
 import 'package:pronostiek/api/repository.dart';
 import 'package:pronostiek/colors.dart/wc_red.dart';
@@ -13,6 +14,8 @@ class UserController extends GetxController {
   User? user;
   bool detailsOpen = false;
   bool isLogged = false;
+
+  final picker = ImagePicker();
 
   Color pickerColor = wcRed[900]!;
 

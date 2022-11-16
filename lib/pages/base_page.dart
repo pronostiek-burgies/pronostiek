@@ -5,7 +5,7 @@ import 'package:pronostiek/pages/admin_page.dart';
 import 'package:pronostiek/pages/dashboard_page.dart';
 import 'package:pronostiek/pages/drawer.dart';
 import 'package:pronostiek/pages/match_page.dart';
-import 'package:pronostiek/pages/pronostiek_page.dart';
+import 'package:pronostiek/pages/pronostiek/pronostiek_page.dart';
 import 'package:pronostiek/pages/result_pages/result_page.dart';
 import 'package:pronostiek/pages/rules_page.dart';
 
@@ -14,11 +14,11 @@ class BasePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget drawer = MyDrawer();
+    const Widget drawer = MyDrawer();
     return GetBuilder<BasePageController>(
         builder:(controller) => IndexedStack(
           index: controller.tabIndex,
-          children: [
+          children: const [
             DashboardPage(drawer),
             PronostiekPage(drawer),
             ResultPage(drawer),

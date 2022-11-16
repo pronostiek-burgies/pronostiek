@@ -66,7 +66,7 @@ class DashboardPage extends StatelessWidget {
                                     ...controller.users.values
                                       .map((User e) => Flexible(
                                         child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
-                                          e.getProfilePicture(),
+                                          e.getProfilePicture(border: false),
                                           SizedBox(width: 64, child: Text(e.username, textAlign: TextAlign.center, textScaleFactor: 0.75, maxLines: 2, overflow: TextOverflow.ellipsis,))
                                         ])
                                       ))

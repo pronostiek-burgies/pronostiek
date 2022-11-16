@@ -9,8 +9,6 @@ import 'package:pronostiek/models/pronostiek/random_pronostiek.dart';
 class PronostiekController extends GetxController {
   Pronostiek? pronostiek;
   Repository repo = Get.find<Repository>();
-  /// index of shown tab
-  var tabIndex = 0;
   List<String> matchIds = [];
   List<MatchGroup> groups = [];
 
@@ -103,12 +101,6 @@ class PronostiekController extends GetxController {
     });
   }
 
-
-  /// sets [tabIndex] to [index] and updates view
-  void changeTabIndex(int index) {
-    tabIndex = index;
-    update();
-  }
 
   void calcNFilledInProgression() {
     int filledIn = 0;

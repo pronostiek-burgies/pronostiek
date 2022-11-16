@@ -8,7 +8,7 @@ import 'package:pronostiek/models/pronostiek/match_pronostiek.dart';
 
 class RulesPage extends StatelessWidget {
   final Widget drawer;
-  RulesPage(this.drawer, {Key? key}) : super(key: key);
+  const RulesPage(this.drawer, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -13,8 +13,7 @@ import 'package:image_picker/image_picker.dart';
 
 
 class MyDrawer extends StatelessWidget {
-  final _picker = ImagePicker();
-  MyDrawer({Key? key}) : super(key: key);
+  const MyDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +42,7 @@ class MyDrawer extends StatelessWidget {
                   trailing: const Icon(Icons.edit),
                   title: const Text("Change profile picture"),
                   onTap: () async {
-                    XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+                    XFile? pickedFile = await controller.picker.pickImage(source: ImageSource.gallery);
                     if (pickedFile == null) {return;}
                     await controller.repo.saveProfilePicture(await pickedFile.readAsBytes());
                     controller.user!.customProfilePicture = true;
