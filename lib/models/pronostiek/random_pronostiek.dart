@@ -113,6 +113,7 @@ class RandomPronostiek {
       GlobalKey<FormState> formKey,
       PronostiekController pronostiekController,
       bool pastDeadline) {
+    print("update, random");
     ResultController resultController = Get.find<ResultController>();
     int? points = resultController.getRandomPoints(this);
     String? correctAnswer = resultController.getCorrectAnswer(this);
@@ -179,7 +180,7 @@ class RandomPronostiek {
             width: Get.textTheme.bodyLarge!.fontSize! * 15,
             child: Autocomplete<Team>(
               initialValue: TextEditingValue(
-                text: controller.text,
+                text: answer ?? "",
               ),
               fieldViewBuilder: (context, textEditingController, focusNode,
                       onFieldSubmitted) =>
@@ -216,7 +217,7 @@ class RandomPronostiek {
         return SizedBox(
             width: Get.textTheme.bodyLarge!.fontSize! * 15,
             child: Autocomplete<String>(
-              initialValue: TextEditingValue(text: controller.text),
+              initialValue: TextEditingValue(text: answer ?? ""),
               fieldViewBuilder: (context, textEditingController, focusNode,
                       onFieldSubmitted) =>
                   TextFormField(

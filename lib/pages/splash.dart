@@ -8,6 +8,7 @@ import 'package:pronostiek/api/time_client.dart';
 import 'package:pronostiek/controllers/base_page_controller.dart';
 import 'package:pronostiek/controllers/match_controller.dart';
 import 'package:pronostiek/controllers/pronostiek_controller.dart';
+import 'package:pronostiek/controllers/pronostiek_page_controller.dart';
 import 'package:pronostiek/controllers/result_controller.dart';
 import 'package:pronostiek/controllers/user_controller.dart';
 import 'package:pronostiek/pages/base_page.dart';
@@ -21,6 +22,7 @@ class SplashPage extends StatelessWidget {
     await contentClient.refreshAccessToken();
     Get.put(TimeClient());
     Get.put(BasePageController());
+    Get.put(PronostiekPageController());
     Get.put(Repository(contentClient.dio));
     UserController userController = Get.put(UserController());
     Get.put(PronostiekController());
