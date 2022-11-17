@@ -114,6 +114,8 @@ class Match {
     this.getAway,
     this.type, {
     this.sportDataApiId,
+    this.sporzaApi,
+    this.apiSports,
   }) {
     knockout = true;
   }
