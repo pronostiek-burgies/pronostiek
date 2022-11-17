@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pronostiek/controllers/pronostiek_controller.dart';
 import 'package:pronostiek/models/team.dart';
+import 'package:pronostiek/pages/match_page.dart';
 
 enum MatchStatus {notStarted, inPlay, ended}
 
@@ -114,6 +116,12 @@ class Match {
     this.sportDataApiId,
   }) {
     knockout = true;
+  }
+
+   bool isPastDeadline() {
+    PronostiekController pronostiekController = Get.find<PronostiekController>();
+    if (pronostiekController.deadlines[id] == null) {return false;}
+    return pronostiekController.utcTime.isAfter(pronostiekController.deadlines[id]!.deadline);
   }
 
   // Tries to set home if still null, returns if home is != null after this call
@@ -234,9 +242,11 @@ class Match {
     );
   }
 
-  ListTile getListTile({bool leading = true}) {
+  ListTile getListTile({bool leading = true, bool openMatchPage=true}) {
     return ListTile(
+      onTap: openMatchPage ? () => Get.to(() => MatchPage(id)) : null,
       leading: leading ? Text(id) : null,
+      trailing: openMatchPage ? IconButton(icon: const Icon(Icons.more_vert), onPressed: () => Get.to(() => MatchPage(id))) : null,
       title: Row(children: [
         Expanded(
             child: Row(children: [
@@ -268,7 +278,7 @@ class Match {
   }
 
   Widget getMatchCard({bool showMatchId = false}) {
-    return Card(
+    return GestureDetector(onTap: () => Get.to(() => MatchPage(id)), child:Card(
         child: Container(
       constraints: const BoxConstraints(maxWidth: 280),
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -348,6 +358,6 @@ class Match {
           ),
         ],
       )),
-    ));
+    )));
   }
 }

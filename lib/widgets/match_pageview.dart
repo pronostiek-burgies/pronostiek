@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pronostiek/controllers/match_controller.dart';
 import 'package:pronostiek/models/match.dart';
+import 'package:pronostiek/pages/match_page.dart';
 
 class MatchPageView extends StatelessWidget {
   PageController pageController = PageController(viewportFraction: min(250/Get.size.width,1.0),);
@@ -34,8 +35,10 @@ class MatchPageView extends StatelessWidget {
                 return ExpandablePageView(
                 // onPageChanged: (int page) {pageController.animateToPage(page, duration: const Duration(seconds: 1), curve: Curves.easeInOut);},
                   controller: pageController,
-                  children: sortedMatches.map<Card>((Match match) {
-                    return Card(
+                  children: sortedMatches.map<Widget>((Match match) {
+                    return GestureDetector(
+                      onTap: () => Get.to(() => MatchPage(match.id)),
+                      child: Card(
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                         child: IntrinsicHeight(child: Row(
@@ -98,7 +101,7 @@ class MatchPageView extends StatelessWidget {
                           ],
                         )),
                       )
-                    );
+                    ));
                   }).toList(),
                 );
               }

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:pronostiek/colors.dart/wc_red.dart';
 import 'package:pronostiek/controllers/match_controller.dart';
 import 'package:pronostiek/controllers/pronostiek_controller.dart';
+import 'package:pronostiek/controllers/pronostiek_controller.dart';
 import 'package:pronostiek/models/icon_image_provider.dart';
 import 'package:pronostiek/models/match.dart';
 import 'package:pronostiek/widgets/match_pronostiek_input_tile.dart';
@@ -32,7 +33,7 @@ class MatchPronostiek {
   late String matchId;
   int? goalsHomeFT;
   int? goalsAwayFT;
-  // winner is home
+  /// winner is home
   bool? winner;
 
   MatchPronostiek(
@@ -56,6 +57,11 @@ class MatchPronostiek {
       "goals_away_FT": goalsAwayFT,
       "winner": winner,
     };
+  }
+
+  bool isPastDeadline() {
+    PronostiekController pronostiekController = Get.find<PronostiekController>();
+    return pronostiekController.utcTime.isAfter(pronostiekController.deadlines[matchId]!.deadline);
   }
  
   static int getBasePoints(
@@ -181,6 +187,21 @@ class MatchPronostiek {
       match.goalsAwayFT!,
       goalsHomeFT!,
       goalsAwayFT!,
+    );
+  }
+
+  int? getMaxPronostiekPoints() {
+    Match match = Get.find<MatchController>().matches[matchId]!;
+    if (goalsHomeFT == null || goalsAwayFT == null) {return 0;}
+    return getPronostiekPointsByScore(
+      goalsHomeFT!,
+      goalsAwayFT!,
+      goalsHomeFT!,
+      goalsAwayFT!,
+      correctWinner: winner,
+      predictWinner: winner,
+      type: match.type,
+      knockout: match.knockout
     );
   }
 

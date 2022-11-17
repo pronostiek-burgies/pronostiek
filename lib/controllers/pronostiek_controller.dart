@@ -16,7 +16,7 @@ class PronostiekController extends GetxController {
   DateTime deadlineRandom = DateTime.utc(2022,11,20, 16, 00);
   DateTime deadlineProgression = DateTime.utc(2022,11,20, 16, 00);
 
-  late DateTime utcTime;
+  late DateTime utcTime = DateTime.now().toUtc();
   TimeClient timeClient = Get.find<TimeClient>();
 
   List<bool> matchGroupCollapsed = [];
