@@ -52,7 +52,7 @@ class RandomPronostiek {
         AnswerType.number,
         ScoreCriterium.closest),
     "total_card": RandomPronostiek(
-        "total_cards",
+        "total_card",
         "How many bookings will be given (red: 4, two yellows: 3, yellow: 1)?",
         AnswerType.number,
         ScoreCriterium.closest),
