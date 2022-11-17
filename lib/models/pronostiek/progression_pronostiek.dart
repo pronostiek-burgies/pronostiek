@@ -22,6 +22,10 @@ class ProgressionPronostiek {
 
   ProgressionPronostiek();
 
+  List<List<String?>> toList() {
+    return [round16, quarterFinals,  semiFinals, wcFinal, [winner]];
+  }
+
   ProgressionPronostiek.fromJson(Map<String,dynamic> json) {
     round16 = List<String?>.from(json["round16"]);    
     quarterFinals = List<String?>.from(json["quarter_finals"]);    
@@ -41,6 +45,17 @@ class ProgressionPronostiek {
   }
 
   List<bool?> getCorrection(List<Team?> teams, int round) {
+    ResultController resultController = Get.find<ResultController>();
+    return teams.map<bool?>((e) {
+      if (e == null) {return false;}
+      if (resultController.progression[round].contains(e)) {
+        return true;
+      }
+      return resultController.teamsEndStage[round-1].contains(e) ? false : null;
+    }).toList();
+  }
+
+  static List<bool?> getCorrectionStatic(List<Team?> teams, int round) {
     ResultController resultController = Get.find<ResultController>();
     return teams.map<bool?>((e) {
       if (e == null) {return false;}

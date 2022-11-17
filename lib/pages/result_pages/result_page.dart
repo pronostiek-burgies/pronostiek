@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pronostiek/controllers/match_controller.dart';
 import 'package:pronostiek/pages/result_pages/group_phase_page.dart';
 import 'package:pronostiek/pages/result_pages/knockout_page.dart';
+import 'package:pronostiek/pages/result_pages/result_progression_page.dart';
 
 class ResultPage extends StatelessWidget {
   final Widget drawer;
@@ -36,10 +37,10 @@ class ResultPage extends StatelessWidget {
                 icon: Icon(Icons.emoji_events),
                 label: 'Knock-out',
               ),
-              // NavigationDestination(
-              //   icon: Icon(Icons.merge),
-              //   label: 'Progression',
-              // ),
+              NavigationDestination(
+                icon: Icon(Icons.merge),
+                label: 'Progression',
+              ),
               // NavigationDestination(
               //   icon: Icon(Icons.star),
               //   label: 'Random',
@@ -50,7 +51,7 @@ class ResultPage extends StatelessWidget {
             getMatches(controller),
             GroupPhasePage(controller),
             KnockoutPage(controller),
-            // getKnockOut(controller),
+            const ResultProgressionPage(),
             // getKnockOut(controller),
           ][controller.tabIndex],
         );
