@@ -106,7 +106,7 @@ class DashboardPage extends StatelessWidget {
                 ),
                 evolution == null
                     ? const CircularProgressIndicator()
-                    : Container(
+                    : LayoutBuilder(builder: (context, boxContraints) => Container(
                         margin: const EdgeInsets.all(10),
                         padding: const EdgeInsets.all(10),
                         color: Get.theme.cardColor,
@@ -114,7 +114,7 @@ class DashboardPage extends StatelessWidget {
                         child: charts.LineChart(
                           evolution.data,
                           animate: true,
-                          behaviors: [charts.SeriesLegend()],
+                          behaviors: [charts.SeriesLegend(desiredMaxColumns: boxContraints.maxWidth~/175)],
                           primaryMeasureAxis: const charts.NumericAxisSpec(
                             showAxisLine: true,
                           ),
@@ -139,7 +139,7 @@ class DashboardPage extends StatelessWidget {
                           defaultInteractions: false,
                           defaultRenderer:
                               charts.LineRendererConfig(includePoints: true),
-                        ))
+                        )))
               ],
             ),
           );
@@ -232,7 +232,7 @@ PointsPerDayWrapper? getEvolutionData(ResultController controller) {
     return null;
   }
   Map<String, Map<DateTime, dynamic>> points = controller.getPointsPerDay(
-      DateTime(2022, 11, 19), DateTime(2022, 12, 30),
+      DateTime(2022, 11, 19), DateTime.now(),
       startZero: true);
   if (points.isEmpty) {
     return null;
