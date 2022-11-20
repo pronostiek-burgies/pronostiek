@@ -92,11 +92,11 @@ class MatchPage extends StatelessWidget {
                     Expanded(flex: 3, child: Text(columns[0], style: const TextStyle(fontWeight: FontWeight.bold))),
                     Flexible(flex: 1, child: Text(columns[1], style: const TextStyle(fontWeight: FontWeight.bold))),
                     Flexible(flex: 1,child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Flexible(child: Text(columns[2], style: const TextStyle(fontWeight: FontWeight.bold))),
+                        Flexible(flex: 1,child: Text(columns[2], style: const TextStyle(fontWeight: FontWeight.bold))),
                         if (match.status != MatchStatus.notStarted) ...[
-                          Flexible(child: Text(columns[3], style: const TextStyle(fontWeight: FontWeight.bold))),
+                          Flexible(flex: 1,child: Text(columns[3], style: const TextStyle(fontWeight: FontWeight.bold))),
                         ]
                       ],
                     ),)
@@ -111,11 +111,11 @@ class MatchPage extends StatelessWidget {
                       Expanded(flex: 3,child: Row(children: [controller.users[username]!.getProfilePicture(border: false),const SizedBox(width: 8.0,),Expanded(child:Text(username))])),
                       Flexible(flex: 1,child: pronostiekToText(controller.pronostieks[username]!.matches[match.id]!, match.knockout)),
                       Flexible(flex: 1,child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(controller.pronostieks[username]!.matches[match.id]!.getMaxPronostiekPoints().toString()),
+                          Flexible(flex: 1,child: Text(controller.pronostieks[username]!.matches[match.id]!.getMaxPronostiekPoints().toString())),
                           if (match.status != MatchStatus.notStarted) ...[
-                            Text(controller.pronostieks[username]!.matches[match.id]!.getPronostiekPoints().toString()),
+                            Flexible(flex: 1,child: Text(controller.pronostieks[username]!.matches[match.id]!.getPronostiekPoints().toString())),
                           ]
                         ],
                       ),)

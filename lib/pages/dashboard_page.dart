@@ -29,6 +29,7 @@ class DashboardPage extends StatelessWidget {
         ),
         body: GetBuilder<ResultController>(builder: (controller) {
           PointsPerDayWrapper? evolution = getEvolutionData(controller);
+          List<charts.Series<UserPoints, String>>? barChartData = controller.initialized ? getRankingData(controller) : null;
           return SingleChildScrollView(
             child: Column(
               children: [
@@ -63,10 +64,10 @@ class DashboardPage extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    ...controller.users.values
-                                      .map((User e) => Flexible(
+                                    ...barChartData![0].data
+                                      .map((UserPoints e) => Flexible(
                                         child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
-                                          e.getProfilePicture(border: false),
+                                          controller.users[e.username]!.getProfilePicture(border: false),
                                           SizedBox(width: 64, child: Text(e.username, textAlign: TextAlign.center, textScaleFactor: 0.75, maxLines: 2, overflow: TextOverflow.ellipsis,))
                                         ])
                                       ))
@@ -78,7 +79,7 @@ class DashboardPage extends StatelessWidget {
                               ]),
                           Expanded(
                               child: charts.BarChart(
-                            getRankingData(controller),
+                            barChartData,
                             layoutConfig: charts.LayoutConfig(
                                 leftMarginSpec: charts.MarginSpec.fixedPixel(4),
                                 topMarginSpec: charts.MarginSpec.defaultSpec,
@@ -178,13 +179,15 @@ List<charts.Series<UserPoints, String>> getRankingData(
       List.generate(controller.usernames.length, (index) => index);
   sortIndex.sort((b, a) => total[a].points.compareTo(total[b].points));
   Map<String, int> orderMap =
-      total.asMap().map((k, v) => MapEntry(v.username, sortIndex[k]));
+      total.asMap().map((k, v) => MapEntry(v.username, sortIndex.indexWhere((element) => element == k)));
 
   matchPoints
       .sort((a, b) => orderMap[a.username]!.compareTo(orderMap[b.username]!));
   progressionPoints
       .sort((a, b) => orderMap[a.username]!.compareTo(orderMap[b.username]!));
   randomPoints
+      .sort((a, b) => orderMap[a.username]!.compareTo(orderMap[b.username]!));
+  total
       .sort((a, b) => orderMap[a.username]!.compareTo(orderMap[b.username]!));
 
   return [

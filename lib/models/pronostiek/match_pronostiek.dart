@@ -150,7 +150,7 @@ class MatchPronostiek {
 
   int? getPronostiekPoints() {
     Match match = Get.find<MatchController>().matches[matchId]!;
-    if (match.status != MatchStatus.ended) {return null;}
+    if (match.status == MatchStatus.notStarted) {return null;}
     if (goalsHomeFT == null || goalsAwayFT == null) {return 0;}
     return getPronostiekPointsByScore(
       match.goalsHomeFT!,
