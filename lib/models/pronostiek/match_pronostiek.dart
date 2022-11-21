@@ -148,9 +148,13 @@ class MatchPronostiek {
     return ((basePoints + bonusPoints) * multiplier).floor();
   }
 
-  int? getPronostiekPoints() {
+  int? getPronostiekPoints({bool virtual=false}) {
     Match match = Get.find<MatchController>().matches[matchId]!;
-    if (match.status == MatchStatus.notStarted) {return null;}
+    if (virtual) {
+      if (match.status == MatchStatus.notStarted) {return null;}
+    } else {
+      if (match.status != MatchStatus.ended) {return null;}
+    }
     if (goalsHomeFT == null || goalsAwayFT == null) {return 0;}
     return getPronostiekPointsByScore(
       match.goalsHomeFT!,

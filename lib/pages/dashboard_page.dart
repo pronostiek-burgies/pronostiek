@@ -83,7 +83,7 @@ class DashboardPage extends StatelessWidget {
                             layoutConfig: charts.LayoutConfig(
                                 leftMarginSpec: charts.MarginSpec.fixedPixel(4),
                                 topMarginSpec: charts.MarginSpec.defaultSpec,
-                                rightMarginSpec: charts.MarginSpec.defaultSpec,
+                                rightMarginSpec: charts.MarginSpec.fixedPixel(32),
                                 bottomMarginSpec: charts.MarginSpec.fixedPixel(28)),
                             animate: true,
                             behaviors: [charts.SeriesLegend()],

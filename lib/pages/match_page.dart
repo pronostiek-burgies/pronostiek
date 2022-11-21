@@ -66,8 +66,8 @@ class MatchPage extends StatelessWidget {
         }
         List<String> usernames = controller.usernames;
         usernames.sort((b, a) {
-          int pointsA = controller.pronostieks[a]!.matches[match.id]!.getPronostiekPoints() ?? 0;
-          int pointsB = controller.pronostieks[b]!.matches[match.id]!.getPronostiekPoints() ?? 0;
+          int pointsA = controller.pronostieks[a]!.matches[match.id]!.getPronostiekPoints(virtual: true) ?? 0;
+          int pointsB = controller.pronostieks[b]!.matches[match.id]!.getPronostiekPoints(virtual: true) ?? 0;
           if (pointsA == pointsB) {
             int maxPointsA = controller.pronostieks[a]!.matches[match.id]!.getMaxPronostiekPoints() ?? 0;
             int maxPointsB = controller.pronostieks[b]!.matches[match.id]!.getMaxPronostiekPoints() ?? 0;
@@ -115,7 +115,7 @@ class MatchPage extends StatelessWidget {
                         children: [
                           Flexible(flex: 1,child: Text(controller.pronostieks[username]!.matches[match.id]!.getMaxPronostiekPoints().toString())),
                           if (match.status != MatchStatus.notStarted) ...[
-                            Flexible(flex: 1,child: Text(controller.pronostieks[username]!.matches[match.id]!.getPronostiekPoints().toString())),
+                            Flexible(flex: 1,child: Text(controller.pronostieks[username]!.matches[match.id]!.getPronostiekPoints(virtual: true).toString())),
                           ]
                         ],
                       ),)
