@@ -125,7 +125,7 @@ class MatchPronostiekController extends GetxController {
   }
 
   Future<void> initPronostiek() async {
-    print("inti");
+    print("init");
     await timeClient.getTime();
     setUtcTime(update: false);
     repo.getPronostiek().then((pronostiek) {

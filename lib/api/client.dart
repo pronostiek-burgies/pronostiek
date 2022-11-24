@@ -35,6 +35,9 @@ class WebStorage {
   
   String? get users => window.localStorage['users'];
   set users(String? sid) => sid == null ? window.localStorage.remove('users') : window.localStorage['users'] = sid;
+  
+  String? get profileColors => window.localStorage['profile_colors'];
+  set profileColors(String? sid) => sid == null ? window.localStorage.remove('profile_colors') : window.localStorage['profile_colors'] = sid;
 }
 
 class DropboxClient {

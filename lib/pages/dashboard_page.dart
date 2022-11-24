@@ -28,7 +28,7 @@ class DashboardPage extends StatelessWidget {
           ],
         ),
         body: GetBuilder<ResultController>(builder: (controller) {
-          PointsPerDayWrapper? evolution = getEvolutionData(controller);
+          PointsPerDayWrapper? evolution = controller.initialized ? getEvolutionData(controller) : null;
           List<charts.Series<UserPoints, String>>? barChartData = controller.initialized ? getRankingData(controller) : null;
           return SingleChildScrollView(
             child: Column(
@@ -105,15 +105,15 @@ class DashboardPage extends StatelessWidget {
                   textScaleFactor: 2.0,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                evolution == null
+                !controller.initialized
                     ? const CircularProgressIndicator()
-                    : LayoutBuilder(builder: (context, boxContraints) => Container(
+                    : LayoutBuilder(builder: (context, boxContraints) => evolution?.data == null ? const CircularProgressIndicator() : Container(
                         margin: const EdgeInsets.all(10),
                         padding: const EdgeInsets.all(10),
                         color: Get.theme.cardColor,
                         height: controller.usernames.length * 100.0,
                         child: charts.LineChart(
-                          evolution.data,
+                          evolution!.data,
                           animate: true,
                           behaviors: [charts.SeriesLegend(desiredMaxColumns: boxContraints.maxWidth~/175)],
                           primaryMeasureAxis: const charts.NumericAxisSpec(
@@ -232,6 +232,9 @@ List<charts.Series<UserPoints, String>> getRankingData(
 
 PointsPerDayWrapper? getEvolutionData(ResultController controller) {
   if (controller.usernames.isEmpty) {
+    return null;
+  }
+  if (!controller.initialized) {
     return null;
   }
   Map<String, Map<DateTime, dynamic>> points = controller.getPointsPerDay(

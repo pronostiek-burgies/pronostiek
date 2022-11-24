@@ -72,8 +72,13 @@ class ResultController extends GetxController {
         users = Map<String,User>.from(jsonDecode(WebStorage.instance.users!).map((k,v) => MapEntry(k, User.fromJson(v)))); 
         n_initialized++;
       }
-      if (n_initialized == 5) {initialized = true;}
+      if (WebStorage.instance.profileColors != null) {
+        profileColors = Map<String,Color>.from(jsonDecode(WebStorage.instance.profileColors!).map((k,v) => MapEntry(k, User.colorFromString(v)))); 
+        n_initialized++;
+      }
+      if (n_initialized == 6) {initialized = true;}
     }
+    update();
   }
 
   Future<void> init() async {
@@ -92,6 +97,7 @@ class ResultController extends GetxController {
       user.profilePicture = await repo.getProfilePicture(user);
     }
     WebStorage.instance.users = jsonEncode(users);
+    WebStorage.instance.profileColors = jsonEncode(profileColors.map((k,v) => MapEntry(k, v.toString())));
     initialized = true;
     update();
   }
