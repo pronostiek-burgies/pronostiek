@@ -1,8 +1,12 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'dart:math';
 import 'package:intl/intl.dart';
+import 'package:pronostiek/api/client.dart';
 import 'package:pronostiek/api/repository.dart';
 import 'package:pronostiek/controllers/match_controller.dart';
 import 'package:pronostiek/models/group.dart';
@@ -46,19 +50,48 @@ class ResultController extends GetxController {
 
   ResultController() {
     progression[0] = matchController.teams.values.toList();
+    if (kIsWeb) {
+      int n_initialized = 0;
+      if (WebStorage.instance.randomQuestions != null) {
+        randomQuestions = List<RandomPronostiek>.from(jsonDecode(WebStorage.instance.randomQuestions!).map((e) => RandomPronostiek.fromJson(e))); 
+        n_initialized++;
+      }
+      if (WebStorage.instance.usernames != null) {
+        usernames = List<String>.from(jsonDecode(WebStorage.instance.usernames!)); 
+        n_initialized++;
+      }
+      if (WebStorage.instance.pronostieks != null) {
+        pronostieks = Map<String,Pronostiek>.from(jsonDecode(WebStorage.instance.pronostieks!).map((k,v) => MapEntry(k,Pronostiek.fromJson(v)))); 
+        n_initialized++;
+      }
+      if (WebStorage.instance.randomSolution != null) {
+        solutionRandom = List<RandomPronostiek>.from(jsonDecode(WebStorage.instance.randomSolution!).map((e) => RandomPronostiek.fromJson(e))); 
+        n_initialized++;
+      }
+      if (WebStorage.instance.users != null) {
+        users = Map<String,User>.from(jsonDecode(WebStorage.instance.users!).map((k,v) => MapEntry(k, User.fromJson(v)))); 
+        n_initialized++;
+      }
+      if (n_initialized == 5) {initialized = true;}
+    }
   }
 
   Future<void> init() async {
     randomQuestions = await repo.getRandomSolution();
+    WebStorage.instance.randomQuestions = jsonEncode(randomQuestions);
     usernames = (await repo.getUsernames()).where((element) => element != "admin").toList();
+    WebStorage.instance.usernames = jsonEncode(usernames);
     pronostieks = await repo.getOtherUsersPronostiek(usernames);
+    WebStorage.instance.pronostieks = jsonEncode(pronostieks);
     solutionRandom = (await repo.getOtherUsersPronostiek(["admin"]))["admin"]!.random;
+    WebStorage.instance.randomSolution = jsonEncode(solutionRandom);
     for (String username in usernames) {
       User user = await repo.getUserDetails(username);
       profileColors[username] = user.color;
       users[username] = user;
       user.profilePicture = await repo.getProfilePicture(user);
     }
+    WebStorage.instance.users = jsonEncode(users);
     initialized = true;
     update();
   }

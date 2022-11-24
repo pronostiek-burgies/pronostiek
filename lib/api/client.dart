@@ -20,6 +20,21 @@ class WebStorage {
 
   String? get username => window.localStorage['username'];
   set username(String? sid) => sid == null ? window.localStorage.remove('username') : window.localStorage['username'] = sid;
+
+  String? get pronostieks => window.localStorage['pronostieks'];
+  set pronostieks(String? sid) => sid == null ? window.localStorage.remove('pronostieks') : window.localStorage['pronostieks'] = sid;
+
+  String? get randomSolution => window.localStorage['random_solution'];
+  set randomSolution(String? sid) => sid == null ? window.localStorage.remove('random_solution') : window.localStorage['random_solution'] = sid;
+  
+  String? get randomQuestions => window.localStorage['random_questions'];
+  set randomQuestions(String? sid) => sid == null ? window.localStorage.remove('random_questions') : window.localStorage['random_questions'] = sid;
+  
+  String? get usernames => window.localStorage['usernames'];
+  set usernames(String? sid) => sid == null ? window.localStorage.remove('usernames') : window.localStorage['usernames'] = sid;
+  
+  String? get users => window.localStorage['users'];
+  set users(String? sid) => sid == null ? window.localStorage.remove('users') : window.localStorage['users'] = sid;
 }
 
 class DropboxClient {
