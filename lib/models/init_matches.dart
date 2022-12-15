@@ -96,7 +96,7 @@ Map<String,Match> getMatches(Map<String,Team> teams, MatchController controller)
     "SF1": Match.knockout("SF1", DateTime.utc(2022, 12, 13, 20-1, 00), "Winner QF1", "Winner QF2", () => getWinnerOfMatch("QF1"), () => getWinnerOfMatch("QF2"), MatchType.semiFinals, sporzaApi: 3311891),
     "SF2": Match.knockout("SF2", DateTime.utc(2022, 12, 14, 20-1, 00), "Winner QF3", "Winner QF4", () => getWinnerOfMatch("QF3"), () => getWinnerOfMatch("QF4"), MatchType.semiFinals, sporzaApi: 3311892),
     
-    "F": Match.knockout("F", DateTime.utc(2022, 12, 18, 16-1, 00), "Winner SF1", "Winner SF2", () => getWinnerOfMatch("SF1"), () => getWinnerOfMatch("SF1"), MatchType.wcFinal, sporzaApi: 3311894),
+    "F": Match.knockout("F", DateTime.utc(2022, 12, 18, 16-1, 00), "Winner SF1", "Winner SF2", () => getWinnerOfMatch("SF1"), () => getWinnerOfMatch("SF2"), MatchType.wcFinal, sporzaApi: 3311894),
     "f": Match.knockout("f", DateTime.utc(2022, 12, 17, 16-1, 00), "Runner-up SF1", "Runner-up SF2", () => getLoserOfMatch("SF1"), () => getLoserOfMatch("SF2"), MatchType.bronzeFinal, sporzaApi: 3311893),
   };
 }
