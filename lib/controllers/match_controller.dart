@@ -52,7 +52,12 @@ class MatchController extends GetxController {
       timeUntilUpdate = Duration(minutes: 1, seconds: random.nextInt(60));
     } else {
       List<DateTime> startTimes = matches.values.where((Match e) => e.status != MatchStatus.ended).map((Match e) => e.startDateTime).toList();
-      DateTime timeUntilMatch = startTimes.reduce((value, element) => value.isBefore(element) ? value : element);
+      DateTime timeUntilMatch;
+      if (startTimes.isEmpty) {
+        timeUntilMatch = DateTime(2025);
+      } else {
+        timeUntilMatch = startTimes.reduce((value, element) => value.isBefore(element) ? value : element);
+      }
       if (timeUntilMatch.isBefore(utcTime)) {
         timeUntilUpdate = Duration(minutes: 0, seconds: random.nextInt(60));
       } else {

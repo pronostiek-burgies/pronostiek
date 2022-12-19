@@ -149,13 +149,14 @@ class ResultController extends GetxController {
         otherAnswers.add(answer);
       }
     }
+    print("random: $otherAnswers");
     if (otherAnswers.isEmpty) {return null;}
     String answer = otherAnswers[0].toString();
     int distance = (otherAnswers[0] - correctAnswer).abs();
     for (int i in List.generate(otherAnswers.length-1, (index) => index+1)) {
       if ((otherAnswers[i] - correctAnswer).abs() < distance) {
         answer = otherAnswers[i].toString();
-        distance = (otherAnswers[0] - correctAnswer).abs();
+        distance = (otherAnswers[i] - correctAnswer).abs();
       } else if ((otherAnswers[i] - correctAnswer).abs() == distance) {
         answer += ";${otherAnswers[i]}";
       }
